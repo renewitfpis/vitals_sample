@@ -18,6 +18,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -49,9 +50,9 @@ ext {
     dagger2Version = '2.8'
     glideVersion = '3.7.0'
     okhttp3Version = '3.6.0'
-    persistentCookieJar = '1.0.1'
+    persistentCookieJar = 'v1.0.1'
     picassoVersion = "2.5.2"
-    retrofitVersion = '2.2.0'
+    retrofitVersion = '2.3.0'
     rxjava2Version = '2.0.5'
     rxbinding2Version = '2.0.0'
     rxandroidVersion = '2.0.1'

@@ -50,14 +50,19 @@ dependencies {
     compile "com.android.support.constraint:constraint-layout:$rootProject.contrainLayoutVersion"
 
     // Google
-    compile "com.google.android.gms:play-services-vision:$playServicesVersion"
+    compile "com.google.firebase:firebase-messaging:$rootProject.playServicesVersion"
+    compile "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
 
     // network
     compile "com.google.code.gson:gson:$rootProject.gsonVersion"
     compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
     compile "com.squareup.okhttp3:okhttp:$rootProject.okhttp3Version"
+    compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp3Version"
     compile "com.facebook.stetho:stetho:$rootProject.stethoVersion"
     compile "com.facebook.stetho:stetho-okhttp3:$rootProject.stethoVersion"
+    compile "com.github.franmontiel:PersistentCookieJar:$rootProject.persistentCookieJar"
 
     // dependency injection
     compile "com.google.dagger:dagger:$rootProject.dagger2Version"

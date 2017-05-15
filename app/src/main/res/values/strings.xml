@@ -1,3 +1,39 @@
 <resources>
     <string name="app_name">Vitals</string>
+
+    <!-- Alert rules -->
+    <string name="alert_title">Alert</string>
+    <string name="alert_system_alert">System Alert</string>
+    <string name="alert_custom_alert">Custom Alert</string>
+    <string name="rule_online">Online</string>
+    <string name="rule_offline">Offline</string>
+    <string name="rule_away">Away</string>
+    <string name="rule_armed">Armed</string>
+    <string name="rule_disarmed">Disarmed</string>
+
+    <!-- DateUtil -->
+    <string name="date_a_few_seconds_ago">a few seconds ago</string>
+    <plurals name="date_minute_ago">
+        <item quantity="one">%d minute ago</item>
+        <item quantity="other">%d minutes ago</item>
+    </plurals>
+    <string name="date_day">%1$s at %2$s</string>
+    <string name="date_today">Today</string>
+
+    <!-- Commission devices -->
+    <!-- Trackers -->
+    <string name="tracker_personal">SmartEarsLife Personal Tracker</string>
+    <string name="tracker_personal_desc">Keep in touch with your loved ones.</string>
+    <string name="tracker_paws">SmartEarsLife Paws</string>
+    <string name="tracker_paws_desc">Never lose your pet again. Track your pet\'s location on-demand from your smartphone.</string>
+    <string name="tracker_kids">SmartEarsLife Kids Tracker</string>
+    <string name="tracker_kids_desc">Stay connected with your kids. Kee your eyes on their location and communicate with them.</string>
+
+    <!-- Errors -->
+    <string name="error_required_field">Required field</string>
+    <string name="error_invalid_email">Invalid email</string>
+    <string name="error_network_connection">Check your network connection.</string>
+
+
+
 </resources>
