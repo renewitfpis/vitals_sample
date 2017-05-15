@@ -1,4 +1,4 @@
-package sg.lifecare.framework.utils;
+package sg.lifecare.utils;
 
 
 import android.content.Context;

@@ -1,10 +1,14 @@
 package sg.lifecare.vitals2.ui.base;
 
 
+import java.net.UnknownHostException;
+
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
-import sg.lifecare.framework.data.DataManager;
+import retrofit2.HttpException;
+import sg.lifecare.data.DataManager;
+import timber.log.Timber;
 
 public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 
@@ -51,7 +55,14 @@ public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
     }
 
     @Override
-    public void handleNetworkError() {
+    public void handleNetworkError(HttpException exception) {
+        int code = exception.code();
+
+        Timber.w("handleNetworkError: code=" + code);
+    }
+
+    @Override
+    public void handleNetworkError(UnknownHostException exception) {
 
     }
 

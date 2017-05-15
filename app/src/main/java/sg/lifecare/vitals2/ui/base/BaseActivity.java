@@ -9,17 +9,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import butterknife.Unbinder;
+import sg.lifecare.utils.NetworkUtils;
+import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.VitalsApp;
-import sg.lifecare.framework.di.module.ActivityModule;
-import sg.lifecare.framework.utils.NetworkUtils;
 import sg.lifecare.vitals2.di.component.ActivityComponent;
 import sg.lifecare.vitals2.di.component.DaggerActivityComponent;
+import sg.lifecare.vitals2.di.module.ActivityModule;
 
 public abstract  class BaseActivity extends AppCompatActivity
         implements MvpView, BaseFragment.Callback {
@@ -58,6 +60,17 @@ public abstract  class BaseActivity extends AppCompatActivity
         onError(getString(resId));
     }
 
+    @Override
+    public void onNetworkError(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.alert_title_error);
+        builder.setMessage(message);
+        builder.setPositiveButton(R.string.action_ok, (dialog, which) -> {
+            dialog.dismiss();
+        });
+        builder.show();
+    }
+
     protected  abstract void setup();
 
     private void showSnackBar(String message) {
@@ -68,6 +81,23 @@ public abstract  class BaseActivity extends AppCompatActivity
         TextView textView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
         textView.setText(message);
         snackbar.show();
+    }
+
+    @Override
+    public void onFragmentAttached() {
+    }
+
+    @Override
+    public void onFragmentDetached(String tag) {
+    }
+
+    @Override
+    public void showLoading() {
+    }
+
+    @Override
+    public void hideLoading() {
+
     }
 
     @Override

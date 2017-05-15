@@ -26,7 +26,7 @@ import sg.lifecare.data.remote.model.response.LoginResponse;
 import sg.lifecare.data.remote.model.response.RelatedAlertMessageResponse;
 import sg.lifecare.data.remote.model.response.ResetPasswordResponse;
 import sg.lifecare.data.remote.model.response.ServiceResponse;
-import timber.log.Timber;
+
 
 @Singleton
 public class DataManager {

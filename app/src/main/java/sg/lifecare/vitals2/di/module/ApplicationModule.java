@@ -1,4 +1,4 @@
-package sg.lifecare.framework.di.module;
+package sg.lifecare.vitals2.di.module;
 
 import android.app.Application;
 import android.content.Context;
@@ -7,8 +7,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import sg.lifecare.framework.data.AppDataManager;
-import sg.lifecare.framework.data.DataManager;
+import sg.lifecare.data.DataManager;
+import sg.lifecare.data.remote.LifecareService;
 import sg.lifecare.framework.di.ApplicationContext;
 
 @Module
@@ -33,8 +33,13 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    DataManager provideDataManager(AppDataManager appDataManager) {
-        return appDataManager;
+    LifecareService provideLifecareService() {
+        return LifecareService.Factory.makeLifecareService(mApplication);
     }
 
+    //@Provides
+    //@Singleton
+    //RxBus provideRxBus(RxBus rxBus) {
+    //    return new RxBus();
+    //}
 }

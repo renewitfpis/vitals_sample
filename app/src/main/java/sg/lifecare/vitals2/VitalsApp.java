@@ -7,10 +7,10 @@ import com.facebook.stetho.Stetho;
 
 import javax.inject.Inject;
 
-import sg.lifecare.framework.data.DataManager;
-import sg.lifecare.framework.di.module.ApplicationModule;
+import sg.lifecare.data.DataManager;
 import sg.lifecare.vitals2.di.component.ApplicationComponent;
 import sg.lifecare.vitals2.di.component.DaggerApplicationComponent;
+import sg.lifecare.vitals2.di.module.ApplicationModule;
 import timber.log.Timber;
 
 public class VitalsApp extends Application {

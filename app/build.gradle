@@ -77,6 +77,7 @@ dependencies {
     // code generator for view
     compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
+    compile "com.jakewharton.rxbinding2:rxbinding:$rootProject.rxbinding2Version"
 
     // logger
     compile "com.jakewharton.timber:timber:$rootProject.timberVersion"

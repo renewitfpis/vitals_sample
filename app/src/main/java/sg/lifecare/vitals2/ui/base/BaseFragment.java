@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import butterknife.Unbinder;
+import sg.lifecare.vitals2.di.component.ActivityComponent;
 
 public abstract class BaseFragment extends Fragment implements MvpView {
 
@@ -31,6 +32,14 @@ public abstract class BaseFragment extends Fragment implements MvpView {
     }
 
     @Override
+    public void showLoading() {
+    }
+
+    @Override
+    public void hideLoading() {
+    }
+
+    @Override
     public void onError(String message) {
         if (mActivity != null) {
             mActivity.onError(message);
@@ -41,6 +50,13 @@ public abstract class BaseFragment extends Fragment implements MvpView {
     public void onError(@StringRes int resId) {
         if (mActivity != null) {
             mActivity.onError(resId);
+        }
+    }
+
+    @Override
+    public void onNetworkError(String message) {
+        if (mActivity != null) {
+            mActivity.onNetworkError(message);
         }
     }
 
@@ -71,6 +87,10 @@ public abstract class BaseFragment extends Fragment implements MvpView {
             mUnbinder.unbind();
         }
         super.onDestroy();
+    }
+
+    public ActivityComponent getActivityComponent() {
+        return mActivity.getActivityComponent();
     }
 
     public BaseActivity getBaseActivity() {

@@ -16,4 +16,6 @@ public interface MvpView {
     boolean isNetworkConnected();
 
     void hideKeyboard();
+
+    void onNetworkError(String message);
 }
