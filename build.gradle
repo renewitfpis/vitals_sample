@@ -46,7 +46,7 @@ ext {
     gsonVersion = '2.8.0'
 
     butterKnifeVersion = '8.5.1'
-    circleImageView = '2.1.0'
+    circleImageViewVersion = '2.1.0'
     dagger2Version = '2.8'
     glideVersion = '3.7.0'
     okhttp3Version = '3.6.0'

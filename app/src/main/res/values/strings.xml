@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Vitals</string>
 
+    <!-- drawer -->
+    <string name="drawer_open">Open drawer</string>
+    <string name="drawer_close">Close drawer</string>
+
     <!-- Rules -->
     <string name="alert_title">Alert</string>
     <string name="alert_system_alert">System Alert</string>
@@ -51,11 +55,17 @@
     <string name="hint_last_name">Last Name</string>
     <string name="hint_confirm_password">Confirm Password</string>
 
+    <!-- Navigations -->
+    <string name="nav_logout">Logout</string>
+
     <!-- Login activity -->
     <string name="login_title_forgot_password">Forgot Password</string>
     <string name="login_title_sign_up">Sign Up</string>
     <string name="login_forgot_password">Forgot password?</string>
     <string name="login_sign_up">Sign Up</string>
     <string name="login_reset_password_msg">Enter your email address below to reset your password.</string>
+
+    <!-- Dashboard activity -->
+    <string name="dashboard_title">Home</string>
 
 </resources>
