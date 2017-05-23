@@ -20,12 +20,14 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import sg.lifecare.data.remote.model.data.AcknowledgeData;
+import sg.lifecare.data.remote.model.data.BloodGlucoseTaskData;
 import sg.lifecare.data.remote.model.data.CaregiverData;
 import sg.lifecare.data.remote.model.data.CommissionData;
 import sg.lifecare.data.remote.model.data.ProfileData;
 import sg.lifecare.data.remote.model.response.AcknowledgeResponse;
 import sg.lifecare.data.remote.model.response.AddAlertRuleResponse;
 import sg.lifecare.data.remote.model.response.AlertRuleResponse;
+import sg.lifecare.data.remote.model.response.AssignedTaskResponse;
 import sg.lifecare.data.remote.model.response.AssistsedEntityResponse;
 import sg.lifecare.data.remote.model.response.CommissionDeviceResponse;
 import sg.lifecare.data.remote.model.response.ConnectedDeviceResponse;
@@ -33,6 +35,7 @@ import sg.lifecare.data.remote.model.response.EntityDetailResponse;
 import sg.lifecare.data.remote.model.response.InviteCaregiverResponse;
 import sg.lifecare.data.remote.model.response.LocationResponse;
 import sg.lifecare.data.remote.model.response.LoginResponse;
+import sg.lifecare.data.remote.model.response.LogoutResponse;
 import sg.lifecare.data.remote.model.response.RegisterAccountResponse;
 import sg.lifecare.data.remote.model.response.RelatedAlertMessageResponse;
 import sg.lifecare.data.remote.model.response.ResetPasswordResponse;
@@ -55,7 +58,7 @@ public interface LifecareService {
                                     @Field("DeviceType") String deviceType);
     @FormUrlEncoded
     @POST("mlifecare/authentication/appLogout")
-    Observable<Void> logout(@Field("DeviceId") String deviceId);
+    Observable<LogoutResponse> logout(@Field("DeviceId") String deviceId);
 
     @FormUrlEncoded
     @POST("mlifecare/authentication/forgotPasswordRequest")
@@ -93,6 +96,9 @@ public interface LifecareService {
     @GET("/mlifecare/service/getServicesDetails")
     Observable<ServiceResponse> getServices();
 
+    @GET("/atthings/taskAssign/getTaskAssign")
+    Observable<AssignedTaskResponse> getAssignedTasks(@Query("EntityId") String entityId);
+
     @POST("/mlifecare/device/commission")
     Observable<CommissionDeviceResponse> postCommissionDevice(@Body CommissionData post);
 
@@ -118,6 +124,8 @@ public interface LifecareService {
     @POST("/mlifecare/rule/acknowledgeRule")
     Observable<AcknowledgeResponse> postAcknowledge(@Body AcknowledgeData post);
 
+    @POST("/mlifecare/event/addEvent")
+    Observable<String> postAssignedTaskForDevice(@Body BloodGlucoseTaskData post);
 
     /**
      * Factory class that sets up new Lifecare Service

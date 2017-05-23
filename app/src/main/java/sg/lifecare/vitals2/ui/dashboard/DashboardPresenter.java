@@ -44,11 +44,13 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
                         return;
                     }
 
+                    getMvpView().hideLoading();
+
                     if (response.isError()) {
                         getMvpView().startLoginActivity();
                     } else {
                         getDataManager().setUserEntity(response.getData().get(0));
-                        getMvpView().onUserEntityUpdate(getDataManager().getUserEntity());
+                        getMvpView().onUserEntityDetailResult(getDataManager().getUserEntity());
                     }
 
                 }, throwable -> {
@@ -67,6 +69,31 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
                     }
                 }));
 
+    }
+
+    @Override
+    public void logout() {
+        getCompositeDisposable().add(getDataManager().logout()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> {
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    getMvpView().hideLoading();
+                    getMvpView().onLogoutResult(response);
+                }, throwable -> {
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    getMvpView().hideLoading();
+                    Timber.e(throwable, throwable.getMessage());
+
+                    // still logout
+                    getMvpView().onLogoutResult(null);
+                }));
     }
 
     @Override

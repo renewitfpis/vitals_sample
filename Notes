@@ -1,0 +1,9 @@
+http://www.lifecare.sg/test/api-post
+
+
+/atthings/taskAssign/updateTaskAssignForDevice
+TaskAssignId
+EntityId
+ApprovalEntityId
+EventData
+Status

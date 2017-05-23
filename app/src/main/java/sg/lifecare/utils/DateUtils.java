@@ -18,6 +18,7 @@ public class DateUtils {
     private static final DateFormat ISO8601_TIMESTAMP_FORMAT = new SimpleDateFormat(ISO8601_TIMESTAMP, Locale.getDefault());
 
     private static final DateFormat DAY_DATE_FORMAT = new SimpleDateFormat("EEE, d MMM", Locale.getDefault());
+    private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
     public static String getIsoTimestamp(Calendar timestamp) {
         try {
@@ -86,6 +87,17 @@ public class DateUtils {
             Timber.e(e, e.getMessage());
         }
 
+
+        return "";
+
+    }
+
+    public static String getDisplayTime(Date time) {
+        try {
+            return TIME_FORMAT.format(time);
+        } catch (Exception e) {
+            Timber.e(e, e.getMessage());
+        }
 
         return "";
 

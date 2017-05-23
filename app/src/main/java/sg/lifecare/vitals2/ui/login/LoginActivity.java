@@ -23,6 +23,7 @@ import io.reactivex.Observable;
 import sg.lifecare.vitals2.BuildConfig;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.ui.base.BaseActivity;
+import sg.lifecare.vitals2.ui.dashboard.DashboardActivity;
 
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
@@ -77,8 +78,8 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                 .subscribe(aBoolean -> mLoginButton.setEnabled(aBoolean));
 
         if (BuildConfig.DEBUG) {
-            mEmailEdit.setText("smartears_caregiver@lifecare.sg");
-            mPasswordEdit.setText("lalaland888");
+            mEmailEdit.setText("vitalsvip1@lifecare.sg");
+            mPasswordEdit.setText("vitals1234");
         }
     }
 
@@ -135,9 +136,9 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     @Override
     public void startHomeActivity() {
-        //Intent intent = HomeActivity.getStartIntent(this);
-        //startActivity(intent);
-        //finish();
+        Intent intent = DashboardActivity.getStartIntent(this);
+        startActivity(intent);
+        finish();
     }
 
 

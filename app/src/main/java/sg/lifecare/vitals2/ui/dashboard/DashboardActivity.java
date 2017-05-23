@@ -2,10 +2,8 @@ package sg.lifecare.vitals2.ui.dashboard;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,9 +20,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import sg.lifecare.data.remote.model.response.EntityDetailResponse;
+import sg.lifecare.data.remote.model.response.LogoutResponse;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.R2;
 import sg.lifecare.vitals2.ui.base.BaseActivity;
+import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanFragment;
 import sg.lifecare.vitals2.ui.login.LoginActivity;
 import timber.log.Timber;
 
@@ -116,6 +116,7 @@ public class DashboardActivity extends BaseActivity implements DashboardMvpView 
                     switch (item.getItemId()) {
 
                         case R.id.nav_item_logout:
+                            mPresenter.logout();
                             return true;
                     }
 
@@ -132,7 +133,7 @@ public class DashboardActivity extends BaseActivity implements DashboardMvpView 
     }
 
     @Override
-    public void onUserEntityUpdate(EntityDetailResponse.Data userEntity) {
+    public void onUserEntityDetailResult(EntityDetailResponse.Data userEntity) {
         getSupportActionBar().show();
 
         mUserNameText.setText(userEntity.getName());
@@ -142,5 +143,20 @@ public class DashboardActivity extends BaseActivity implements DashboardMvpView 
                     .load(userEntity.getDefaultMediaUrl())
                     .into(mUserProfileImage);
         }
+
+        showCarePlanFragment();
+    }
+
+    @Override
+    public void onLogoutResult(LogoutResponse response) {
+        startLoginActivity();
+    }
+
+    private void showCarePlanFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .disallowAddToBackStack()
+                .add(R.id.fragment_content, CarePlanFragment.newInstance(), CarePlanFragment.class.getSimpleName())
+                .commit();
     }
 }

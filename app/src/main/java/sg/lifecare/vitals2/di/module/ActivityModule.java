@@ -11,6 +11,9 @@ import sg.lifecare.framework.di.PerActivity;
 import sg.lifecare.vitals2.ui.dashboard.DashboardMvpPresenter;
 import sg.lifecare.vitals2.ui.dashboard.DashboardMvpView;
 import sg.lifecare.vitals2.ui.dashboard.DashboardPresenter;
+import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanMvpPresenter;
+import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanMvpView;
+import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanPresenter;
 import sg.lifecare.vitals2.ui.login.ForgotPasswordMvpPresenter;
 import sg.lifecare.vitals2.ui.login.ForgotPasswordMvpView;
 import sg.lifecare.vitals2.ui.login.ForgotPasswordPresenter;
@@ -55,6 +58,13 @@ public class ActivityModule {
     @PerActivity
     DashboardMvpPresenter<DashboardMvpView> provideDashboardPresenter(
             DashboardPresenter<DashboardMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    CarePlanMvpPresenter<CarePlanMvpView> provideCarePlanPresenter(
+            CarePlanPresenter<CarePlanMvpView> presenter) {
         return presenter;
     }
 }

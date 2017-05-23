@@ -7,4 +7,6 @@ import sg.lifecare.vitals2.ui.base.MvpPresenter;
 public interface DashboardMvpPresenter<V extends DashboardMvpView> extends MvpPresenter<V> {
 
     void getUserEntity();
+
+    void logout();
 }

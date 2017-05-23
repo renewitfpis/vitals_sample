@@ -10,10 +10,14 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
+import io.reactivex.internal.operators.observable.ObservableElementAt;
+import sg.lifecare.data.local.PreferencesHelper;
+import sg.lifecare.data.remote.model.data.BloodGlucoseTaskData;
+import sg.lifecare.data.remote.model.response.AssignedTaskResponse;
+import sg.lifecare.data.remote.model.response.LogoutResponse;
 import sg.lifecare.framework.di.ApplicationContext;
 import sg.lifecare.utils.CookieUtils;
 import sg.lifecare.utils.DateUtils;
-import sg.lifecare.vitals2.data.local.PreferencesHelper;
 import sg.lifecare.data.remote.LifecareService;
 import sg.lifecare.data.remote.model.data.CommissionData;
 import sg.lifecare.data.remote.model.response.AlertRuleResponse;
@@ -105,6 +109,13 @@ public class DataManager {
                 mPreferencesHelper.getDeviceId(), "A");
     }
 
+    public Observable<LogoutResponse> logout() {
+        return mLifecareService.logout(mPreferencesHelper.getDeviceId())
+                .doOnComplete(() -> {
+                   mPreferencesHelper.clear(mContext);
+                });
+    }
+
     public Observable<ResetPasswordResponse> resetPassword(final String email) {
         // need to clear the previous cookie
         CookieUtils.getCookieJar(mContext).clear();
@@ -138,8 +149,15 @@ public class DataManager {
         return mLifecareService.getRelatedAlertMessages(entityId, pageSize, skipSize);
     }
 
+    public Observable<AssignedTaskResponse> getAssignedTasks(String entityId) {
+        return mLifecareService.getAssignedTasks(entityId);
+    }
+
     public Observable<CommissionDeviceResponse> postCommissionDevice(CommissionData data) {
         return mLifecareService.postCommissionDevice(data);
     }
 
+    public Observable<String> postAssignedTaskForDevice(BloodGlucoseTaskData data) {
+        return mLifecareService.postAssignedTaskForDevice(data);
+    }
 }

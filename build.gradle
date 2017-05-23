@@ -38,7 +38,7 @@ ext {
     contrainLayoutVersion = '1.0.2'
 
     // Google
-    playServicesVersion = '10.2.4'
+    playServicesVersion = '10.2.6'
     mapsUtilsVersion = '0.5'
 
     // APP dependencies

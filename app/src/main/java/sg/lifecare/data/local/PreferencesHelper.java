@@ -1,4 +1,4 @@
-package sg.lifecare.vitals2.data.local;
+package sg.lifecare.data.local;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -16,6 +16,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import sg.lifecare.framework.di.ApplicationContext;
+import sg.lifecare.utils.CookieUtils;
 import timber.log.Timber;
 
 
@@ -59,7 +60,8 @@ public class PreferencesHelper {
 
     }
 
-    public void clear() {
+    public void clear(Context context) {
+        CookieUtils.getCookieJar(context).clear();
         setEntityId("");
     }
 
