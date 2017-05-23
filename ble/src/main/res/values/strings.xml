@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">BLE</string>
+
+    <string name="ok">OK</string>
+
+    <string name="action_connect">CONNECT</string>
+    <string name="action_connecting">CONNECTING…</string>
+    <string name="action_disconnect">DISCONNECT</string>
+
+    <string name="battery">%d%%</string>
+    <string name="not_available">n/a</string>
+    <string name="not_supported">The device does not have required services.</string>
+    <string name="no_ble">Device doesn\'t have BLE support!</string>
+    <string name="no_required_permission">Permission denied.</string>
+    <string name="scanner_title">Select device:</string>
+    <string name="scanner_empty">No device found</string>
+    <string name="scanner_action_scan">Scan</string>
+    <string name="scanner_action_cancel">Cancel</string>
+    <string name="scanner_subtitle_bonded">BONDED DEVICES:</string>
+    <string name="scanner_subtitle_not_bonded">AVAILABLE DEVICES:</string>
+    <string name="scanner_permission_rationale">Since Android 6.0 Marshmallow system requires granting access to device\'s location in order to scan for Bluetooth Smart devices. Bluetooth beacons may be used to determine the phone\'s and user\'s location.</string>
+
+    <string name="about_title">About</string>
+    <string name="about_version">\n\nVersion: %s</string>
+
+
+    <string name="bonding">Bonding with the device&#8230;</string>
+    <string name="bonded">The device is now bonded.</string>
+
+</resources>
