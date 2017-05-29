@@ -1,9 +1,10 @@
 package sg.lifecare.vitals2.ui.dashboard.careplan;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +15,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import sg.lifecare.data.remote.model.data.BloodGlucoseTaskData;
 import sg.lifecare.data.remote.model.response.AssignedTaskResponse;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.R2;
@@ -23,6 +23,12 @@ import timber.log.Timber;
 
 public class CarePlanFragment extends BaseFragment
         implements CarePlanMvpView, CarePlanAdapter.OnItemClickListener {
+
+    public interface CarePlanTaskListener {
+        void showBloodGlucoseManualFragment();
+    }
+
+    private CarePlanTaskListener mCallback;
 
     @Inject
     CarePlanMvpPresenter<CarePlanMvpView> mPresenter;
@@ -37,6 +43,17 @@ public class CarePlanFragment extends BaseFragment
 
     public static CarePlanFragment newInstance() {
         return new CarePlanFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof CarePlanTaskListener) {
+            mCallback = (CarePlanTaskListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement CarePlanTaskListener");
+        }
     }
 
     @Override
@@ -102,7 +119,16 @@ public class CarePlanFragment extends BaseFragment
         Timber.d("onItemClick: %s", task.isBloodGlucose());
         if (task.isBloodGlucose()) {
             // test
-            mPresenter.postBloodGlucoseTask(task);
+            //mPresenter.postBloodGlucoseTask(task);
+            mCallback.showBloodGlucoseManualFragment();
+        } else if (task.isBloodPressure()) {
+            //mPresenter.postBloodPressureTask(task);
+        } else if (task.isBodyWeight()) {
+            //mPresenter.postBodyWeightTask(task);
+        } else if (task.isSpo2()) {
+            //mPresenter.postSpO2Task(task);
         }
     }
+
+
 }

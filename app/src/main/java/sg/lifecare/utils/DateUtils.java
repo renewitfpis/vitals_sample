@@ -1,6 +1,10 @@
 package sg.lifecare.utils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -92,14 +96,15 @@ public class DateUtils {
 
     }
 
-    public static String getDisplayTime(Date time) {
-        try {
-            return TIME_FORMAT.format(time);
-        } catch (Exception e) {
-            Timber.e(e, e.getMessage());
-        }
+    public static String getLocalDisplayTime(@NonNull Date time) {
+        DateTime dateTime = new DateTime(time, DateTimeZone.getDefault());
 
-        return "";
+        ///Timber.d("before %s", time.toString());
+        //Timber.d("after %s", dateTime.toLocalDateTime().toDate());
+        //Timber.d("res %s", dateTime.toString("HH:mm"));
+        //Timber.d("res %s", dateTime.toDateTimeISO().toString("HH:mm"));
 
+        return dateTime.toLocalDateTime().toString("HH:mm");
     }
+
 }

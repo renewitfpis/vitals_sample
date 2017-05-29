@@ -10,9 +10,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
-import io.reactivex.internal.operators.observable.ObservableElementAt;
 import sg.lifecare.data.local.PreferencesHelper;
-import sg.lifecare.data.remote.model.data.BloodGlucoseTaskData;
+import sg.lifecare.data.remote.model.data.BloodGlucoseEventData;
+import sg.lifecare.data.remote.model.data.BloodPressureEventData;
+import sg.lifecare.data.remote.model.data.BodyWeightEventData;
+import sg.lifecare.data.remote.model.data.SpO2EventData;
+import sg.lifecare.data.remote.model.response.AssignedTaskForDeviceResponse;
 import sg.lifecare.data.remote.model.response.AssignedTaskResponse;
 import sg.lifecare.data.remote.model.response.LogoutResponse;
 import sg.lifecare.framework.di.ApplicationContext;
@@ -157,7 +160,19 @@ public class DataManager {
         return mLifecareService.postCommissionDevice(data);
     }
 
-    public Observable<String> postAssignedTaskForDevice(BloodGlucoseTaskData data) {
+    public Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BloodGlucoseEventData data) {
+        return mLifecareService.postAssignedTaskForDevice(data);
+    }
+
+    public Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BloodPressureEventData data) {
+        return mLifecareService.postAssignedTaskForDevice(data);
+    }
+
+    public Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BodyWeightEventData data) {
+        return mLifecareService.postAssignedTaskForDevice(data);
+    }
+
+    public Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(SpO2EventData data) {
         return mLifecareService.postAssignedTaskForDevice(data);
     }
 }

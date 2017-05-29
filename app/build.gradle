@@ -85,6 +85,9 @@ dependencies {
     // utilities
     compile "de.hdodenhof:circleimageview:$rootProject.circleImageViewVersion"
     compile "com.github.bumptech.glide:glide:$rootProject.glideVersion"
+    compile "joda-time:joda-time:2.9.9"
+    compile "com.prolificinteractive:material-calendarview:1.4.3"
+    compile "com.github.dwfox:DWRulerView:1.1.0"
 
     testCompile 'junit:junit:4.12'
 }

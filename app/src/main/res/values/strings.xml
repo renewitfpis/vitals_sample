@@ -24,6 +24,13 @@
     <string name="date_day">%1$s at %2$s</string>
     <string name="date_today">Today</string>
 
+    <!-- Units -->
+    <string name="unit_mmol_l">mmol/L</string>
+    <string name="unit_kg">KG</string>
+    <string name="unit_mmhg">mmHg</string>
+    <string name="unit_per_min">/min.</string>
+    <string name="unit_percent">%</string>
+
     <!-- Commission devices -->
     <!-- Trackers -->
     <string name="tracker_personal">SmartEarsLife Personal Tracker</string>
@@ -47,6 +54,9 @@
     <string name="action_send">Send</string>
     <string name="action_sign_up">Sign Up</string>
     <string name="action_back">Back</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_done">Done</string>
+    <string name="action_save">Save</string>
 
     <!-- Hints -->
     <string name="hint_email">Email Address</string>
@@ -54,9 +64,11 @@
     <string name="hint_first_name">First Name</string>
     <string name="hint_last_name">Last Name</string>
     <string name="hint_confirm_password">Confirm Password</string>
+    <string name="hint_notes">Notes</string>
 
     <!-- Navigations -->
     <string name="nav_logout">Logout</string>
+    <string name="nav_devices">Devices</string>
 
     <!-- Login activity -->
     <string name="login_title_forgot_password">Forgot Password</string>
@@ -67,5 +79,8 @@
 
     <!-- Dashboard activity -->
     <string name="dashboard_title">Home</string>
+
+    <!-- BloodGlucose activity -->
+    <string name="bloodglucose_name_unit_label">Blood Glucose (mmol/L)</string>
 
 </resources>

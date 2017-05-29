@@ -20,13 +20,17 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import sg.lifecare.data.remote.model.data.AcknowledgeData;
-import sg.lifecare.data.remote.model.data.BloodGlucoseTaskData;
+import sg.lifecare.data.remote.model.data.BloodGlucoseEventData;
+import sg.lifecare.data.remote.model.data.BloodPressureEventData;
+import sg.lifecare.data.remote.model.data.BodyWeightEventData;
 import sg.lifecare.data.remote.model.data.CaregiverData;
 import sg.lifecare.data.remote.model.data.CommissionData;
 import sg.lifecare.data.remote.model.data.ProfileData;
+import sg.lifecare.data.remote.model.data.SpO2EventData;
 import sg.lifecare.data.remote.model.response.AcknowledgeResponse;
 import sg.lifecare.data.remote.model.response.AddAlertRuleResponse;
 import sg.lifecare.data.remote.model.response.AlertRuleResponse;
+import sg.lifecare.data.remote.model.response.AssignedTaskForDeviceResponse;
 import sg.lifecare.data.remote.model.response.AssignedTaskResponse;
 import sg.lifecare.data.remote.model.response.AssistsedEntityResponse;
 import sg.lifecare.data.remote.model.response.CommissionDeviceResponse;
@@ -125,7 +129,16 @@ public interface LifecareService {
     Observable<AcknowledgeResponse> postAcknowledge(@Body AcknowledgeData post);
 
     @POST("/mlifecare/event/addEvent")
-    Observable<String> postAssignedTaskForDevice(@Body BloodGlucoseTaskData post);
+    Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BloodGlucoseEventData post);
+
+    @POST("/mlifecare/event/addEvent")
+    Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BloodPressureEventData post);
+
+    @POST("/mlifecare/event/addEvent")
+    Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BodyWeightEventData post);
+
+    @POST("/mlifecare/event/addEvent")
+    Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body SpO2EventData post);
 
     /**
      * Factory class that sets up new Lifecare Service
@@ -148,7 +161,7 @@ public interface LifecareService {
 
             Gson gson = new GsonBuilder()
                     .serializeNulls()
-                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                     .create();
 
             Retrofit retrofit = new Retrofit.Builder()

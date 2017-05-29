@@ -5,6 +5,7 @@ import sg.lifecare.framework.di.PerActivity;
 import sg.lifecare.vitals2.TestActivity;
 import sg.lifecare.vitals2.di.module.ActivityModule;
 import sg.lifecare.vitals2.ui.dashboard.DashboardActivity;
+import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseManualFragment;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanFragment;
 import sg.lifecare.vitals2.ui.login.ForgotPasswordFragment;
 import sg.lifecare.vitals2.ui.login.LoginActivity;
@@ -20,5 +21,7 @@ public interface ActivityComponent {
 
     void inject(DashboardActivity dashboardActivity);
     void inject(CarePlanFragment carePlanFragment);
+
+    void inject(BloodGlucoseManualFragment bloodGlucoseManualFragment);
 
 }

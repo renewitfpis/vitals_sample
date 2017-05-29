@@ -24,11 +24,14 @@ import sg.lifecare.data.remote.model.response.LogoutResponse;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.R2;
 import sg.lifecare.vitals2.ui.base.BaseActivity;
+import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseActivity;
+import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseManualFragment;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanFragment;
 import sg.lifecare.vitals2.ui.login.LoginActivity;
 import timber.log.Timber;
 
-public class DashboardActivity extends BaseActivity implements DashboardMvpView {
+public class DashboardActivity extends BaseActivity
+        implements DashboardMvpView, CarePlanFragment.CarePlanTaskListener {
 
     @Inject
     DashboardMvpPresenter<DashboardMvpView> mPresenter;
@@ -155,8 +158,13 @@ public class DashboardActivity extends BaseActivity implements DashboardMvpView 
     private void showCarePlanFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .disallowAddToBackStack()
                 .add(R.id.fragment_content, CarePlanFragment.newInstance(), CarePlanFragment.class.getSimpleName())
                 .commit();
+    }
+
+    @Override
+    public void showBloodGlucoseManualFragment() {
+        Timber.d("showBloodGlucoseManualFragment");
+        startActivity(BloodGlucoseActivity.getStartIntent(this));
     }
 }

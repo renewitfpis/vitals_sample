@@ -10,6 +10,8 @@
 
     <style name="AppTheme.ToolBar">
         <item name="android:textColorPrimary">@color/white</item>
+        <!-- change menu icon -->
+        <item name="colorControlNormal">@color/white</item>
     </style>
 
 
@@ -23,7 +25,16 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <style name="AppNumberPicker" parent="AppTheme">
+        <item name="android:textSize">28sp</item>
+    </style>
+
     <style name="AppText" parent="@android:style/TextAppearance">
+    </style>
+
+    <style name="AppText.Display1">
+        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Display1</item>
+        <item name="android:textSize">34sp</item>
     </style>
 
     <style name="AppText.Headline">
@@ -41,9 +52,14 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="AppText.Body">
+    <style name="AppText.Body" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="AppText.Body.Light">
         <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Body1</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="AppText.Caption">
@@ -51,18 +67,40 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="AppText.Button">
-        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Button</item>
-        <item name="android:textSize">14sp</item>
+    <style name="AppText.Button" parent="TextAppearance.AppCompat.Button">
     </style>
 
-    <style name="AppText.Small">
-        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+    <style name="AppText.Small" parent="TextAppearance.AppCompat.Small">
     </style>
 
-    <style name="AppText.Medium">
-        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    <style name="AppText.Medium" parent="TextAppearance.AppCompat.Medium">
+    </style>
+
+    <style name="AppText.Large" parent="TextAppearance.AppCompat.Large">
+    </style>
+
+    <style name="AppButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="AppButton.Dialog">
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
 
+    <style name="CalendarDayText" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/calendar_text_color</item>
+    </style>
+
+    <style name="NotesEditText" parent="AppTheme">
+        <item name="colorAccent">@color/black</item>
+        <item name="colorControlNormal">@color/black</item>
+        <item name="colorControlActivated">@color/black</item>
+
+        <item name="android:maxLength">@integer/notes_length</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:inputType">text</item>
+    </style>
 </resources>

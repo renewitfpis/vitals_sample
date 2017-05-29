@@ -25,7 +25,7 @@ public class TimelineView extends View {
     public static final int LINE_TYPE_END = 2;
     public static final int LINE_TYPE_ONLYONE = 3;
 
-    private static final float DEFAULT_MARKER_SIZE = 20f;
+    private static final float DEFAULT_MARKER_SIZE = 10f;
     private static final float DEFAULT_LINE_SIZE = 2f;
 
 

@@ -11,14 +11,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/AppText.Body"
-        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         tools:text="00:00pm" />
 
     <sg.lifecare.views.TimelineView
         android:id="@+id/timeline_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         app:markerYOffset="10dp">
 
     </sg.lifecare.views.TimelineView>
