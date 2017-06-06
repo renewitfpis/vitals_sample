@@ -298,5 +298,7 @@
     <!-- 12% white -->
     <color name="divider_dark">#1FFFFFFF</color>
 
+    <color name="custom_dim_foreground_disabled_material_dark">#80bebebe</color>
+    <color name="custom_dim_foreground_disabled_material_light">#80323232</color>
 
 </resources>

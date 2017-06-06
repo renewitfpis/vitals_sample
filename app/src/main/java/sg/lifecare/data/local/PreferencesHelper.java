@@ -31,11 +31,14 @@ public class PreferencesHelper {
 
     private static final String GCM_SENDER_ID = "1076112719492";
 
+    private DeviceData mDeviceData;
+
     private final SharedPreferences mPref;
 
     @Inject
     public PreferencesHelper(@ApplicationContext final Context context) {
         mPref = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        mDeviceData = DeviceData.getInstance(context);
 
         if (TextUtils.isEmpty(getDeviceId())) {
             setDeviceId(context);
@@ -90,6 +93,8 @@ public class PreferencesHelper {
         mPref.edit().putString(PREF_KEY_ENTITY_ID, entityId).apply();
     }
 
-
+    public DeviceData getDeviceData() {
+        return mDeviceData;
+    }
 
 }

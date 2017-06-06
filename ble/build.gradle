@@ -32,5 +32,8 @@ dependencies {
     compile 'no.nordicsemi.android:log:2.1.1'
     compile 'no.nordicsemi.android.support.v18:scanner:1.0.0'
 
+    // logger
+    compile "com.jakewharton.timber:timber:$rootProject.timberVersion"
+
     testCompile 'junit:junit:4.12'
 }

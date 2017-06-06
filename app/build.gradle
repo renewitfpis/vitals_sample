@@ -87,7 +87,9 @@ dependencies {
     compile "com.github.bumptech.glide:glide:$rootProject.glideVersion"
     compile "joda-time:joda-time:2.9.9"
     compile "com.prolificinteractive:material-calendarview:1.4.3"
-    compile "com.github.dwfox:DWRulerView:1.1.0"
+    compile 'com.scottyab:secure-preferences-lib:0.1.4'
+    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
 
     testCompile 'junit:junit:4.12'
+    compile project(path: ':ble')
 }

@@ -14,6 +14,7 @@ import android.view.View;
 
 import sg.lifecare.utils.CommonUtils;
 import sg.lifecare.vitals2.R;
+import timber.log.Timber;
 
 public class TimelineView extends View {
 

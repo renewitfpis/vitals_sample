@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="none">
         <item
-            android:id="@+id/nav_devices"
+            android:id="@+id/nav_item_devices"
             android:title="@string/nav_devices"/>
         <item
             android:id="@+id/nav_item_logout"

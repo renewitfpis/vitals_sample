@@ -12,12 +12,15 @@
         <item name="android:textColorPrimary">@color/white</item>
         <!-- change menu icon -->
         <item name="colorControlNormal">@color/white</item>
+        <item name="actionMenuTextColor">@color/white</item>
     </style>
 
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <!-- change menu icon -->
+        <item name="colorControlNormal">@color/white</item>
     </style>
 
     <style name="AppTheme.NoActionBar.FullScreen">
@@ -102,5 +105,9 @@
         <item name="android:maxLength">@integer/notes_length</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:inputType">text</item>
+    </style>
+
+    <style name="AppDialog" parent="Theme.AppCompat.Light.Dialog">
+
     </style>
 </resources>

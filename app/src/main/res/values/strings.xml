@@ -15,6 +15,10 @@
     <string name="rule_armed">Armed</string>
     <string name="rule_disarmed">Disarmed</string>
 
+    <!-- Devices -->
+    <string name="device_uc_352">UC-352BLE</string>
+    <string name="device_ua_651">UA-651BLE</string>
+
     <!-- DateUtil -->
     <string name="date_a_few_seconds_ago">a few seconds ago</string>
     <plurals name="date_minute_ago">
@@ -28,6 +32,7 @@
     <string name="unit_mmol_l">mmol/L</string>
     <string name="unit_kg">KG</string>
     <string name="unit_mmhg">mmHg</string>
+    <string name="unit_bpm">bpm</string>
     <string name="unit_per_min">/min.</string>
     <string name="unit_percent">%</string>
 
@@ -57,6 +62,11 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_done">Done</string>
     <string name="action_save">Save</string>
+    <string name="action_add">Add</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_connect">Connect</string>
+    <string name="action_stop">Stop</string>
 
     <!-- Hints -->
     <string name="hint_email">Email Address</string>
@@ -82,5 +92,22 @@
 
     <!-- BloodGlucose activity -->
     <string name="bloodglucose_name_unit_label">Blood Glucose (mmol/L)</string>
+
+    <!-- BloodPressure activity -->
+    <string name="bloodpressure_systolic_name_unit_label">Systolic (mmHg)</string>
+    <string name="bloodpressure_diastolic_name_unit_label">Diastolic (mmHg)</string>
+    <string name="bloodpressure_pulse_rate_name_unit_label">Pulse rate (bpm)</string>
+
+    <!-- BodyWeight activity -->
+    <string name="bodyweight_name_unit_label">Body Weight (KG)</string>
+
+    <!-- Device activity -->
+    <string name="device_title">Devices</string>
+    <string name="device_alert_remove_title">Remove device</string>
+    <string name="device_alert_remove_msg">%1$s will be removed.</string>
+    <string name="device_title_add_device">Add device</string>
+    <string name="device_msg_scanning">Scanning for device</string>
+    <string name="device_msg_paring">Pairing for device</string>
+    <string name="device_msg_no_device">No devices found</string>
 
 </resources>

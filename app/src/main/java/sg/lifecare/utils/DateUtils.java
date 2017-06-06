@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,6 +25,8 @@ public class DateUtils {
 
     private static final DateFormat DAY_DATE_FORMAT = new SimpleDateFormat("EEE, d MMM", Locale.getDefault());
     private static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
+    public static final DateTimeFormatter FULL_DATETIME_FORMAT = DateTimeFormat.forPattern("EEE, MMM dd, yyyy, HH:mm");
 
     public static String getIsoTimestamp(Calendar timestamp) {
         try {

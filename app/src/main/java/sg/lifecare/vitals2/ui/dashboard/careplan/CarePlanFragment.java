@@ -1,7 +1,5 @@
 package sg.lifecare.vitals2.ui.dashboard.careplan;
 
-
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -26,6 +24,9 @@ public class CarePlanFragment extends BaseFragment
 
     public interface CarePlanTaskListener {
         void showBloodGlucoseManualFragment();
+        void showBodyWeightDeviceFragment();
+        void showBloodPressureDeviceFragment();
+        void showBloodPressureManualFragment();
     }
 
     private CarePlanTaskListener mCallback;
@@ -122,9 +123,11 @@ public class CarePlanFragment extends BaseFragment
             //mPresenter.postBloodGlucoseTask(task);
             mCallback.showBloodGlucoseManualFragment();
         } else if (task.isBloodPressure()) {
-            //mPresenter.postBloodPressureTask(task);
+            //mCallback.showBloodPressureManualFragment();
+            mCallback.showBloodPressureDeviceFragment();
         } else if (task.isBodyWeight()) {
             //mPresenter.postBodyWeightTask(task);
+            mCallback.showBodyWeightDeviceFragment();
         } else if (task.isSpo2()) {
             //mPresenter.postSpO2Task(task);
         }

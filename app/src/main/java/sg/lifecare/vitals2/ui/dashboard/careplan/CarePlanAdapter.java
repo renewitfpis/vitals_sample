@@ -22,6 +22,7 @@ import sg.lifecare.data.remote.model.response.extradata.BodyWeightExtraData;
 import sg.lifecare.data.remote.model.response.extradata.ExtraData;
 import sg.lifecare.data.remote.model.response.extradata.SpO2ExtraData;
 import sg.lifecare.utils.DateUtils;
+import sg.lifecare.views.TimelineView;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.R2;
 import timber.log.Timber;
@@ -95,6 +96,7 @@ class CarePlanAdapter extends RecyclerView.Adapter<CarePlanAdapter.BaseHolder>{
         AssignedTaskResponse.Data task = mTasks.get(position);
 
         holder.bindView(task);
+        holder.mTimelineView.initLine(TimelineView.getTimeLineViewType(position, getItemCount()));
 
         if (task.getEvent() != null) {
             Timber.d("extra_data %s", task.getEvent().getExtraData());
@@ -368,6 +370,9 @@ class CarePlanAdapter extends RecyclerView.Adapter<CarePlanAdapter.BaseHolder>{
 
         @BindView(R2.id.time_text)
         TextView timeText;
+
+        @BindView(R2.id.timeline_view)
+        TimelineView mTimelineView;
 
         BaseHolder(View itemView, int type) {
             super(itemView);

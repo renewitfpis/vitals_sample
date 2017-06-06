@@ -26,7 +26,11 @@ import sg.lifecare.vitals2.R2;
 import sg.lifecare.vitals2.ui.base.BaseActivity;
 import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseActivity;
 import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseManualFragment;
+import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureActivity;
+import sg.lifecare.vitals2.ui.bodyweight.BodyWeightActivity;
+import sg.lifecare.vitals2.ui.bodyweight.BodyWeightDeviceFragment;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanFragment;
+import sg.lifecare.vitals2.ui.device.DeviceActivity;
 import sg.lifecare.vitals2.ui.login.LoginActivity;
 import timber.log.Timber;
 
@@ -114,16 +118,22 @@ public class DashboardActivity extends BaseActivity
         mUserNameText = (TextView) headerLayout.findViewById(R.id.user_name_text);
 
         mNavigationView.setNavigationItemSelectedListener(item -> {
-                    mDrawerLayout.closeDrawer(GravityCompat.START);
+
 
                     switch (item.getItemId()) {
 
+                        case R.id.nav_item_devices:
+                            startDeviceActivity();
+                            break;
+
                         case R.id.nav_item_logout:
                             mPresenter.logout();
-                            return true;
+                            break;
                     }
 
-                    return false;
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
+
+                    return true;
                 }
         );
     }
@@ -155,6 +165,30 @@ public class DashboardActivity extends BaseActivity
         startLoginActivity();
     }
 
+
+
+    @Override
+    public void showBloodGlucoseManualFragment() {
+        Timber.d("showBloodGlucoseManualFragment");
+        startActivity(BloodGlucoseActivity.getStartIntent(this, BloodGlucoseActivity.TYPE_MANUAL));
+    }
+
+    @Override
+    public void showBodyWeightDeviceFragment() {
+        Timber.d("showBodyWeightDeviceFragment");
+        startActivity(BodyWeightActivity.getStartIntent(this));
+    }
+
+    @Override
+    public void showBloodPressureDeviceFragment() {
+        startActivity(BloodPressureActivity.getStartIntent(this, BloodPressureActivity.TYPE_DEVICE));
+    }
+
+    @Override
+    public void showBloodPressureManualFragment() {
+        startActivity(BloodPressureActivity.getStartIntent(this, BloodPressureActivity.TYPE_MANUAL));
+    }
+
     private void showCarePlanFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -162,9 +196,8 @@ public class DashboardActivity extends BaseActivity
                 .commit();
     }
 
-    @Override
-    public void showBloodGlucoseManualFragment() {
-        Timber.d("showBloodGlucoseManualFragment");
-        startActivity(BloodGlucoseActivity.getStartIntent(this));
+    private void startDeviceActivity() {
+        Intent intent = DeviceActivity.getStartIntent(this);
+        startActivity(intent);
     }
 }
