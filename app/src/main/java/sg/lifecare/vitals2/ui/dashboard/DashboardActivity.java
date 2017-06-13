@@ -23,6 +23,7 @@ import sg.lifecare.data.remote.model.response.EntityDetailResponse;
 import sg.lifecare.data.remote.model.response.LogoutResponse;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.R2;
+import sg.lifecare.vitals2.ui.BarcodeBottomSheetFragment;
 import sg.lifecare.vitals2.ui.base.BaseActivity;
 import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseActivity;
 import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseManualFragment;
@@ -126,6 +127,10 @@ public class DashboardActivity extends BaseActivity
                             startDeviceActivity();
                             break;
 
+                        case R.id.nav_barcode:
+                            showBarcodeFragment();
+                            break;
+
                         case R.id.nav_item_logout:
                             mPresenter.logout();
                             break;
@@ -199,5 +204,11 @@ public class DashboardActivity extends BaseActivity
     private void startDeviceActivity() {
         Intent intent = DeviceActivity.getStartIntent(this);
         startActivity(intent);
+    }
+
+    private void showBarcodeFragment() {
+        BarcodeBottomSheetFragment fragment =
+                BarcodeBottomSheetFragment.newInstance();
+        fragment.show(getSupportFragmentManager(), BarcodeBottomSheetFragment.TAG);
     }
 }

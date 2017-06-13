@@ -4,6 +4,11 @@
         <item
             android:id="@+id/nav_item_devices"
             android:title="@string/nav_devices"/>
+
+        <item
+            android:id="@+id/nav_barcode"
+            android:title="Barcode" />
+
         <item
             android:id="@+id/nav_item_logout"
             android:title="@string/nav_logout" />
