@@ -4,9 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.google.gson.JsonDeserializer;
 
 import android.content.Context;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.util.Date;
+
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -19,6 +26,8 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import sg.lifecare.data.local.database.BloodGlucose;
+import sg.lifecare.data.local.database.BodyWeight;
 import sg.lifecare.data.remote.model.data.AcknowledgeData;
 import sg.lifecare.data.remote.model.data.BloodGlucoseEventData;
 import sg.lifecare.data.remote.model.data.BloodPressureEventData;
@@ -33,6 +42,9 @@ import sg.lifecare.data.remote.model.response.AlertRuleResponse;
 import sg.lifecare.data.remote.model.response.AssignedTaskForDeviceResponse;
 import sg.lifecare.data.remote.model.response.AssignedTaskResponse;
 import sg.lifecare.data.remote.model.response.AssistsedEntityResponse;
+import sg.lifecare.data.remote.model.response.BloodGlucoseResponse;
+import sg.lifecare.data.remote.model.response.BloodPressureResponse;
+import sg.lifecare.data.remote.model.response.BodyWeightResponse;
 import sg.lifecare.data.remote.model.response.CommissionDeviceResponse;
 import sg.lifecare.data.remote.model.response.ConnectedDeviceResponse;
 import sg.lifecare.data.remote.model.response.EntityDetailResponse;
@@ -43,6 +55,7 @@ import sg.lifecare.data.remote.model.response.LogoutResponse;
 import sg.lifecare.data.remote.model.response.RegisterAccountResponse;
 import sg.lifecare.data.remote.model.response.RelatedAlertMessageResponse;
 import sg.lifecare.data.remote.model.response.ResetPasswordResponse;
+import sg.lifecare.data.remote.model.response.Response;
 import sg.lifecare.data.remote.model.response.ServiceResponse;
 import sg.lifecare.data.remote.model.response.UpdateProfileResponse;
 import sg.lifecare.utils.CookieUtils;
@@ -128,6 +141,24 @@ public interface LifecareService {
     @POST("/mlifecare/rule/acknowledgeRule")
     Observable<AcknowledgeResponse> postAcknowledge(@Body AcknowledgeData post);
 
+    @GET("/mlifecare/event/getBloodPressureReading")
+    Flowable<BloodPressureResponse> getBloodPressures(
+            @Query("EntityId") String entityId,
+            @Query("StartDay") String startDate,
+            @Query("EndDay") String endDay);
+
+    @GET("/mlifecare/event/getGlucoseReading")
+    Flowable<BloodGlucoseResponse> getBloodGlucoses(
+            @Query("EntityId") String entityId,
+            @Query("StartDay") String startDate,
+            @Query("EndDay") String endDay);
+
+    @GET("/mlifecare/event/getWeighingScaleReading")
+    Flowable<BodyWeightResponse> getBodyWeights(
+            @Query("EntityId") String entityId,
+            @Query("StartDay") String startDate,
+            @Query("EndDay") String endDay);
+
     @POST("/mlifecare/event/addEvent")
     Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BloodGlucoseEventData post);
 
@@ -161,6 +192,15 @@ public interface LifecareService {
 
             Gson gson = new GsonBuilder()
                     .serializeNulls()
+                    .registerTypeAdapter(Date.class,
+                            (JsonDeserializer<Date>) (jsonElement, type, jsonDeserializationContext) -> {
+                                if (jsonElement == null) {
+                                    return null;
+                                }
+
+                                DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+                                return formatter.parseDateTime(jsonElement.getAsString()).toDate();
+                            })
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                     .create();
 

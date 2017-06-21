@@ -57,6 +57,9 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".ui.dashboard.DashboardActivity" />
 
+        <service android:name=".services.SyncService"
+            android:exported="false" />
+
         <activity android:name=".TestActivity">
 
         </activity>

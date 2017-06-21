@@ -23,6 +23,7 @@ import sg.lifecare.data.remote.model.response.EntityDetailResponse;
 import sg.lifecare.data.remote.model.response.LogoutResponse;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.R2;
+import sg.lifecare.vitals2.services.SyncService;
 import sg.lifecare.vitals2.ui.BarcodeBottomSheetFragment;
 import sg.lifecare.vitals2.ui.base.BaseActivity;
 import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseActivity;
@@ -163,6 +164,8 @@ public class DashboardActivity extends BaseActivity
         }
 
         showCarePlanFragment();
+
+        startService(new Intent(this, SyncService.class));
     }
 
     @Override

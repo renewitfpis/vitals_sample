@@ -7,10 +7,13 @@ import java.net.SocketTimeoutException;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
 import sg.lifecare.data.DataManager;
+import sg.lifecare.data.remote.model.response.EntityDetailResponse;
 import sg.lifecare.vitals2.ui.base.BasePresenter;
 import timber.log.Timber;
 
@@ -49,6 +52,7 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
                     if (response.isError()) {
                         getMvpView().startLoginActivity();
                     } else {
+                        testAddUser(response.getData().get(0));
                         getDataManager().setUserEntity(response.getData().get(0));
                         getMvpView().onUserEntityDetailResult(getDataManager().getUserEntity());
                     }
@@ -93,6 +97,17 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
 
                     // still logout
                     getMvpView().onLogoutResult(null);
+                }));
+    }
+
+
+    private void testAddUser(EntityDetailResponse.Data user) {
+        getCompositeDisposable().add(getDataManager().addNewUser(user)
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(@NonNull Boolean aBoolean) throws Exception {
+
+                    }
                 }));
     }
 

@@ -3,6 +3,12 @@ package sg.lifecare.data.remote;
 
 import android.support.annotation.NonNull;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.util.Calendar;
+
 public class LifecareUtils {
 
     public static final String EVENT_ID_BLOOD_PRESSURE = "20013";
@@ -19,6 +25,12 @@ public class LifecareUtils {
     public static final String TASK_NOTICE = "N";
     public static final String TASK_QUESTION = "T";
     public static final String TASK_DEVICE = "D";
+
+    private static final DateTimeFormatter sDayFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+
+    public static String convertToDayFormat(DateTime day) {
+        return sDayFormatter.print(day);
+    }
 
 
     public static boolean isBodyWeightEventId(@NonNull String id) {
