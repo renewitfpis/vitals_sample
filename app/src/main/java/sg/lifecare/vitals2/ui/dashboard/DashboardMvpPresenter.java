@@ -9,5 +9,7 @@ public interface DashboardMvpPresenter<V extends DashboardMvpView> extends MvpPr
 
     void getUserEntity();
 
+    void getMembersEntity();
+
     void logout();
 }

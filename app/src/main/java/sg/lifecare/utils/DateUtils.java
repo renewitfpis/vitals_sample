@@ -29,9 +29,13 @@ public class DateUtils {
     public static final DateTimeFormatter FULL_DATETIME_FORMAT = DateTimeFormat.forPattern("EEE, MMM dd, yyyy, HH:mm");
 
     public static String getIsoTimestamp(Calendar timestamp) {
+        return getIsoTimestamp(timestamp.getTime());
+    }
+
+    public static String getIsoTimestamp(Date timestamp) {
         try {
             ISO8601_TIMESTAMP_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
-            return ISO8601_TIMESTAMP_FORMAT.format(timestamp.getTime());
+            return ISO8601_TIMESTAMP_FORMAT.format(timestamp);
         } catch (Exception e) {
             Timber.e(e, e.getMessage());
         }

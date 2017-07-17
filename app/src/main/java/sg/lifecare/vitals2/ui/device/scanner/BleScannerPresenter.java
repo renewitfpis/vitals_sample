@@ -58,6 +58,7 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
 
     @Override
     public void scanForANDUA651() {
+        Timber.d("scanForANDUA651");
         final List<ScanFilter> filters = new ArrayList<>();
         filters.add(new ScanFilter.Builder().setServiceUuid(
                 ParcelUuid.fromString(ANDUA651Manager.BLOOD_PRESSURE_SERVICE.toString())).build());
@@ -78,7 +79,7 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
 
     @Override
     public void startScan(List<ScanFilter> filters) {
-        stopScan();
+        /*stopScan();
 
         try {
             mScanner.startScan(filters, mScanSettings, mScanCallback);
@@ -89,10 +90,29 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
             getMvpView().showScanLoading();
         } catch (IllegalStateException ex) {
             Timber.e(ex, ex.getMessage());
+        }*/
+        startScan(filters, SCAN_DURATION);
+    }
+
+    @Override
+    public void startScan(List<ScanFilter> filters, long timeoutSec) {
+        stopScan();
+
+        try {
+            mScanner.startScan(filters, mScanSettings, mScanCallback);
+            mIsScanning = true;
+
+            if (timeoutSec > 0) {
+                addScanTimeout(timeoutSec);
+            }
+
+            getMvpView().showScanLoading();
+        } catch (IllegalStateException ex) {
+            Timber.e(ex, ex.getMessage());
         }
     }
 
-    private void addScanTimeout() {
+    private void addScanTimeout(long timeoutSec) {
 
         removeScanTimeout();
 
@@ -117,7 +137,7 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
             }
         };
 
-        Flowable.timer(SCAN_DURATION, TimeUnit.SECONDS)
+        Flowable.timer(timeoutSec, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mScanTimeoutSubscriber);

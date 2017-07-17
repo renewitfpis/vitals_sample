@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import sg.lifecare.ble.parser.BloodPressureMeasurement;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.ui.base.BaseActivity;
 
@@ -12,6 +13,9 @@ public class BloodPressureActivity extends BaseActivity {
 
     public static final int TYPE_MANUAL = 1;
     public static final int TYPE_DEVICE = 2;
+
+    public static final String PARAM_DATA = "data";
+    public static final String PARAM_DEVICE_ID = "device_id";
 
     private static final String PARAM_TYPE = "type";
 
@@ -22,6 +26,10 @@ public class BloodPressureActivity extends BaseActivity {
         intent.putExtra(PARAM_TYPE, type);
         return intent;
 
+    }
+
+    public static BloodPressureMeasurement getData(Intent intent) {
+        return (BloodPressureMeasurement) intent.getSerializableExtra(PARAM_DATA);
     }
 
     @Override

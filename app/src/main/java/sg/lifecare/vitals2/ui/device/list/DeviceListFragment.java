@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -17,8 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import javax.inject.Inject;
 
@@ -36,7 +35,7 @@ public class DeviceListFragment extends BaseFragment implements DeviceListMvpVie
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int REQUEST_ADD_DEVICE = 100;
 
-    private RxPermissions mPermissions;
+    private static final int PERMISSION_REQ_LOCATION = 1;
 
     @Inject
     DeviceListMvpPresenter<DeviceListMvpView> mPresenter;
@@ -55,11 +54,6 @@ public class DeviceListFragment extends BaseFragment implements DeviceListMvpVie
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-
-        mPermissions = new RxPermissions(getActivity());
-        mPermissions.setLogging(true);
-
-
     }
 
     @Override
@@ -122,6 +116,7 @@ public class DeviceListFragment extends BaseFragment implements DeviceListMvpVie
     }
 
     private void showDeviceAddFragment() {
+        // check permissions
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             if (BleUtils.isBluetoothEnabled(getContext())) {
@@ -135,19 +130,9 @@ public class DeviceListFragment extends BaseFragment implements DeviceListMvpVie
                 startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
             }
         } else {
-            // check permissions
-            mPermissions.requestEach(Manifest.permission.ACCESS_COARSE_LOCATION)
-                    .subscribe(permission -> {
-                        if (permission.granted) {
-                            Timber.d("permission.granted: %s", permission.name);
 
-                        } else if (permission.shouldShowRequestPermissionRationale) {
-                            Timber.d("permission.shouldShowRequestPermissionRationale: %s",
-                                    permission.name);
-                        } else {
-                            Timber.d("permission.denied: %s", permission.name);
-                        }
-                    });
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQ_LOCATION);
         }
     }
 

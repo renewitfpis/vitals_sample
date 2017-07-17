@@ -14,14 +14,22 @@ import javax.inject.Singleton;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import sg.lifecare.data.local.PreferencesHelper;
 import sg.lifecare.data.local.database.AppDatabase;
 import sg.lifecare.data.local.database.BloodGlucose;
 import sg.lifecare.data.local.database.BloodPressure;
+import sg.lifecare.data.local.database.Patient;
 import sg.lifecare.data.remote.LifecareUtils;
 import sg.lifecare.data.remote.model.data.BloodGlucoseEventData;
 import sg.lifecare.data.remote.model.data.BloodPressureEventData;
 import sg.lifecare.data.remote.model.data.BodyWeightEventData;
+import sg.lifecare.data.remote.model.data.EventData;
 import sg.lifecare.data.remote.model.data.SpO2EventData;
 import sg.lifecare.data.remote.model.response.AssignedTaskForDeviceResponse;
 import sg.lifecare.data.remote.model.response.AssignedTaskResponse;
@@ -140,11 +148,11 @@ public class DataManager {
         return mLifecareService.resetPassword(email);
     }
 
-    public Observable<EntityDetailResponse> getEntity(final String id) {
+    public Observable<EntityDetailResponse> getEntityObservable(final String id) {
         return mLifecareService.getEntityDetail(id);
     }
 
-    public Observable<AssistsedEntityResponse> getMembersEntity(String entityId) {
+    public Observable<AssistsedEntityResponse> getMembersEntityObservable(String entityId) {
         return mLifecareService.getAsisteds(entityId);
     }
 
@@ -210,23 +218,7 @@ public class DataManager {
     /**************************************************************************
      * Database
      *************************************************************************/
-    public Flowable<Boolean> addNewUser(EntityDetailResponse.Data user) {
-        return mAppDatabase.addNewUser(user);
-    }
-
-    public void addBloodPressures(String userId, List<BloodPressureResponse.Data> bps) {
-        mAppDatabase.addBloodPressures(userId, bps);
-    }
-
-    public void addBloodGlucoses(String userId, List<BloodGlucoseResponse.Data> bgs) {
-        mAppDatabase.addBloodGlucoses(userId, bgs);
-    }
-
-    public void addBodyWeights(String userId, List<BodyWeightResponse.Data> bws) {
-        mAppDatabase.addBodyWeights(userId, bws);
-    }
-
-    public Flowable<Long> addBloodPressuresFlowable(String userId, List<BloodPressureResponse.Data> bps) {
-        return mAppDatabase.addBloodPressuresFlowable(userId, bps);
+    public Realm getRealm() {
+        return mAppDatabase.getRealm();
     }
 }

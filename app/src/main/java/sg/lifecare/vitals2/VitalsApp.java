@@ -1,7 +1,7 @@
 package sg.lifecare.vitals2;
 
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.facebook.stetho.Stetho;
 
@@ -13,7 +13,7 @@ import sg.lifecare.vitals2.di.component.DaggerApplicationComponent;
 import sg.lifecare.vitals2.di.module.ApplicationModule;
 import timber.log.Timber;
 
-public class VitalsApp extends Application {
+public class VitalsApp extends MultiDexApplication {
 
     @Inject
     DataManager mDataManager;

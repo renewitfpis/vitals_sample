@@ -26,6 +26,15 @@ import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseManualPresenter;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanMvpPresenter;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanMvpView;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanPresenter;
+import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainMvpPresenter;
+import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainMvpView;
+import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainPresenter;
+import sg.lifecare.vitals2.ui.dashboard.nurse.NurseScanMvpPresenter;
+import sg.lifecare.vitals2.ui.dashboard.nurse.NurseScanMvpView;
+import sg.lifecare.vitals2.ui.dashboard.nurse.NurseScanPresenter;
+import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainMvpPresenter;
+import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainMvpView;
+import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainPresenter;
 import sg.lifecare.vitals2.ui.device.list.DeviceListMvpPresenter;
 import sg.lifecare.vitals2.ui.device.list.DeviceListMvpView;
 import sg.lifecare.vitals2.ui.device.list.DeviceListPresenter;
@@ -127,6 +136,27 @@ public class ActivityModule {
     @PerActivity
     BleScannerMvpPresenter<BleScannerMvpView> provideBleDeviceAddPresenter(
             BleScannerPresenter<BleScannerMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    NurseScanMvpPresenter<NurseScanMvpView> provideNurseScanPresenter(
+            NurseScanPresenter<NurseScanMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    NurseMainMvpPresenter<NurseMainMvpView> provideNurseMainPresenter(
+            NurseMainPresenter<NurseMainMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    PatientMainMvpPresenter<PatientMainMvpView> providePatientMainPresenter(
+            PatientMainPresenter<PatientMainMvpView> presenter) {
         return presenter;
     }
 

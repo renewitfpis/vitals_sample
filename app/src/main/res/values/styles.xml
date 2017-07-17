@@ -87,6 +87,11 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="AppButton.Yellow" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:background">@color/blood_pressure</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="AppButton.Dialog">
         <item name="android:background">@color/white</item>
         <item name="android:textColor">@color/black</item>

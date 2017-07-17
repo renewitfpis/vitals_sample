@@ -10,6 +10,10 @@
             android:title="Barcode" />
 
         <item
+            android:id="@+id/nav_panic"
+            android:title="Panic" />
+
+        <item
             android:id="@+id/nav_item_logout"
             android:title="@string/nav_logout" />
 

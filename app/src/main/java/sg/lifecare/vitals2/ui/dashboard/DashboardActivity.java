@@ -32,12 +32,17 @@ import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureActivity;
 import sg.lifecare.vitals2.ui.bodyweight.BodyWeightActivity;
 import sg.lifecare.vitals2.ui.bodyweight.BodyWeightDeviceFragment;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanFragment;
+import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainFragment;
+import sg.lifecare.vitals2.ui.dashboard.nurse.NurseScanFragment;
+import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainFragment;
 import sg.lifecare.vitals2.ui.device.DeviceActivity;
 import sg.lifecare.vitals2.ui.login.LoginActivity;
+import sg.lifecare.vitals2.ui.panic.PanicFragment;
 import timber.log.Timber;
 
-public class DashboardActivity extends BaseActivity
-        implements DashboardMvpView, CarePlanFragment.CarePlanTaskListener {
+public class DashboardActivity extends BaseActivity implements
+        DashboardMvpView, CarePlanFragment.CarePlanTaskListener, NurseScanFragment.NurseScanListener,
+        NurseMainFragment.NurseMainListener {
 
     @Inject
     DashboardMvpPresenter<DashboardMvpView> mPresenter;
@@ -132,6 +137,10 @@ public class DashboardActivity extends BaseActivity
                             showBarcodeFragment();
                             break;
 
+                        case R.id.nav_panic:
+                            showPanicFragment();
+                            break;
+
                         case R.id.nav_item_logout:
                             mPresenter.logout();
                             break;
@@ -142,6 +151,16 @@ public class DashboardActivity extends BaseActivity
                     return true;
                 }
         );
+    }
+
+    @Override
+    public void onBackPressed() {
+        Timber.d("onBackPressed: count=%d", getSupportFragmentManager().getBackStackEntryCount());
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            finish();
+        }
     }
 
     @Override
@@ -163,9 +182,11 @@ public class DashboardActivity extends BaseActivity
                     .into(mUserProfileImage);
         }
 
-        showCarePlanFragment();
+        //showCarePlanFragment();
 
         startService(new Intent(this, SyncService.class));
+
+        showNurseScanFragment();
     }
 
     @Override
@@ -213,5 +234,41 @@ public class DashboardActivity extends BaseActivity
         BarcodeBottomSheetFragment fragment =
                 BarcodeBottomSheetFragment.newInstance();
         fragment.show(getSupportFragmentManager(), BarcodeBottomSheetFragment.TAG);
+    }
+
+    private void showPanicFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_content, PanicFragment.newInstance(), PanicFragment.class.getSimpleName())
+                .addToBackStack(PanicFragment.class.getSimpleName())
+                .commit();
+
+    }
+
+    private void showNurseScanFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_content, NurseScanFragment.newInstance(), NurseScanFragment.class.getSimpleName())
+                .addToBackStack(NurseScanFragment.class.getSimpleName())
+                .commit();
+    }
+
+    @Override
+    public void showNurseMainFragment(String nurseId) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_content, NurseMainFragment.newInstance(nurseId), NurseMainFragment.class.getSimpleName())
+                .addToBackStack(NurseMainFragment.class.getSimpleName())
+                .commit();
+    }
+
+    @Override
+    public void showPatientMainFragment(String nurseId, String patientId) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_content, PatientMainFragment.newInstance(nurseId, patientId),
+                        PatientMainFragment.class.getSimpleName())
+                .addToBackStack(PatientMainFragment.class.getSimpleName())
+                .commit();
     }
 }

@@ -26,8 +26,6 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
-import sg.lifecare.data.local.database.BloodGlucose;
-import sg.lifecare.data.local.database.BodyWeight;
 import sg.lifecare.data.remote.model.data.AcknowledgeData;
 import sg.lifecare.data.remote.model.data.BloodGlucoseEventData;
 import sg.lifecare.data.remote.model.data.BloodPressureEventData;

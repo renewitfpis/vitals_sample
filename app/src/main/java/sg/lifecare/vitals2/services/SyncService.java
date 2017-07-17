@@ -17,15 +17,17 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
 import sg.lifecare.data.DataManager;
 import sg.lifecare.data.local.database.BloodGlucose;
+import sg.lifecare.data.local.database.BloodPressure;
 import sg.lifecare.data.remote.model.response.BloodGlucoseResponse;
 import sg.lifecare.data.remote.model.response.BloodPressureResponse;
 import sg.lifecare.data.remote.model.response.BodyWeightResponse;
@@ -56,20 +58,67 @@ public class SyncService extends Service {
 
         DateTime start = new DateTime().withDayOfMonth(1);
         DateTime end = new DateTime();
+
+        if (mDataManager.getUserEntity() == null) {
+            stopSelf();
+            return;
+        }
+
         String userId = mDataManager.getUserEntity().getId();
 
-        Flowable<Object> flow = Flowable.zip(mDataManager.getBloodPressures(userId, start, end), mDataManager.getBloodPressures(userId, start, end), (key, val) -> key);
+        Flowable<Boolean> bpFlowable = mDataManager.getBloodPressures(userId, start, end)
+                .map(bloodPressureResponse -> {
+                    Realm realm = mDataManager.getRealm();
+                    BloodPressure.addBloodPressures(realm, bloodPressureResponse.getData());
+                    realm.close();
+                    return true;
+                })
+                .onErrorReturn(throwable -> {
+                    Timber.e(throwable.getMessage(), throwable);
+                    return false;
+                });
+
+        Flowable<Boolean> bgFlowable =  mDataManager.getBloodGlucoses(userId, start, end)
+                .map(new Function<BloodGlucoseResponse, Boolean>() {
+                    @Override
+                    public Boolean apply(@NonNull BloodGlucoseResponse bloodGlucoseResponse)
+                            throws Exception {
+                        Realm realm = mDataManager.getRealm();
+                        BloodGlucose.addBloodGlucoses(realm, bloodGlucoseResponse.getData());
+                        realm.close();
+                        return true;
+                    }
+                })
+                .onErrorReturn(throwable -> {
+                    Timber.e(throwable.getMessage(), throwable);
+                    return false;
+                });
 
         mCompositeDisposable.add(Flowable.interval(0, 1, TimeUnit.MINUTES)
                 .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .flatMap(new Function<Long, Publisher<Boolean>>() {
+                .map(new Function<Long, Boolean>() {
+
                     @Override
-                    public Publisher<Boolean> apply(@NonNull Long aLong) throws Exception {
+                    public Boolean apply(@NonNull Long aLong) throws Exception {
                         return isNetworkOn();
                     }
                 })
                 .flatMap(new Function<Boolean, Publisher<Boolean>>() {
+                    @Override
+                    public Publisher<Boolean> apply(@NonNull Boolean isNetworkOn) throws Exception {
+                        if (isNetworkOn) {
+                            return Flowable.zip(bpFlowable, bgFlowable,
+                                    (bp, bg) -> true);
+                        } else {
+                            return Flowable.just(false);
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(done -> {
+                    Timber.d("done " + done);
+                }));
+                /*.flatMap(new Function<Boolean, Publisher<Boolean>>() {
 
                     @Override
                     public Publisher<Boolean> apply(@NonNull Boolean aBoolean) throws Exception {
@@ -84,7 +133,7 @@ public class SyncService extends Service {
                                     return true;
                                 });
                     }
-                })
+                })*/
                 /*.flatMap(new Function<Boolean, Publisher<BloodPressureResponse>>() {
                     @Override
                     public Publisher<BloodPressureResponse> apply(
@@ -128,10 +177,7 @@ public class SyncService extends Service {
                         return mDataManager.getBodyWeight(userId, start, end);
                     }
                 })*/
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(done -> {
-                    Timber.d("done " + done);
-                }));
+
     }
 
     @Override
@@ -143,11 +189,11 @@ public class SyncService extends Service {
         }
     }
 
-    private Flowable<Boolean> isNetworkOn() {
+    private boolean isNetworkOn() {
         ConnectivityManager manager = (ConnectivityManager) getApplicationContext().getSystemService(
                 Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-        return Flowable.just(networkInfo != null && networkInfo.isConnected());
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     @Override

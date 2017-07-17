@@ -67,6 +67,9 @@
     <string name="action_refresh">Refresh</string>
     <string name="action_connect">Connect</string>
     <string name="action_stop">Stop</string>
+    <string name="action_scan_nurse_id">Scan Nurse ID</string>
+    <string name="action_scan_patient_id">Scan Patient ID</string>
+    <string name="action_measure">Measure</string>
 
     <!-- Hints -->
     <string name="hint_email">Email Address</string>
@@ -109,5 +112,8 @@
     <string name="device_msg_scanning">Scanning for device</string>
     <string name="device_msg_paring">Pairing for device</string>
     <string name="device_msg_no_device">No devices found</string>
+
+    <!-- Fullerton -->
+    <string name="fullerton_blood_pressure">Blood Pressure</string>
 
 </resources>

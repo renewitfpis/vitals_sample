@@ -78,8 +78,10 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                 .subscribe(aBoolean -> mLoginButton.setEnabled(aBoolean));
 
         if (BuildConfig.DEBUG) {
-            mEmailEdit.setText("vitalsvip1@lifecare.sg");
-            mPasswordEdit.setText("vitals1234");
+            //mEmailEdit.setText("vitalsvip1@lifecare.sg");
+            //mPasswordEdit.setText("vitals1234");
+            mEmailEdit.setText("clinic1@fullertonhealth.com");
+            mPasswordEdit.setText("test1234");
         }
     }
 

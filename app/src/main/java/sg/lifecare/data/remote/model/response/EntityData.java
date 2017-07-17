@@ -12,6 +12,7 @@ public class EntityData {
     private String last_name;
     private String location_name;
     private String authentication_string_lower;
+    private int authorization_level;
     private double latitude;
     private double longitude;
     private List<Response.Phone> phones;
@@ -91,5 +92,13 @@ public class EntityData {
         }
 
         return "";
+    }
+
+    public int getAuthorizationLevel() {
+        return authorization_level;
+    }
+
+    public boolean isNormalUser() {
+        return 300 == authorization_level;
     }
 }
