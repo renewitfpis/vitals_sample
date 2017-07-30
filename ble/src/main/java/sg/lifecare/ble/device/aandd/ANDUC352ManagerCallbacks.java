@@ -1,9 +1,9 @@
 package sg.lifecare.ble.device.aandd;
 
 
-import sg.lifecare.ble.parser.WeightMeasurement;
+import sg.lifecare.ble.parser.BodyWeightMeasurement;
 
 public interface ANDUC352ManagerCallbacks extends ANDManagerCallbacks {
 
-    void onWeightMeasurementRead(WeightMeasurement weightMeasurement);
+    void onWeightMeasurementRead(BodyWeightMeasurement weightMeasurement);
 }

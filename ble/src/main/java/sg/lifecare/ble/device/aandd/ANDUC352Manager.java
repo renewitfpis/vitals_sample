@@ -8,7 +8,7 @@ import android.content.Context;
 
 import java.util.UUID;
 
-import sg.lifecare.ble.parser.WeightMeasurement;
+import sg.lifecare.ble.parser.BodyWeightMeasurement;
 import timber.log.Timber;
 
 public class ANDUC352Manager extends ANDManager<ANDUC352ManagerCallbacks> {
@@ -35,12 +35,12 @@ public class ANDUC352Manager extends ANDManager<ANDUC352ManagerCallbacks> {
     public void characteristicIndicated(BluetoothGatt gatt,
             BluetoothGattCharacteristic characteristic) {
 
-        WeightMeasurement weightMeasurement = WeightMeasurement.parse(characteristic);
+        BodyWeightMeasurement bw = BodyWeightMeasurement.parse(characteristic);
 
-        if (weightMeasurement != null) {
-            Timber.d("onCharacteristicIndicated: %s", weightMeasurement.toString());
+        if (bw != null) {
+            Timber.d("onCharacteristicIndicated: %s", bw.toString());
 
-            mCallbacks.onWeightMeasurementRead(weightMeasurement);
+            mCallbacks.onWeightMeasurementRead(bw);
         }
     }
 }

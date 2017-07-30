@@ -91,6 +91,14 @@ public class BloodPressureMeasurement implements Serializable {
         return bloodPressureMeasurement;
     }
 
+    public static BloodPressureMeasurement get(float systolic, float diastolic, float pulseRate, Date timestamp) {
+        BloodPressureMeasurement measurement = new BloodPressureMeasurement(UNIT_SI, systolic, diastolic, 0);
+        measurement.setPulseRate(pulseRate);
+        measurement.setTimestamp(timestamp);
+
+        return measurement;
+    }
+
     private final int mUnit;
     private final float mSystolic;
     private final float mDiastolic;
