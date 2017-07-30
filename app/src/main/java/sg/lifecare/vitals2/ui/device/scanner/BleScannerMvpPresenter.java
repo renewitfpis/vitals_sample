@@ -19,5 +19,7 @@ public interface BleScannerMvpPresenter<V extends MvpView> extends MvpPresenter<
 
     void startScan(List<ScanFilter> filters, long timeoutSec);
 
+    void startScan(long timeoutSec);
+
     void stopScan();
 }

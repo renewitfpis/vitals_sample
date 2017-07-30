@@ -11,10 +11,6 @@ public class BloodPressureEventData extends EventData {
     private transient int mSystolic;
     private transient int mDiastolic;
     private transient int mPulse;
-    private transient String mNurseId;
-    private transient String mPatientId;
-    private transient Date mReadTime;
-    private transient String mRemarks;
 
     public BloodPressureEventData() {
         super(LifecareUtils.EVENT_ID_BLOOD_PRESSURE, "BloodPressure Update Data");
@@ -32,22 +28,6 @@ public class BloodPressureEventData extends EventData {
         return mPulse;
     }
 
-    public String getNurseId() {
-        return mNurseId;
-    }
-
-    public String getPatientId() {
-        return mPatientId;
-    }
-
-    public Date getReadTime() {
-        return mReadTime;
-    }
-
-    public String getRemarks() {
-        return mRemarks;
-    }
-
     public void setDistolic(int diastolic) {
         mDiastolic = diastolic;
         updateExtraData();
@@ -58,30 +38,12 @@ public class BloodPressureEventData extends EventData {
         updateExtraData();
     }
 
-    public void setRemarks(String remarks) {
-        mRemarks = remarks;
-        updateExtraData();
-    }
-
     public void setSystolic(int systolic) {
         mSystolic = systolic;
         updateExtraData();
     }
 
-    public void setReadTime(Date time) {
-        mReadTime = time;
-        updateExtraData();
-    }
 
-    public void setNurseId(String id) {
-        mNurseId = id;
-        updateExtraData();
-    }
-
-    public void setPatientId(String id) {
-        mPatientId = id;
-        updateExtraData();
-    }
 
     @Override
     protected void updateExtraData() {

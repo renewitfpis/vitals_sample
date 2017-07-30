@@ -10,4 +10,6 @@
     <color name="rule_away">@color/amber_500</color>
 
     <color name="blood_pressure">#FFD23A</color>
+    <color name="body_weight">#90C850</color>
+    <color name="body_temperature">#407AE2</color>
 </resources>

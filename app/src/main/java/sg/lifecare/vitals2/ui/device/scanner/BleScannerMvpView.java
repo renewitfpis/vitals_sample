@@ -12,6 +12,8 @@ public interface BleScannerMvpView extends MvpView {
 
     void hideScanLoading();
 
+    void bleScanResult(int callbackType, ScanResult result);
+
     void bleBatchScanResults(final List<ScanResult> results);
 
     void onNoDeviceFound();

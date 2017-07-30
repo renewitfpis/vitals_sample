@@ -29,6 +29,7 @@ import retrofit2.http.Query;
 import sg.lifecare.data.remote.model.data.AcknowledgeData;
 import sg.lifecare.data.remote.model.data.BloodGlucoseEventData;
 import sg.lifecare.data.remote.model.data.BloodPressureEventData;
+import sg.lifecare.data.remote.model.data.BodyTemperatureEventData;
 import sg.lifecare.data.remote.model.data.BodyWeightEventData;
 import sg.lifecare.data.remote.model.data.CaregiverData;
 import sg.lifecare.data.remote.model.data.CommissionData;
@@ -168,6 +169,9 @@ public interface LifecareService {
 
     @POST("/mlifecare/event/addEvent")
     Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body SpO2EventData post);
+
+    @POST("/mlifecare/event/addEvent")
+    Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BodyTemperatureEventData post);
 
     /**
      * Factory class that sets up new Lifecare Service

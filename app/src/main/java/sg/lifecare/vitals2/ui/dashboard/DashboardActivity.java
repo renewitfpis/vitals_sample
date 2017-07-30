@@ -35,9 +35,14 @@ import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanFragment;
 import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainFragment;
 import sg.lifecare.vitals2.ui.dashboard.nurse.NurseScanFragment;
 import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainFragment;
+import sg.lifecare.vitals2.ui.dashboard.vital.VitalFragment;
 import sg.lifecare.vitals2.ui.device.DeviceActivity;
+import sg.lifecare.vitals2.ui.jumper.JumperOximeterFragment;
+import sg.lifecare.vitals2.ui.jumper.JumperThermometerFragment;
 import sg.lifecare.vitals2.ui.login.LoginActivity;
 import sg.lifecare.vitals2.ui.panic.PanicFragment;
+import sg.lifecare.vitals2.ui.qn.QNFragment;
+import sg.lifecare.vitals2.ui.urion.UrionFragment;
 import timber.log.Timber;
 
 public class DashboardActivity extends BaseActivity implements
@@ -128,7 +133,7 @@ public class DashboardActivity extends BaseActivity implements
 
 
                     switch (item.getItemId()) {
-
+/*
                         case R.id.nav_item_devices:
                             startDeviceActivity();
                             break;
@@ -141,6 +146,22 @@ public class DashboardActivity extends BaseActivity implements
                             showPanicFragment();
                             break;
 
+                        case R.id.nav_qn:
+                            showQNFragment();
+                            break;
+
+                        case R.id.nav_urion:
+                            showUrionFragment();
+                            break;
+
+                        case R.id.nav_jumper_thermometer:
+                            showJumperThermometerFragment();
+                            break;
+
+                        case R.id.nav_jumper_oximeter:
+                            showJumperOximeterFragment();
+                            break;
+*/
                         case R.id.nav_item_logout:
                             mPresenter.logout();
                             break;
@@ -182,11 +203,13 @@ public class DashboardActivity extends BaseActivity implements
                     .into(mUserProfileImage);
         }
 
+        showVitalFragment();
+
         //showCarePlanFragment();
 
-        startService(new Intent(this, SyncService.class));
+        //startService(new Intent(this, SyncService.class));
 
-        showNurseScanFragment();
+        //showNurseScanFragment();
     }
 
     @Override
@@ -205,7 +228,7 @@ public class DashboardActivity extends BaseActivity implements
     @Override
     public void showBodyWeightDeviceFragment() {
         Timber.d("showBodyWeightDeviceFragment");
-        startActivity(BodyWeightActivity.getStartIntent(this));
+        startActivity(BodyWeightActivity.getStartIntent(this, BodyWeightActivity.TYPE_MANUAL));
     }
 
     @Override
@@ -245,6 +268,42 @@ public class DashboardActivity extends BaseActivity implements
 
     }
 
+    private void showQNFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_content, QNFragment.newInstance(), QNFragment.class.getSimpleName())
+                .addToBackStack(QNFragment.class.getSimpleName())
+                .commit();
+
+    }
+
+    public void showUrionFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_content, UrionFragment.newInstance(), UrionFragment.class.getSimpleName())
+                .addToBackStack(UrionFragment.class.getSimpleName())
+                .commit();
+
+    }
+
+    private void showJumperThermometerFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_content, JumperThermometerFragment.newInstance(), JumperThermometerFragment.class.getSimpleName())
+                .addToBackStack(JumperThermometerFragment.class.getSimpleName())
+                .commit();
+
+    }
+
+    private void showJumperOximeterFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_content, JumperOximeterFragment.newInstance(), JumperOximeterFragment.class.getSimpleName())
+                .addToBackStack(JumperOximeterFragment.class.getSimpleName())
+                .commit();
+
+    }
+
     private void showNurseScanFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -269,6 +328,13 @@ public class DashboardActivity extends BaseActivity implements
                 .add(R.id.fragment_content, PatientMainFragment.newInstance(nurseId, patientId),
                         PatientMainFragment.class.getSimpleName())
                 .addToBackStack(PatientMainFragment.class.getSimpleName())
+                .commit();
+    }
+
+    private void showVitalFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_content, VitalFragment.newInstance(), VitalFragment.class.getSimpleName())
                 .commit();
     }
 }

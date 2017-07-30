@@ -13,11 +13,16 @@ import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanFragment;
 import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainFragment;
 import sg.lifecare.vitals2.ui.dashboard.nurse.NurseScanFragment;
 import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainFragment;
+import sg.lifecare.vitals2.ui.dashboard.vital.VitalFragment;
 import sg.lifecare.vitals2.ui.device.ble.BleDeviceAddFragment;
 import sg.lifecare.vitals2.ui.device.list.DeviceListFragment;
+import sg.lifecare.vitals2.ui.jumper.JumperOximeterFragment;
+import sg.lifecare.vitals2.ui.jumper.JumperThermometerFragment;
 import sg.lifecare.vitals2.ui.login.ForgotPasswordFragment;
 import sg.lifecare.vitals2.ui.login.LoginActivity;
 import sg.lifecare.vitals2.ui.panic.PanicFragment;
+import sg.lifecare.vitals2.ui.qn.QNFragment;
+import sg.lifecare.vitals2.ui.urion.UrionFragment;
 
 @PerActivity
 @Component(dependencies = ApplicationComponent.class, modules = ActivityModule.class)
@@ -46,5 +51,14 @@ public interface ActivityComponent {
     void inject(PatientMainFragment patientMainFragment);
 
     void inject(PanicFragment panicFragment);
+
+    void inject(QNFragment qnFragment);
+
+    void inject(UrionFragment urionFragment);
+
+    void inject(JumperThermometerFragment jumperFragment);
+    void inject(JumperOximeterFragment jumperFragment);
+
+    void inject(VitalFragment vitalFragment);
 
 }

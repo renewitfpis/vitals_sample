@@ -77,7 +77,7 @@ public class PatientMainPresenter<V extends PatientMainMvpView> extends BaseReal
 
     @Override
     public BloodPressure getLatestBloodPressure(String patientId) {
-        return BloodPressure.getLatestBloodPressureByPatientId(mRealm, patientId);
+        return BloodPressure.getLatestByPatientId(mRealm, patientId);
     }
 
 }

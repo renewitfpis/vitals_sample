@@ -35,6 +35,7 @@
     <string name="unit_bpm">bpm</string>
     <string name="unit_per_min">/min.</string>
     <string name="unit_percent">%</string>
+    <string name="unit_celcius">\u2103</string>
 
     <!-- Commission devices -->
     <!-- Trackers -->
@@ -104,6 +105,14 @@
     <!-- BodyWeight activity -->
     <string name="bodyweight_name_unit_label">Body Weight (KG)</string>
 
+    <!-- BodyTemperature activity -->
+    <string name="bodytemperature_name_unit_label">Body Temperature (\u2103;)</string>
+
+    <!-- SPO2 activity -->
+    <string name="spo2_spo2_name_unit_label">SPo2 (%)</string>
+    <string name="spo2_pulse_rate_name_unit_label">Pulse rate (bpm)</string>
+    <string name="spo2_pi_name_unit_label">PI (%)</string>
+
     <!-- Device activity -->
     <string name="device_title">Devices</string>
     <string name="device_alert_remove_title">Remove device</string>
@@ -112,8 +121,27 @@
     <string name="device_msg_scanning">Scanning for device</string>
     <string name="device_msg_paring">Pairing for device</string>
     <string name="device_msg_no_device">No devices found</string>
+    <string name="device_msg_start_connect">Start connecting to device</string>
 
-    <!-- Fullerton -->
-    <string name="fullerton_blood_pressure">Blood Pressure</string>
+    <!-- misc -->
+    <string name="blood_pressure">Blood Pressure</string>
+    <string name="body_weight">Body Weight</string>
+    <string name="body_temperature">Body Temperature</string>
 
+
+    <!-- QN -->
+    <string name="qn_connecting_to">Connecting to %1$s</string>
+    <string name="qn_connected_to">Connected to %1$s</string>
+    <string name="qn_bmi">BMI</string>
+    <string name="qn_body_fat">Body Fat</string>
+    <string name="qn_water">Body Water</string>
+    <string name="qn_bmr">BMR</string>
+    <string name="qn_subcutaneous_fat">Subcutaneous Fat</string>
+    <string name="qn_visceral_fat">Visceral Fat</string>
+    <string name="qn_bone_mass">Bone Mass</string>
+    <string name="qn_skeletal_muscle">Skeletal Muscle</string>
+    <string name="qn_protein">Protein</string>
+
+    <!-- Urion -->
+    <string name="urion_connected_to">Connected to %1$s</string>
 </resources>

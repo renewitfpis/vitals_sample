@@ -35,6 +35,18 @@ import sg.lifecare.vitals2.ui.dashboard.nurse.NurseScanPresenter;
 import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainMvpPresenter;
 import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainMvpView;
 import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainPresenter;
+import sg.lifecare.vitals2.ui.dashboard.vital.VitalMvpPresenter;
+import sg.lifecare.vitals2.ui.dashboard.vital.VitalMvpView;
+import sg.lifecare.vitals2.ui.dashboard.vital.VitalPresenter;
+import sg.lifecare.vitals2.ui.device.ble.jumper.JumperOximeterMvpPresenter;
+import sg.lifecare.vitals2.ui.device.ble.jumper.JumperOximeterMvpView;
+import sg.lifecare.vitals2.ui.device.ble.jumper.JumperOximeterPresenter;
+import sg.lifecare.vitals2.ui.device.ble.jumper.JumperThermometerMvpPresenter;
+import sg.lifecare.vitals2.ui.device.ble.jumper.JumperThermometerMvpView;
+import sg.lifecare.vitals2.ui.device.ble.jumper.JumperThermometerPresenter;
+import sg.lifecare.vitals2.ui.device.ble.urion.UrionMvpPresenter;
+import sg.lifecare.vitals2.ui.device.ble.urion.UrionMvpView;
+import sg.lifecare.vitals2.ui.device.ble.urion.UrionPresenter;
 import sg.lifecare.vitals2.ui.device.list.DeviceListMvpPresenter;
 import sg.lifecare.vitals2.ui.device.list.DeviceListMvpView;
 import sg.lifecare.vitals2.ui.device.list.DeviceListPresenter;
@@ -49,6 +61,9 @@ import sg.lifecare.vitals2.ui.login.ForgotPasswordPresenter;
 import sg.lifecare.vitals2.ui.login.LoginMvpPresenter;
 import sg.lifecare.vitals2.ui.login.LoginMvpView;
 import sg.lifecare.vitals2.ui.login.LoginPresenter;
+import sg.lifecare.vitals2.ui.qn.QNMvpPresenter;
+import sg.lifecare.vitals2.ui.qn.QNMvpView;
+import sg.lifecare.vitals2.ui.qn.QNPresenter;
 
 @Module
 public class ActivityModule {
@@ -160,4 +175,36 @@ public class ActivityModule {
         return presenter;
     }
 
+
+    @Provides
+    @PerActivity
+    QNMvpPresenter<QNMvpView> proviceQNPresenter(QNPresenter<QNMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    UrionMvpPresenter<UrionMvpView> provideUrionPresenter(UrionPresenter<UrionMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    JumperThermometerMvpPresenter<JumperThermometerMvpView> provideJumperThermometerPresenter(
+            JumperThermometerPresenter<JumperThermometerMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    JumperOximeterMvpPresenter<JumperOximeterMvpView> provideJumperOximeterPresenter(
+            JumperOximeterPresenter<JumperOximeterMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    VitalMvpPresenter<VitalMvpView> provideVitalPresenter(VitalPresenter<VitalMvpView> presenter) {
+        return presenter;
+    }
 }

@@ -1,5 +1,6 @@
 package sg.lifecare.vitals2.ui.device.scanner;
 
+import android.os.Looper;
 import android.os.ParcelUuid;
 
 import java.util.ArrayList;
@@ -27,15 +28,15 @@ import timber.log.Timber;
 public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresenter<V>
         implements BleScannerMvpPresenter<V> {
 
-    private static final int SCAN_DURATION = 30; // in seconds
+    private static final int SCAN_DURATION = 60; // in seconds
 
     private static ScanSettings mScanSettings = new ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
-            .setReportDelay(1000)
-            .setUseHardwareBatchingIfSupported(true)
+            //.setReportDelay(1000)
+            //.setUseHardwareBatchingIfSupported(false)
+            .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
             .build();
 
-    private BluetoothLeScannerCompat mScanner;
     private boolean mIsScanning = false;
 
     private DisposableSubscriber<Long> mScanTimeoutSubscriber;
@@ -44,8 +45,6 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
     public BleScannerPresenter(DataManager dataManager,
             CompositeDisposable compositeDisposable) {
         super(dataManager, compositeDisposable);
-
-        mScanner = BluetoothLeScannerCompat.getScanner();
     }
 
     @Override
@@ -68,7 +67,9 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
     @Override
     public void stopScan() {
         if (mIsScanning) {
-            mScanner.stopScan(mScanCallback);
+            Timber.d("stopScan");
+            final BluetoothLeScannerCompat scanner = BluetoothLeScannerCompat.getScanner();
+            scanner.stopScan(mScanCallback);
             mIsScanning = false;
         }
 
@@ -98,8 +99,16 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
     public void startScan(List<ScanFilter> filters, long timeoutSec) {
         stopScan();
 
+        Timber.d("startScan");
+
         try {
-            mScanner.startScan(filters, mScanSettings, mScanCallback);
+            final BluetoothLeScannerCompat scanner = BluetoothLeScannerCompat.getScanner();
+
+            if (filters == null) {
+                scanner.startScan(mScanCallback);
+            } else {
+                scanner.startScan(filters, mScanSettings, mScanCallback);
+            }
             mIsScanning = true;
 
             if (timeoutSec > 0) {
@@ -112,7 +121,13 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
         }
     }
 
+    @Override
+    public void startScan(long timeoutSec) {
+        startScan(null, timeoutSec);
+    }
+
     private void addScanTimeout(long timeoutSec) {
+        Timber.d("addScanTimeout: %d seconds", timeoutSec);
 
         removeScanTimeout();
 
@@ -157,10 +172,15 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
             super.onScanResult(callbackType, result);
 
             Timber.d("onScanResult: callbackType=%d, data=%s", callbackType, result.toString());
+
+            if (getMvpView() != null) {
+                getMvpView().bleScanResult(callbackType, result);
+            }
         }
 
         @Override
         public void onBatchScanResults(final List<ScanResult> results) {
+            Timber.d("onBatchScanResults: size=%d", results.size());
             for (ScanResult result : results) {
                 Timber.d("onBatchScanResults: %s", result.toString());
             }

@@ -301,6 +301,11 @@ public class BloodPressureDeviceFragment extends BaseFragment implements
     }
 
     @Override
+    public void bleScanResult(int callbackType, ScanResult result) {
+
+    }
+
+    @Override
     public void bleBatchScanResults(List<ScanResult> results) {
         if (results.size() > 0) {
             mBleScannerPresenter.stopScan();

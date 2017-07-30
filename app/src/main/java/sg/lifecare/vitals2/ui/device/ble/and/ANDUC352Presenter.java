@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import io.reactivex.disposables.CompositeDisposable;
 import sg.lifecare.ble.device.aandd.ANDUC352Manager;
 import sg.lifecare.ble.device.aandd.ANDUC352ManagerCallbacks;
-import sg.lifecare.ble.parser.WeightMeasurement;
+import sg.lifecare.ble.parser.BodyWeightMeasurement;
 import sg.lifecare.ble.utility.BleUtils;
 import sg.lifecare.data.DataManager;
 import sg.lifecare.data.local.DeviceData;
@@ -31,7 +31,7 @@ public class ANDUC352Presenter<V extends ANDUC352MvpView> extends ANDPresenter<V
     }
 
     @Override
-    public void onWeightMeasurementRead(WeightMeasurement weightMeasurement) {
+    public void onWeightMeasurementRead(BodyWeightMeasurement weightMeasurement) {
         Timber.d("onWeightMeasurementRead");
 
         if (mLastReadTime == 0) {

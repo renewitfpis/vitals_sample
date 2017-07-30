@@ -147,7 +147,8 @@ public class PatientMainFragment extends BaseFragment implements PatientMainMvpV
 
     public void showBloodPressureDeviceFragment() {
         startActivityForResult(
-                BloodPressureActivity.getStartIntent(getContext(), BloodPressureActivity.TYPE_DEVICE),
+                BloodPressureActivity.getStartIntent(getContext(),
+                        BloodPressureActivity.TYPE_DEVICE, BloodPressureActivity.DEVICE_URION),
                 REQ_BP_DATA);
     }
 

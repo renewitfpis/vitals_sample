@@ -86,7 +86,7 @@ public class BloodPressure extends RealmObject {
 
     }
 
-    public static BloodPressure getLatestBloodPressureByPatientId(Realm realm, String patientId) {
+    public static BloodPressure getLatestByPatientId(Realm realm, String patientId) {
         RealmResults<BloodPressure> bloodPressures = realm.where(BloodPressure.class)
                 .equalTo("patientId", patientId)
                 .findAllSorted("takenTime", Sort.DESCENDING);

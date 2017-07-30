@@ -15,6 +15,7 @@ public class LifecareUtils {
     public static final String EVENT_ID_BODY_WEIGHT = "20014";
     public static final String EVENT_ID_BLOOD_GLUCOSE = "20015";
     public static final String EVENT_ID_SPO2 = "20050";
+    public static final String EVENT_ID_BODY_TEMPERATURE = "20051";
 
     public static final String TYPE_BLOOD_GLUCOSE = "GM";
     public static final String TYPE_BLOOD_PRESSURE = "BP";
@@ -47,6 +48,10 @@ public class LifecareUtils {
 
     public static boolean isSpO2EventId(@NonNull String id) {
         return EVENT_ID_SPO2.equals(id);
+    }
+
+    public static boolean isBodyTemperatureEventId(@NonNull String id) {
+        return EVENT_ID_BODY_TEMPERATURE.equals(id);
     }
 
     public static boolean isBloodGlucoseType(@NonNull String type) {

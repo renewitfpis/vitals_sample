@@ -8,15 +8,13 @@ public class BodyWeightEventData extends EventData {
 
     private transient float mWeight;
     private transient String mUnit = "kg";
-    private transient String mRemarks;
 
     public BodyWeightEventData() {
         super(LifecareUtils.EVENT_ID_BODY_WEIGHT, "Weight Update Data");
     }
 
-    public void setRemarks(String remarks) {
-        mRemarks = remarks;
-        updateExtraData();
+    public float getWeight() {
+        return mWeight;
     }
 
     public void setWeight(float weight) {
@@ -33,6 +31,18 @@ public class BodyWeightEventData extends EventData {
 
         if (!TextUtils.isEmpty(mRemarks)) {
             sb.append("&Remarks:").append(mRemarks);
+        }
+
+        if (!TextUtils.isEmpty(mNurseId)) {
+            sb.append("&NurseId:").append(mNurseId);
+        }
+
+        if (!TextUtils.isEmpty(mPatientId)) {
+            sb.append("&PatientId:").append(mPatientId);
+        }
+
+        if (mReadTime != null) {
+            sb.append("&RecordTime:").append(getIsoTimestamp(mReadTime));
         }
 
         setExtraData(sb.toString());

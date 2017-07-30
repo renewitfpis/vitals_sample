@@ -25,11 +25,32 @@ public abstract class EventData {
     private String EventTypeId;
     private String EventTypeName;
 
+    transient String mNurseId;
+    transient String mPatientId;
+    transient Date mReadTime;
+    transient String mRemarks;
+
     private boolean WriteToSocket = false;
 
-    public EventData(String eventTypeId, String eventTypeName) {
+    EventData(String eventTypeId, String eventTypeName) {
         EventTypeId = eventTypeId;
         EventTypeName = eventTypeName;
+    }
+
+    public String getNurseId() {
+        return mNurseId;
+    }
+
+    public String getPatientId() {
+        return mPatientId;
+    }
+
+    public String getRemarks() {
+        return mRemarks;
+    }
+
+    public Date getReadTime() {
+        return mReadTime;
     }
 
     public void setCreateDate(Date createDate) {
@@ -44,7 +65,7 @@ public abstract class EventData {
         EntityId = entityId;
     }
 
-    protected void setExtraData(String extraData) {
+    void setExtraData(String extraData) {
         ExtraData = extraData;
     }
 
@@ -52,7 +73,7 @@ public abstract class EventData {
         TaskAssignedId = taskAssignedId;
     }
 
-    protected String getIsoTimestamp(Date timestamp) {
+    String getIsoTimestamp(Date timestamp) {
         try {
             ISO8601_TIMESTAMP_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
             return ISO8601_TIMESTAMP_FORMAT.format(timestamp);
@@ -60,6 +81,26 @@ public abstract class EventData {
             Timber.e(e, e.getMessage());
         }
         return "";
+    }
+
+    public void setNurseId(String id) {
+        mNurseId = id;
+        updateExtraData();
+    }
+
+    public void setPatientId(String id) {
+        mPatientId = id;
+        updateExtraData();
+    }
+
+    public void setReadTime(Date time) {
+        mReadTime = time;
+        updateExtraData();
+    }
+
+    public void setRemarks(String remarks) {
+        mRemarks = remarks;
+        updateExtraData();
     }
 
     protected abstract void updateExtraData();

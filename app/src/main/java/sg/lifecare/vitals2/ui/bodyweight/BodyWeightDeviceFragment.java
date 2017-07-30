@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import no.nordicsemi.android.support.v18.scanner.ScanFilter;
 import no.nordicsemi.android.support.v18.scanner.ScanResult;
-import sg.lifecare.ble.parser.WeightMeasurement;
+import sg.lifecare.ble.parser.BodyWeightMeasurement;
 import sg.lifecare.data.local.DeviceData;
 import sg.lifecare.utils.DateUtils;
 import sg.lifecare.vitals2.R;
@@ -87,7 +87,7 @@ public class BodyWeightDeviceFragment extends BaseFragment
     TextInputLayout mNotesLayout;
 
     private List<ScanFilter> mScanFilters = new ArrayList<>();
-    private List<WeightMeasurement> mWeights = new ArrayList<>();
+    private List<BodyWeightMeasurement> mWeights = new ArrayList<>();
 
 
     @Override
@@ -177,7 +177,7 @@ public class BodyWeightDeviceFragment extends BaseFragment
         mProgressBar.setVisibility(View.INVISIBLE);
         mProgressText.setVisibility(View.INVISIBLE);
 
-        WeightMeasurement weight = mWeights.get(mWeights.size()-1);
+        BodyWeightMeasurement weight = mWeights.get(mWeights.size()-1);
 
         mValueText.setText(String.format(Locale.getDefault(), "%.1f", weight.getWeight()));
 
@@ -217,7 +217,7 @@ public class BodyWeightDeviceFragment extends BaseFragment
     }
 
     @Override
-    public void onWeightMeasurementRead(WeightMeasurement weight) {
+    public void onWeightMeasurementRead(BodyWeightMeasurement weight) {
         Timber.d("onWeightMeasurementRead");
         mWeights.add(weight);
     }
@@ -241,6 +241,11 @@ public class BodyWeightDeviceFragment extends BaseFragment
 
     @Override
     public void hideScanLoading() {
+
+    }
+
+    @Override
+    public void bleScanResult(int callbackType, ScanResult result) {
 
     }
 

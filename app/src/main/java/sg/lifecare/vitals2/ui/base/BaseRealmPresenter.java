@@ -1,7 +1,5 @@
 package sg.lifecare.vitals2.ui.base;
 
-import java.util.List;
-
 import io.reactivex.disposables.CompositeDisposable;
 import io.realm.Realm;
 import sg.lifecare.data.DataManager;

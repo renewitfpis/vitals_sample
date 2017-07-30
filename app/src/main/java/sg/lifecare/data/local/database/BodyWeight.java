@@ -6,6 +6,9 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
+import io.realm.Sort;
+import sg.lifecare.data.remote.model.data.BodyWeightEventData;
 import sg.lifecare.data.remote.model.response.BodyWeightResponse;
 import timber.log.Timber;
 
@@ -55,6 +58,39 @@ public class BodyWeight extends RealmObject {
 
             realm.commitTransaction();
         }
+    }
+
+    public static void addBodyWeight(Realm realm, BodyWeightEventData data) {
+        realm.beginTransaction();
+
+        BodyWeight bloodPressureDb = realm.createObject(BodyWeight.class);
+        bloodPressureDb.setEntityId("");
+        bloodPressureDb.setWeight(data.getWeight());
+        bloodPressureDb.setIsUploaded(false);
+
+        bloodPressureDb.setTakerId(data.getNurseId());
+        bloodPressureDb.setPatientId(data.getPatientId());
+        bloodPressureDb.setTakenTime(data.getReadTime());
+
+        Patient.addOrUpdatePatient(realm, data.getPatientId(), data.getReadTime());
+
+        realm.commitTransaction();
+    }
+
+    public static BodyWeight getLatestByPatientId(Realm realm, String patientId) {
+        RealmResults<BodyWeight> bodyWeights = realm.where(BodyWeight.class)
+                .equalTo("patientId", patientId)
+                .findAllSorted("takenTime", Sort.DESCENDING);
+
+        if (bodyWeights.size() == 0) {
+            return null;
+        }
+
+        return bodyWeights.get(0);
+    }
+
+    public float getWeight() {
+        return weight;
     }
 
     public void setEntityId(String entityId) {

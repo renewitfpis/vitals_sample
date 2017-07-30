@@ -4,6 +4,9 @@ package sg.lifecare.vitals2;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.stetho.Stetho;
+import com.kitnew.ble.QNApiManager;
+import com.kitnew.ble.QNResultCallback;
+import com.kitnew.ble.utils.QNLog;
 
 import javax.inject.Inject;
 
@@ -33,6 +36,16 @@ public class VitalsApp extends MultiDexApplication {
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this)).build();
         mApplicationComponent.inject(this);
+
+        QNLog.DEBUG = true;
+        QNApiManager.getApi(getApplicationContext()).initSDK("123456789", false,
+                new QNResultCallback() {
+                    @Override
+                    public void onCompete(int errorCode) {
+                        Timber.i("QN init result %d", errorCode);
+                    }
+                });
+
     }
 
     public ApplicationComponent getComponent() {

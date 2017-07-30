@@ -104,6 +104,11 @@ public class PanicFragment extends BaseFragment implements BleScannerMvpView {
     }
 
     @Override
+    public void bleScanResult(int callbackType, ScanResult result) {
+
+    }
+
+    @Override
     public void bleBatchScanResults(List<ScanResult> results) {
         Timber.d("bleBatchScanResults: size=", results.size());
 
