@@ -248,7 +248,8 @@ public class JumperThermometerFragment extends BaseFragment
 
     @Override
     public void bleScanResult(int callbackType, ScanResult result) {
-        if (mDevice == null) {
+        if ((mDevice == null) && (result.getDevice() != null)
+                && "My Thermometer".equalsIgnoreCase(result.getDevice().getName())) {
             mDevice = result.getDevice();
 
             mBleScannerPresenter.stopScan();
@@ -286,7 +287,7 @@ public class JumperThermometerFragment extends BaseFragment
                 mMeasurement = BodyTemperatureMeasurement.get((float) temperature,
                         Calendar.getInstance().getTime());
                 setupSaveView();
-
+                mJumperPresenter.disconnect();
             }
         });
     }

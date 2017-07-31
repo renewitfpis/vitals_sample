@@ -68,7 +68,9 @@ public class UrionPresenter<V extends UrionMvpView> extends BasePresenter<V> imp
 
     @Override
     public void onDeviceConnected(BluetoothDevice device) {
-
+        if (getMvpView() != null) {
+            getMvpView().onDeviceConnected(device);
+        }
     }
 
     @Override
@@ -78,7 +80,9 @@ public class UrionPresenter<V extends UrionMvpView> extends BasePresenter<V> imp
 
     @Override
     public void onDeviceDisconnected(BluetoothDevice device) {
-
+        if ((getMvpView() != null) && (mResultCount == 0) ) {
+            getMvpView().onDeviceErrorDisconnected(device);
+        }
     }
 
     @Override

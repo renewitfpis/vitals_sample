@@ -15,7 +15,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
+        versionName "0.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
@@ -25,6 +25,20 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def appId = variant.applicationId
+                    def versionName = variant.versionName
+                    def versionCode = variant.versionCode
+                    def flavorName = variant.flavorName
+                    def buildType = variant.buildType
+                    def variantName = variant.name
+
+                    def apkName = "Vitals_" + versionName + "_" + buildType.name + ".apk"
+                    output.outputFile = new File(output.outputFile.parentFile, apkName);
+                }
+            }
         }
         debug {
             debuggable true

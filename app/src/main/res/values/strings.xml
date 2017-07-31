@@ -122,6 +122,7 @@
     <string name="device_msg_paring">Pairing for device</string>
     <string name="device_msg_no_device">No devices found</string>
     <string name="device_msg_start_connect">Start connecting to device</string>
+    <string name="device_msg_error_disconnected">Connection error. Retry.</string>
 
     <!-- misc -->
     <string name="blood_pressure">Blood Pressure</string>

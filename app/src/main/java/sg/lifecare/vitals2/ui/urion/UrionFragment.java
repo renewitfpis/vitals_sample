@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -101,7 +102,6 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
     TextInputLayout mNotesLayout;
 
     private BloodPressureMeasurement mMeasurement = null;
-
     private BluetoothDevice mDevice;
 
     public static UrionFragment newInstance() {
@@ -141,7 +141,7 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
 
     @Override
     protected void setupViews(View view) {
-        setupConnectView();
+        setupConnectView(R.string.device_msg_start_connect);
     }
 
     @OnClick(R.id.connect_button)
@@ -159,6 +159,7 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
                 //scanFilters.add(new ScanFilter.Builder().setDeviceName("Bluetooth BP").build());
 
                 mDevice = null;
+                mMeasurement = null;
                 mBleScannerPresenter.startScan(scanFilters, 0);
             } else {
                 final Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -169,7 +170,7 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
 
     @OnClick(R.id.stop_button)
     public void onStopClick() {
-        setupConnectView();
+        setupConnectView(R.string.device_msg_start_connect);
 
         mBleScannerPresenter.stopScan();
         mUrionPresenter.disconnect();
@@ -217,14 +218,14 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
         mProgressText.setText(R.string.device_msg_scanning);
     }
 
-    private void setupConnectView() {
+    private void setupConnectView(@StringRes int res) {
         mSaveButton.setVisibility(View.GONE);
         mConnectButton.setVisibility(View.VISIBLE);
         mStopButton.setVisibility(View.GONE);
 
         mProgressBar.setVisibility(View.INVISIBLE);
         mProgressText.setVisibility(View.VISIBLE);
-        mProgressText.setText(R.string.device_msg_start_connect);
+        mProgressText.setText(res);
 
         setContentVisibility(View.INVISIBLE);
     }
@@ -276,7 +277,8 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
 
     @Override
     public void bleScanResult(int callbackType, ScanResult result) {
-        if (mDevice == null) {
+        if ((mDevice == null) && (result.getDevice() != null) &&
+                "Bluetooth BP".equalsIgnoreCase(result.getDevice().getName())) {
             mDevice = result.getDevice();
 
             mBleScannerPresenter.stopScan();
@@ -313,7 +315,7 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
 
     @Override
     public void onNoDeviceFound() {
-        setupConnectView();
+        setupConnectView(R.string.device_msg_no_device);
     }
 
     @Override
@@ -323,6 +325,18 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
             public void run() {
                 mProgressText.setText(String.format(getContext().getResources().getString(R.string.urion_connected_to),
                         device.getName()));
+            }
+        });
+    }
+
+    @Override
+    public void onDeviceErrorDisconnected(BluetoothDevice device) {
+        Timber.d("onDeviceErrorDisconnected");
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setupConnectView(R.string.device_msg_error_disconnected);
             }
         });
     }

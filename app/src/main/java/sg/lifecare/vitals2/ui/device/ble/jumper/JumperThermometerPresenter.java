@@ -64,7 +64,7 @@ public class JumperThermometerPresenter<V extends JumperThermometerMvpView> exte
 
     @Override
     public void onDeviceConnected(BluetoothDevice device) {
-
+        Timber.d("onDeviceConnected");
     }
 
     @Override
@@ -74,7 +74,7 @@ public class JumperThermometerPresenter<V extends JumperThermometerMvpView> exte
 
     @Override
     public void onDeviceDisconnected(BluetoothDevice device) {
-
+        Timber.d("onDeviceDisconnected");
     }
 
     @Override

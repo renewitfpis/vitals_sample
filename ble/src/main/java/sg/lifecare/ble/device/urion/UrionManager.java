@@ -34,7 +34,7 @@ public class UrionManager extends BleManager<UrionManagerCallbacks> {
         super.connect(device);
 
         if (mBluetoothGatt != null) {
-            //mBluetoothGatt.connect();
+            mBluetoothGatt.connect();
         }
     }
 
