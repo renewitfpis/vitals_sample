@@ -54,7 +54,7 @@ public abstract class JumperManager<V extends BleManagerCallbacks> extends BleMa
             final LinkedList<Request> requests = new LinkedList<>();
 
             requests.add(Request.newEnableNotificationsRequest(mNotifyCharacteristic));
-            requests.add(Request.newWriteRequest(mWriteCharacteristic, BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE));
+            //requests.add(Request.newWriteRequest(mWriteCharacteristic, BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE));
 
             return requests;
         }
