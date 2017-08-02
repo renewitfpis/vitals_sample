@@ -17,6 +17,7 @@ public class JumperThermometerPresenter<V extends JumperThermometerMvpView> exte
         implements JumperThermometerMvpPresenter<V>, JumperThermometerCallbacks {
 
     private JumperManager<JumperThermometerCallbacks> mManager;
+    private boolean mHasResult = false;
 
     @Inject
     public JumperThermometerPresenter(DataManager dataManager,
@@ -32,9 +33,7 @@ public class JumperThermometerPresenter<V extends JumperThermometerMvpView> exte
 
     @Override
     public void uninit() {
-        if (mManager.isConnected()) {
-            mManager.disconnect();
-        }
+        disconnect();
 
         mManager.close();
         mManager = null;
@@ -47,6 +46,7 @@ public class JumperThermometerPresenter<V extends JumperThermometerMvpView> exte
             return;
         }
 
+        mHasResult = false;
         mManager.connect(device);
     }
 
@@ -75,6 +75,15 @@ public class JumperThermometerPresenter<V extends JumperThermometerMvpView> exte
     @Override
     public void onDeviceDisconnected(BluetoothDevice device) {
         Timber.d("onDeviceDisconnected");
+
+        if (getMvpView() != null) {
+
+            if (mHasResult) {
+                getMvpView().onDeviceDisconnected(device);
+            } else {
+                getMvpView().onDeviceErrorDisconnected(device);
+            }
+        }
     }
 
     @Override
@@ -125,6 +134,9 @@ public class JumperThermometerPresenter<V extends JumperThermometerMvpView> exte
 
     @Override
     public void onTemperatureRead(double temperature) {
-        getMvpView().onTemperatureRead(temperature);
+        mHasResult = true;
+        if (getMvpView() != null) {
+            getMvpView().onTemperatureRead(temperature);
+        }
     }
 }

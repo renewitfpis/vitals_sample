@@ -118,11 +118,12 @@
     <string name="device_alert_remove_title">Remove device</string>
     <string name="device_alert_remove_msg">%1$s will be removed.</string>
     <string name="device_title_add_device">Add device</string>
-    <string name="device_msg_scanning">Scanning for device</string>
-    <string name="device_msg_paring">Pairing for device</string>
-    <string name="device_msg_no_device">No devices found</string>
-    <string name="device_msg_start_connect">Start connecting to device</string>
+    <string name="device_msg_scanning">Scanning for device.</string>
+    <string name="device_msg_paring">Pairing for device.</string>
+    <string name="device_msg_no_device">No devices found.</string>
+    <string name="device_msg_start_connect">Start connecting to device.</string>
     <string name="device_msg_error_disconnected">Connection error. Retry.</string>
+    <string name="device_msg_waiting_measure">Waiting to start measuring.</string>
 
     <!-- misc -->
     <string name="blood_pressure">Blood Pressure</string>

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.ParcelUuid;
+import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -132,7 +133,7 @@ public class JumperThermometerFragment extends BaseFragment
 
     @Override
     protected void setupViews(View view) {
-        setupConnectView();
+        setupConnectView(R.string.device_msg_start_connect);
     }
 
 
@@ -160,7 +161,7 @@ public class JumperThermometerFragment extends BaseFragment
 
     @OnClick(R.id.stop_button)
     public void onStopClick() {
-        setupConnectView();
+        setupConnectView(R.string.device_msg_start_connect);
 
         mBleScannerPresenter.stopScan();
         mJumperPresenter.disconnect();
@@ -186,7 +187,9 @@ public class JumperThermometerFragment extends BaseFragment
 
     @OnClick(R.id.cancel_button)
     public void onCancelClick() {
-        getActivity().finish();
+        //getActivity().finish();
+        setupScanView();
+        onConnectClick();
     }
 
     private void setupScanView() {
@@ -200,15 +203,24 @@ public class JumperThermometerFragment extends BaseFragment
         setContentVisibility(View.INVISIBLE);
     }
 
-    private void setupConnectView() {
+    private void setupConnectView(@StringRes int res) {
         mSaveButton.setVisibility(View.GONE);
         mConnectButton.setVisibility(View.VISIBLE);
         mStopButton.setVisibility(View.GONE);
 
         mProgressBar.setVisibility(View.INVISIBLE);
-        mProgressText.setText(R.string.device_msg_start_connect);
+        mProgressText.setVisibility(View.VISIBLE);
+        mProgressText.setText(res);
 
         setContentVisibility(View.INVISIBLE);
+    }
+
+    private void setupTransferView() {
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mProgressText.setVisibility(View.INVISIBLE);
+
+        mLabel.setVisibility(View.VISIBLE);
+        mValueText.setVisibility(View.VISIBLE);
     }
 
     private void setupSaveView() {
@@ -218,7 +230,6 @@ public class JumperThermometerFragment extends BaseFragment
 
         mProgressBar.setVisibility(View.INVISIBLE);
         mProgressText.setVisibility(View.INVISIBLE);
-
 
         DateTime dateTime = new DateTime(mMeasurement.getTimestamp());
         mTimestampText.setText(DateUtils.FULL_DATETIME_FORMAT.print(dateTime));
@@ -275,19 +286,46 @@ public class JumperThermometerFragment extends BaseFragment
 
     @Override
     public void onNoDeviceFound() {
-        setupConnectView();
+        setupConnectView(R.string.device_msg_no_device);
     }
 
+
+    @Override
+    public void onDeviceDisconnected(BluetoothDevice device) {
+        if (mMeasurement != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setupSaveView();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onDeviceErrorDisconnected(BluetoothDevice device) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setupConnectView(R.string.device_msg_error_disconnected);
+            }
+        });
+    }
 
     @Override
     public void onTemperatureRead(double temperature) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (mMeasurement == null) {
+                    setupTransferView();
+                }
+
                 mMeasurement = BodyTemperatureMeasurement.get((float) temperature,
                         Calendar.getInstance().getTime());
-                setupSaveView();
-                mJumperPresenter.disconnect();
+                mValueText.setText(new DecimalFormat("##.#").format(mMeasurement.getTemperature()));
+                //setupSaveView();
+                //mJumperPresenter.disconnect();
             }
         });
     }

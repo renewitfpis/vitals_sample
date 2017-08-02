@@ -91,7 +91,9 @@ public class UrionManager extends BleManager<UrionManagerCallbacks> {
 
             if (data != null) {
                 if ((data.length == 1) && (data[0] == (byte)0xA5)) {
-                    enqueue(Request.newWriteRequest(mWriteCharacteristic, START_CMD));
+                    mWriteCharacteristic.setValue(START_CMD);
+                    writeCharacteristic(mWriteCharacteristic);
+                    //enqueue(Request.newWriteRequest(mWriteCharacteristic, START_CMD));
                 } else if (data.length == 5) {
                     if (data[2] == (byte)0x06) {
                         mCallbacks.onStartMeasure();

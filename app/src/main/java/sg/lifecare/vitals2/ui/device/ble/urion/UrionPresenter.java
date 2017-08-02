@@ -19,6 +19,8 @@ public class UrionPresenter<V extends UrionMvpView> extends BasePresenter<V> imp
 
     private int mResultCount = 0;
 
+    //private DisposableSubscriber<Long> mSubscriber;
+
     @Inject
     public UrionPresenter(DataManager dataManager,
             CompositeDisposable compositeDisposable) {
@@ -131,7 +133,6 @@ public class UrionPresenter<V extends UrionMvpView> extends BasePresenter<V> imp
 
     }
 
-
     @Override
     public void onStartMeasure() {
         getMvpView().onMeasureStart();
@@ -150,4 +151,43 @@ public class UrionPresenter<V extends UrionMvpView> extends BasePresenter<V> imp
 
         mResultCount++;
     }
+
+    /*private void addSubscriber() {
+        Timber.d("addSubscriber");
+
+        removeSubscriber();
+
+        mSubscriber = new DisposableSubscriber<Long>() {
+            @Override
+            public void onNext(Long time) {
+                Timber.d("onNext");
+                mManager.sendStartCommand();
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                Timber.d("onComplete");
+            }
+        };
+
+        Flowable.timer(2, TimeUnit.SECONDS)
+                .delay(2, TimeUnit.SECONDS)
+                .repeat(4)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mSubscriber);
+    }
+
+    private void removeSubscriber() {
+        if ((mSubscriber) != null && !mSubscriber.isDisposed()) {
+            mSubscriber.dispose();
+        }
+
+        mSubscriber = null;
+    }*/
 }

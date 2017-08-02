@@ -104,6 +104,8 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
     private BloodPressureMeasurement mMeasurement = null;
     private BluetoothDevice mDevice;
 
+
+
     public static UrionFragment newInstance() {
         return new UrionFragment();
     }
@@ -281,7 +283,9 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
                 "Bluetooth BP".equalsIgnoreCase(result.getDevice().getName())) {
             mDevice = result.getDevice();
 
-            mBleScannerPresenter.stopScan();
+            Timber.d("bleScanResult: deviceType=%d", mDevice.getType());
+
+             mBleScannerPresenter.stopScan();
             mUrionPresenter.connect(mDevice);
         }
     }
@@ -330,6 +334,7 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
     }
 
     @Override
+
     public void onDeviceErrorDisconnected(BluetoothDevice device) {
         Timber.d("onDeviceErrorDisconnected");
 
