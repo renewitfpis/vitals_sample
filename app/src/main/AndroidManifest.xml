@@ -66,6 +66,9 @@
         <activity android:name=".TestActivity">
 
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="3506c6859471f0de5804355a83414ed0af1f6ec9" />
     </application>
 
 </manifest>

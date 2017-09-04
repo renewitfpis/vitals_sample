@@ -3,11 +3,13 @@ package sg.lifecare.vitals2;
 
 import android.support.multidex.MultiDexApplication;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.kitnew.ble.QNApiManager;
 import com.kitnew.ble.QNResultCallback;
 import com.kitnew.ble.utils.QNLog;
 
+import io.fabric.sdk.android.Fabric;
 import javax.inject.Inject;
 
 import sg.lifecare.data.DataManager;
@@ -26,6 +28,7 @@ public class VitalsApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         Timber.plant(new Timber.DebugTree());
 
