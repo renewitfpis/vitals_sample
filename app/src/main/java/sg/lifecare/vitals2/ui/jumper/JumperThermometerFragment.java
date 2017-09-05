@@ -187,9 +187,9 @@ public class JumperThermometerFragment extends BaseFragment
 
     @OnClick(R.id.cancel_button)
     public void onCancelClick() {
-        //getActivity().finish();
-        setupScanView();
-        onConnectClick();
+        getActivity().finish();
+        //setupScanView();
+        //onConnectClick();
     }
 
     private void setupScanView() {

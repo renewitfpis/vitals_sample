@@ -129,6 +129,7 @@
     <string name="blood_pressure">Blood Pressure</string>
     <string name="body_weight">Body Weight</string>
     <string name="body_temperature">Body Temperature</string>
+    <string name="spo2">SpO2</string>
 
 
     <!-- QN -->

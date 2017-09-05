@@ -29,8 +29,8 @@ android {
         applicationId "sg.lifecare.vitals2"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 3
-        versionName "0.2.3"
+        versionCode 4
+        versionName "0.2.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true

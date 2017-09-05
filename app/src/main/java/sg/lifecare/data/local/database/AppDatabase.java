@@ -24,7 +24,7 @@ public class AppDatabase {
         if (mRealmConfiguration == null) {
             mRealmConfiguration = new RealmConfiguration.Builder()
                     .name("app-db")
-                    .schemaVersion(1)
+                    .schemaVersion(2)
                     .build();
 
         }

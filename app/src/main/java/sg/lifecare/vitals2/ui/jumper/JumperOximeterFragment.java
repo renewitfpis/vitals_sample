@@ -2,9 +2,12 @@ package sg.lifecare.vitals2.ui.jumper;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.ParcelUuid;
+import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -30,6 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import no.nordicsemi.android.support.v18.scanner.ScanFilter;
 import no.nordicsemi.android.support.v18.scanner.ScanResult;
+import sg.lifecare.ble.device.jumper.JumperManager;
 import sg.lifecare.ble.utility.BleUtils;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.ui.base.BaseFragment;
@@ -97,6 +101,8 @@ public class JumperOximeterFragment extends BaseFragment
     @BindView(R.id.notes_layout)
     TextInputLayout mNotesLayout;
 
+    private BluetoothDevice mDevice;
+
     public static JumperOximeterFragment newInstance() {
         return new JumperOximeterFragment();
     }
@@ -134,7 +140,7 @@ public class JumperOximeterFragment extends BaseFragment
 
     @Override
     protected void setupViews(View view) {
-        setupConnectView();
+        setupConnectView(R.string.device_msg_start_connect);
     }
 
     @OnClick(R.id.connect_button)
@@ -146,9 +152,11 @@ public class JumperOximeterFragment extends BaseFragment
                 setupScanView();
 
                 List<ScanFilter> scanFilters = new ArrayList<>();
-                //scanFilters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid(UrionManager.PROPRIETARY_SERVICE)).build());
-                scanFilters.add(new ScanFilter.Builder().setDeviceName("My Oximeter").build());
+                scanFilters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid(
+                        JumperManager.PROPRIETARY_SERVICE)).build());
+                //scanFilters.add(new ScanFilter.Builder().setDeviceName("My Oximeter").build());
 
+                mDevice = null;
                 mBleScannerPresenter.startScan(scanFilters, 0);
             } else {
                 final Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -159,10 +167,15 @@ public class JumperOximeterFragment extends BaseFragment
 
     @OnClick(R.id.stop_button)
     public void onStopClick() {
-        setupConnectView();
+        setupConnectView(R.string.device_msg_start_connect);
 
         mBleScannerPresenter.stopScan();
         mJumperPresenter.disconnect();
+    }
+
+    @OnClick(R.id.cancel_button)
+    public void onCancelClick() {
+        getActivity().finish();
     }
 
 
@@ -175,14 +188,14 @@ public class JumperOximeterFragment extends BaseFragment
         mProgressText.setText(R.string.device_msg_scanning);
     }
 
-    private void setupConnectView() {
+    private void setupConnectView(@StringRes int res) {
         mSaveButton.setVisibility(View.GONE);
         mConnectButton.setVisibility(View.VISIBLE);
         mStopButton.setVisibility(View.GONE);
 
         mProgressBar.setVisibility(View.INVISIBLE);
         mProgressBar.setVisibility(View.VISIBLE);
-        mProgressText.setText(R.string.device_msg_no_device);
+        mProgressText.setText(res);
 
         setContentVisibility(View.INVISIBLE);
     }
@@ -257,15 +270,21 @@ public class JumperOximeterFragment extends BaseFragment
 
     @Override
     public void bleScanResult(int callbackType, ScanResult result) {
+        if ((mDevice == null) && (result.getDevice() != null)
+                && "My Oximeter".equalsIgnoreCase(result.getDevice().getName())) {
+            mDevice = result.getDevice();
 
+            mBleScannerPresenter.stopScan();
+            mJumperPresenter.connect(mDevice);
+        }
     }
 
     @Override
     public void bleBatchScanResults(List<ScanResult> results) {
-        if (results.size() > 0) {
-            mBleScannerPresenter.stopScan();
-            mJumperPresenter.connect(results.get(0).getDevice());
-        }
+        //if (results.size() > 0) {
+        //    mBleScannerPresenter.stopScan();
+        //    mJumperPresenter.connect(results.get(0).getDevice());
+        //}
     }
 
     @Override

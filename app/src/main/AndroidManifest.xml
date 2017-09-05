@@ -54,6 +54,10 @@
         <activity android:name=".ui.bodytemperature.BodyTemperatureActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".ui.spo2.Spo2Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
         
         <activity android:name=".ui.device.DeviceActivity"
             android:screenOrientation="portrait"

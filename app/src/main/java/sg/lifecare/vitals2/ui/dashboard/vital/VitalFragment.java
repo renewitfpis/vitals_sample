@@ -25,8 +25,10 @@ import sg.lifecare.vitals2.ui.bodyweight.BodyWeightActivity;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BloodPressureView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BodyTemperatureView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BodyWeightView;
+import sg.lifecare.vitals2.ui.dashboard.vital.view.Spo2View;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.VitalView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.VitalViewListener;
+import sg.lifecare.vitals2.ui.spo2.Spo2Activity;
 import timber.log.Timber;
 
 public class VitalFragment extends BaseFragment implements VitalMvpView, VitalViewListener {
@@ -34,6 +36,7 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
     private static final int REQ_BP_DATA = 1;
     private static final int REQ_BW_DATA = 2;
     private static final int REQ_BT_DATA = 3;
+    private static final int REQ_SPO2_DATA = 4;
 
     @Inject
     VitalMvpPresenter<VitalMvpView> mPresenter;
@@ -80,6 +83,7 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
         mData.add(new BloodPressureView());
         mData.add(new BodyWeightView());
         mData.add(new BodyTemperatureView());
+        mData.add(new Spo2View());
 
         mAdapter = new VitalAdapter(mData, mPresenter.getDatabase(), mPresenter.getPatientId(), this);
         mGridView.setAdapter(mAdapter);
@@ -134,6 +138,12 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
                             BodyTemperatureActivity.TYPE_DEVICE,
                             BodyTemperatureActivity.DEVICE_JUMPER),
                             REQ_BT_DATA);
+        } else if (vitalView instanceof Spo2View) {
+            startActivityForResult(
+                    Spo2Activity.getStartIntent(getContext(),
+                            Spo2Activity.TYPE_DEVICE,
+                            Spo2Activity.DEVICE_JUMPER),
+                            REQ_SPO2_DATA);
         }
     }
 }

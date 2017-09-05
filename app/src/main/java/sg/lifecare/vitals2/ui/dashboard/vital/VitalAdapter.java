@@ -11,6 +11,7 @@ import io.realm.Realm;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BloodPressureView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BodyTemperatureView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BodyWeightView;
+import sg.lifecare.vitals2.ui.dashboard.vital.view.Spo2View;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.VitalView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.VitalViewListener;
 
@@ -56,6 +57,8 @@ class VitalAdapter extends BaseAdapter {
             } else if (vitalView instanceof BodyWeightView) {
                 itemView = vitalView.getView(parent);
             } else if (vitalView instanceof BodyTemperatureView) {
+                itemView = vitalView.getView(parent);
+            } else if (vitalView instanceof Spo2View) {
                 itemView = vitalView.getView(parent);
             }
         }

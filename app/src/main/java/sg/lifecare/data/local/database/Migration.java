@@ -31,6 +31,20 @@ public class Migration implements RealmMigration {
             bodyTemperatureSchema.addField("uploadedTime", Date.class);
 
             oldVesion++;
+        } else if (oldVesion == 1) {
+            RealmObjectSchema spo2Schema = schema.create("Spo2");
+            spo2Schema.addField("entityId", String.class);
+            spo2Schema.addField("deviceId", String.class);
+            spo2Schema.addField("spo2", Integer.class);
+            spo2Schema.addField("pulse", Integer.class);
+            spo2Schema.addField("takenTime", Date.class);
+            spo2Schema.addField("takerId", String.class);
+            spo2Schema.addField("patientId", String.class);
+            spo2Schema.addField("isUploaded", Boolean.class);
+            spo2Schema.addField("uploadedTime", Date.class);
+
+            oldVesion++;
+
         }
     }
 }
