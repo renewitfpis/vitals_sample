@@ -1,5 +1,7 @@
 package sg.lifecare.data.local;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
@@ -13,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import sg.lifecare.framework.di.ApplicationContext;
@@ -43,23 +46,39 @@ public class PreferencesHelper {
         if (TextUtils.isEmpty(getDeviceId())) {
             setDeviceId(context);
         }
-
-        if (TextUtils.isEmpty(getFcmToken())) {
-            Observable.create(aSubscriber -> {
+        checkGooglePlayServices(context);
+        if (TextUtils.isEmpty(getFcmToken()) && checkGooglePlayServices(context)) {
+            Observable.create((ObservableEmitter<String> aSubscriber) -> {
                 InstanceID instanceID = InstanceID.getInstance(context);
                 try {
-                    String token = instanceID.getToken(GCM_SENDER_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+                    String token = instanceID.getToken(GCM_SENDER_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
                     aSubscriber.onNext(token);
                 } catch (IOException e) {
                     Timber.e(e, e.getMessage());
-                    aSubscriber.onError(e);
+                    //aSubscriber.onError(e);
+                    aSubscriber.onNext("");
                 }
                 aSubscriber.onComplete();
             })
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(token -> putFcmToken((String) token));
+            .subscribe(token -> putFcmToken(token),
+                    throwable -> Timber.e(throwable, throwable.getMessage()));
         }
+
+    }
+
+    private boolean checkGooglePlayServices(Context context) {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(context);
+
+        if (resultCode == ConnectionResult.SUCCESS) {
+            Timber.d("checkGooglePlayServices: true");
+            return true;
+        }
+
+        Timber.d("checkGooglePlayServices: false");
+        return false;
 
     }
 
