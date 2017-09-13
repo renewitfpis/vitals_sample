@@ -285,7 +285,7 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
 
             Timber.d("bleScanResult: deviceType=%d", mDevice.getType());
 
-             mBleScannerPresenter.stopScan();
+            mBleScannerPresenter.stopScan();
             mUrionPresenter.connect(mDevice);
         }
     }
@@ -376,6 +376,7 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
                 //mDiastolicValueText.setText(String.format(Locale.getDefault(), "%d", diastolic));
                 //mPulseValueText.setText(String.format(Locale.getDefault(), "%d", pulse));
                 mMeasurement = BloodPressureMeasurement.get(systolic, diastolic, pulse, Calendar.getInstance().getTime());
+                mUrionPresenter.disconnect();
                 setupSaveView();
             }
         });
