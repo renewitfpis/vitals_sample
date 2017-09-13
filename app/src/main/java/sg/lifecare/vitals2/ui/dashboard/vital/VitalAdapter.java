@@ -14,6 +14,7 @@ import sg.lifecare.vitals2.ui.dashboard.vital.view.BodyWeightView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.Spo2View;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.VitalView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.VitalViewListener;
+import timber.log.Timber;
 
 class VitalAdapter extends BaseAdapter {
 
@@ -46,6 +47,7 @@ class VitalAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Timber.d("getView: %d", position);
         View itemView = convertView;
         VitalView vitalView = mData.get(position);
 
@@ -67,6 +69,9 @@ class VitalAdapter extends BaseAdapter {
         vitalView.setListener(mListener);
 
         return itemView;
+    }
 
+    void updateView(int position) {
+        mData.get(position).setup(mRealm, mId);
     }
 }

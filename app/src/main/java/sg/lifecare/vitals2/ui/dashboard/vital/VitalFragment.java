@@ -43,6 +43,11 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
     private static final int REQ_BT_DATA = 3;
     private static final int REQ_SPO2_DATA = 4;
 
+    private static final int POSITION_BP = 0;
+    private static final int POSITION_BW = 1;
+    private static final int POSITION_BT = 2;
+    private static final int POSITION_SPO2 = 3;
+
     private static final String KEY_MEMBER_POSITION = "member_position";
 
     @Inject
@@ -145,18 +150,19 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
                 BloodPressureMeasurement bp = BloodPressureActivity.getData(data);
 
                 mPresenter.postBloodPressureData(bp, mUser.getId(), getPatientId());
+                mAdapter.updateView(POSITION_BP);
 
             } else if (requestCode == REQ_BW_DATA) {
                 BodyWeightMeasurement bw = BodyWeightActivity.getData(data);
 
                 mPresenter.postBodyWeightData(bw, mUser.getId(), getPatientId());
+                mAdapter.updateView(POSITION_BW);
             } else if (requestCode == REQ_BT_DATA) {
                 BodyTemperatureMeasurement bt = BodyTemperatureActivity.getData(data);
 
                 mPresenter.postBodyTemperatureData(bt, mUser.getId(), getPatientId());
+                mAdapter.updateView(POSITION_BT);
             }
-
-            mAdapter.notifyDataSetChanged();
         }
 
     }
