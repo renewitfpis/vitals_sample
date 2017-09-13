@@ -112,6 +112,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     @OnClick(R.id.login_button)
     void onLoginClick(View v) {
+        hideKeyboard();
         mPresenter.login(mEmailEdit.getText().toString(), mPasswordEdit.getText().toString());
     }
 
