@@ -8,11 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.ToolBar">
-        <item name="android:textColorPrimary">@color/white</item>
+    <style name="AppTheme.ToolBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/blue_grey_900</item>
+        <item name="android:background">@color/white</item>
+        
         <!-- change menu icon -->
-        <item name="colorControlNormal">@color/white</item>
-        <item name="actionMenuTextColor">@color/white</item>
+        <item name="colorControlNormal">@color/blue_grey_900</item>
+        <item name="actionMenuTextColor">@color/blue_grey_900</item>
     </style>
 
 

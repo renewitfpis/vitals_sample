@@ -3,10 +3,13 @@ package sg.lifecare.vitals2.ui.dashboard.vital;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -17,6 +20,8 @@ import butterknife.ButterKnife;
 import sg.lifecare.ble.parser.BloodPressureMeasurement;
 import sg.lifecare.ble.parser.BodyTemperatureMeasurement;
 import sg.lifecare.ble.parser.BodyWeightMeasurement;
+import sg.lifecare.data.remote.model.response.AssistsedEntityResponse;
+import sg.lifecare.data.remote.model.response.EntityDetailResponse;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.ui.base.BaseFragment;
 import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureActivity;
@@ -38,6 +43,8 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
     private static final int REQ_BT_DATA = 3;
     private static final int REQ_SPO2_DATA = 4;
 
+    private static final String KEY_MEMBER_POSITION = "member_position";
+
     @Inject
     VitalMvpPresenter<VitalMvpView> mPresenter;
 
@@ -46,10 +53,22 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
 
     private ArrayList<VitalView> mData;
     private VitalAdapter mAdapter;
-
+    private AssistsedEntityResponse.Data mMember = null;
+    private EntityDetailResponse.Data mUser;
 
     public static VitalFragment newInstance() {
         return new VitalFragment();
+    }
+
+    public static VitalFragment newInstance(int memberPosition) {
+
+        Bundle data = new Bundle();
+        data.putInt(KEY_MEMBER_POSITION, memberPosition);
+
+        VitalFragment fragment = new VitalFragment();
+        fragment.setArguments(data);
+
+        return fragment;
     }
 
     @Override
@@ -63,9 +82,36 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
 
         mPresenter.onAttach(this);
 
+        Bundle data = getArguments();
+        if (data != null) {
+            mMember = mPresenter.getMember(data.getInt(KEY_MEMBER_POSITION));
+        }
+
+        mUser = mPresenter.getUser();
+
+        Timber.d("patientId: %s", getPatientId());
+
         setupViews(view);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Timber.d("onResume");
+
+        if (mMember != null) {
+            //getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            ActionBar actionBar = getBaseActivity().getSupportActionBar();
+            if (actionBar != null) {
+                String name = mMember.getName();
+
+                actionBar.setTitle(name);
+            }
+        }
     }
 
     @Override
@@ -85,7 +131,8 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
         mData.add(new BodyTemperatureView());
         mData.add(new Spo2View());
 
-        mAdapter = new VitalAdapter(mData, mPresenter.getDatabase(), mPresenter.getPatientId(), this);
+        mAdapter = new VitalAdapter(mData, mPresenter.getDatabase(), getPatientId(), this);
+
         mGridView.setAdapter(mAdapter);
     }
 
@@ -97,19 +144,16 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
             if (requestCode == REQ_BP_DATA) {
                 BloodPressureMeasurement bp = BloodPressureActivity.getData(data);
 
-                mPresenter.postBloodPressureData(bp, mPresenter.getPatientId(),
-                        mPresenter.getPatientId());
+                mPresenter.postBloodPressureData(bp, mUser.getId(), getPatientId());
 
             } else if (requestCode == REQ_BW_DATA) {
                 BodyWeightMeasurement bw = BodyWeightActivity.getData(data);
 
-                mPresenter.postBodyWeightData(bw, mPresenter.getPatientId(),
-                        mPresenter.getPatientId());
+                mPresenter.postBodyWeightData(bw, mUser.getId(), getPatientId());
             } else if (requestCode == REQ_BT_DATA) {
                 BodyTemperatureMeasurement bt = BodyTemperatureActivity.getData(data);
 
-                mPresenter.postBodyTemperatureData(bt, mPresenter.getPatientId(),
-                        mPresenter.getPatientId());
+                mPresenter.postBodyTemperatureData(bt, mUser.getId(), getPatientId());
             }
 
             mAdapter.notifyDataSetChanged();
@@ -145,5 +189,9 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
                             Spo2Activity.DEVICE_JUMPER),
                             REQ_SPO2_DATA);
         }
+    }
+
+    private String getPatientId() {
+        return mMember == null ? mUser.getId() : mMember.getId();
     }
 }

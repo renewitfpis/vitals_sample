@@ -1,5 +1,6 @@
 package sg.lifecare.vitals2.ui.dashboard;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,16 +10,23 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import sg.lifecare.data.remote.LifecareUtils;
+import sg.lifecare.data.remote.model.response.AssistsedEntityResponse;
 import sg.lifecare.data.remote.model.response.EntityDetailResponse;
 import sg.lifecare.data.remote.model.response.LogoutResponse;
 import sg.lifecare.vitals2.R;
@@ -32,6 +40,7 @@ import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureActivity;
 import sg.lifecare.vitals2.ui.bodyweight.BodyWeightActivity;
 import sg.lifecare.vitals2.ui.bodyweight.BodyWeightDeviceFragment;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanFragment;
+import sg.lifecare.vitals2.ui.dashboard.member.MemberListFragment;
 import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainFragment;
 import sg.lifecare.vitals2.ui.dashboard.nurse.NurseScanFragment;
 import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainFragment;
@@ -46,8 +55,7 @@ import sg.lifecare.vitals2.ui.urion.UrionFragment;
 import timber.log.Timber;
 
 public class DashboardActivity extends BaseActivity implements
-        DashboardMvpView, CarePlanFragment.CarePlanTaskListener, NurseScanFragment.NurseScanListener,
-        NurseMainFragment.NurseMainListener {
+        DashboardMvpView, MemberListFragment.MemberListFragmentListener {
 
     @Inject
     DashboardMvpPresenter<DashboardMvpView> mPresenter;
@@ -94,15 +102,30 @@ public class DashboardActivity extends BaseActivity implements
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Timber.d("onOptionsItemSelected: %b", mDrawerToggle.onOptionsItemSelected(item));
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        } else {
+            switch (item.getItemId()) {
+                case android.R.id.home:
+                    onBackPressed();
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
     protected void setup() {
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(R.string.dashboard_title);
+        getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().hide();
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
-                mToolbar,
                 R.string.drawer_open,
                 R.string.drawer_close) {
 
@@ -119,9 +142,49 @@ public class DashboardActivity extends BaseActivity implements
 
         };
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
-        mDrawerToggle.syncState();
+
+
         setupNavigationView();
+
+        getSupportFragmentManager().addOnBackStackChangedListener(
+                new android.support.v4.app.FragmentManager.OnBackStackChangedListener() {
+                    @Override
+                    public void onBackStackChanged() {
+                        Timber.d("onBackStackChanged: count %d", getSupportFragmentManager().getBackStackEntryCount());
+                        updateActionBar();
+                    }
+                });
+    }
+
+    private void updateActionBar() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+
+        Timber.d("updateActionBar: count=%d", count);
+
+        // update navigation button
+        if (count == 1) {
+            mDrawerToggle.setDrawerIndicatorEnabled(true);
+            //getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        } else {
+            mDrawerToggle.setDrawerIndicatorEnabled(false);
+            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        mDrawerToggle.syncState();
+
+        // update title
+        if (count > 0) {
+            String tag = getSupportFragmentManager().getBackStackEntryAt(count - 1).getName();
+
+            if (MemberListFragment.class.getSimpleName().equals(tag)) {
+                getSupportActionBar().setTitle(R.string.app_name);
+            }
+
+        }
     }
 
     private void setupNavigationView() {
@@ -130,8 +193,6 @@ public class DashboardActivity extends BaseActivity implements
         mUserNameText = (TextView) headerLayout.findViewById(R.id.user_name_text);
 
         mNavigationView.setNavigationItemSelectedListener(item -> {
-
-
                     switch (item.getItemId()) {
 /*
                         case R.id.nav_item_devices:
@@ -177,6 +238,12 @@ public class DashboardActivity extends BaseActivity implements
     @Override
     public void onBackPressed() {
         Timber.d("onBackPressed: count=%d", getSupportFragmentManager().getBackStackEntryCount());
+
+        if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
+            mDrawerLayout.closeDrawer(Gravity.START);
+            return;
+        }
+
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStack();
         } else {
@@ -192,8 +259,7 @@ public class DashboardActivity extends BaseActivity implements
     }
 
     @Override
-    public void onUserEntityDetailResult(EntityDetailResponse.Data userEntity) {
-        getSupportActionBar().show();
+    public void onUserEntityResult(EntityDetailResponse.Data userEntity) {
 
         mUserNameText.setText(userEntity.getName());
 
@@ -203,7 +269,12 @@ public class DashboardActivity extends BaseActivity implements
                     .into(mUserProfileImage);
         }
 
-        showVitalFragment();
+        if (LifecareUtils.isCaregiver(userEntity.getAuthorizationLevel())) {
+            mPresenter.getMembersEntity();
+        } else {
+            getSupportActionBar().show();
+            showVitalFragment();
+        }
 
         //showCarePlanFragment();
 
@@ -213,33 +284,44 @@ public class DashboardActivity extends BaseActivity implements
     }
 
     @Override
+    public void onMembersEntityResult(List<AssistsedEntityResponse.Data> membersEntity) {
+        getSupportActionBar().show();
+        showMemberListFragment();
+    }
+
+    @Override
     public void onLogoutResult(LogoutResponse response) {
         startLoginActivity();
     }
 
-
-
     @Override
-    public void showBloodGlucoseManualFragment() {
-        Timber.d("showBloodGlucoseManualFragment");
-        startActivity(BloodGlucoseActivity.getStartIntent(this, BloodGlucoseActivity.TYPE_MANUAL));
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu. menu_main, menu);
+        return true;
     }
 
-    @Override
-    public void showBodyWeightDeviceFragment() {
-        Timber.d("showBodyWeightDeviceFragment");
-        startActivity(BodyWeightActivity.getStartIntent(this, BodyWeightActivity.TYPE_MANUAL));
-    }
+    //@Override
+    //public void showBloodGlucoseManualFragment() {
+    //    Timber.d("showBloodGlucoseManualFragment");
+    //    startActivity(BloodGlucoseActivity.getStartIntent(this, BloodGlucoseActivity.TYPE_MANUAL));
+    //}
 
-    @Override
-    public void showBloodPressureDeviceFragment() {
-        startActivity(BloodPressureActivity.getStartIntent(this, BloodPressureActivity.TYPE_DEVICE));
-    }
+    //@Override
+    //public void showBodyWeightDeviceFragment() {
+    //    Timber.d("showBodyWeightDeviceFragment");
+    //    startActivity(BodyWeightActivity.getStartIntent(this, BodyWeightActivity.TYPE_MANUAL));
+    //}
 
-    @Override
-    public void showBloodPressureManualFragment() {
-        startActivity(BloodPressureActivity.getStartIntent(this, BloodPressureActivity.TYPE_MANUAL));
-    }
+    //@Override
+    //public void showBloodPressureDeviceFragment() {
+    //    startActivity(BloodPressureActivity.getStartIntent(this, BloodPressureActivity.TYPE_DEVICE));
+    //}
+
+    //@Override
+    //public void showBloodPressureManualFragment() {
+    //    startActivity(BloodPressureActivity.getStartIntent(this, BloodPressureActivity.TYPE_MANUAL));
+    //}
 
     private void showCarePlanFragment() {
         getSupportFragmentManager()
@@ -312,29 +394,46 @@ public class DashboardActivity extends BaseActivity implements
                 .commit();
     }
 
-    @Override
-    public void showNurseMainFragment(String nurseId) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_content, NurseMainFragment.newInstance(nurseId), NurseMainFragment.class.getSimpleName())
-                .addToBackStack(NurseMainFragment.class.getSimpleName())
-                .commit();
-    }
+    //@Override
+    //public void showNurseMainFragment(String nurseId) {
+    //    getSupportFragmentManager()
+    //            .beginTransaction()
+    //            .add(R.id.fragment_content, NurseMainFragment.newInstance(nurseId), NurseMainFragment.class.getSimpleName())
+    //            .addToBackStack(NurseMainFragment.class.getSimpleName())
+    //            .commit();
+    //}
 
-    @Override
-    public void showPatientMainFragment(String nurseId, String patientId) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_content, PatientMainFragment.newInstance(nurseId, patientId),
-                        PatientMainFragment.class.getSimpleName())
-                .addToBackStack(PatientMainFragment.class.getSimpleName())
-                .commit();
-    }
+    //@Override
+    //public void showPatientMainFragment(String nurseId, String patientId) {
+    //    getSupportFragmentManager()
+    //            .beginTransaction()
+    //            .add(R.id.fragment_content, PatientMainFragment.newInstance(nurseId, patientId),
+    //                    PatientMainFragment.class.getSimpleName())
+    //            .addToBackStack(PatientMainFragment.class.getSimpleName())
+    //            .commit();
+    //}
 
     private void showVitalFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_content, VitalFragment.newInstance(), VitalFragment.class.getSimpleName())
+                .commit();
+    }
+
+    private void showMemberListFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_content, MemberListFragment.newInstance(), MemberListFragment.class.getSimpleName())
+                .addToBackStack(MemberListFragment.class.getSimpleName())
+                .commit();
+    }
+
+    @Override
+    public void showMemberVitalFragment(int position) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_content, VitalFragment.newInstance(position), VitalFragment.class.getSimpleName())
+                .addToBackStack(VitalFragment.class.getSimpleName())
                 .commit();
     }
 }

@@ -27,6 +27,18 @@ public class LifecareUtils {
     public static final String TASK_QUESTION = "T";
     public static final String TASK_DEVICE = "D";
 
+    // user levels
+    public static final int GUEST_LEVEL =  100;
+    public static final int USER_LEVEL = 200;
+    public static final int STUDENT_LEVEL = 300;
+    public static final int CAREGIVER_LEVEL = 400;
+    public static final int TEACHER_LEVEL = 400;
+    public static final int CLINICIAN_LEVEL = 410;
+    public static final int DOCTOR_LEVEL = 412;
+    public static final int ENTERPRISE_ADMIN_LEVEL = 440;
+    public static final int ENTERPRISE_SYSTEM_ADMIN_LEVEL = 450;
+    public static final int SYSTEM_ADMIN_LEVEL = 500;
+
     private static final DateTimeFormatter sDayFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 
     public static String convertToDayFormat(DateTime day) {
@@ -84,5 +96,13 @@ public class LifecareUtils {
 
     public static boolean isDeviceTask(@NonNull String type) {
         return TASK_DEVICE.equals(type);
+    }
+
+    public static boolean isCaregiver(int level) {
+        if (CAREGIVER_LEVEL == level || CLINICIAN_LEVEL == level || DOCTOR_LEVEL == level) {
+            return true;
+        }
+
+        return false;
     }
 }

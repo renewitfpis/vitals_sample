@@ -142,7 +142,7 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
                             } else {
                                 EntityDetailResponse.Data entities = response.getData().get(0);
                                 getDataManager().setUserEntity(entities);
-                                getMvpView().onUserEntityDetailResult(getDataManager().getUserEntity());
+                                getMvpView().onUserEntityResult(getDataManager().getUserEntity());
 
                             }
                         }, throwable -> {
@@ -231,6 +231,7 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
                     } else {
                         List<AssistsedEntityResponse.Data> entities = response.getData();
                         getDataManager().setMembersEntity(entities);
+                        getMvpView().onMembersEntityResult(entities);
                     }
 
                 }, throwable -> {

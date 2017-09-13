@@ -50,6 +50,7 @@
     <string name="error_required_field">Required field</string>
     <string name="error_invalid_email">Invalid email</string>
     <string name="error_check_network_connection">Check your network connection.</string>
+    <string name="error_no_members">No members</string>
 
     <!-- Alerts -->
     <string name="alert_title_error">Error</string>

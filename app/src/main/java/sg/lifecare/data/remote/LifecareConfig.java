@@ -11,4 +11,6 @@ public class LifecareConfig {
 
     public static final String TERMS_AND_CONDITIONS_URL = LifecareService.ENDPOINT + "/terms";
     public static final String PRIVACY_URL = LifecareService.ENDPOINT + "/privacy";
+
+
 }

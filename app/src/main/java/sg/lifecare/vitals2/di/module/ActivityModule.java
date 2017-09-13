@@ -26,6 +26,10 @@ import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseManualPresenter;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanMvpPresenter;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanMvpView;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanPresenter;
+import sg.lifecare.vitals2.ui.dashboard.member.MemberListFragment;
+import sg.lifecare.vitals2.ui.dashboard.member.MemberListMvpPresenter;
+import sg.lifecare.vitals2.ui.dashboard.member.MemberListMvpView;
+import sg.lifecare.vitals2.ui.dashboard.member.MemberListPresenter;
 import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainMvpPresenter;
 import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainMvpView;
 import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainPresenter;
@@ -207,4 +211,12 @@ public class ActivityModule {
     VitalMvpPresenter<VitalMvpView> provideVitalPresenter(VitalPresenter<VitalMvpView> presenter) {
         return presenter;
     }
+
+    @Provides
+    @PerActivity
+    MemberListMvpPresenter<MemberListMvpView> provideMemberListPresenter(
+            MemberListPresenter<MemberListMvpView> presenter) {
+        return presenter;
+    }
+
 }

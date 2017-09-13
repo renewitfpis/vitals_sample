@@ -23,7 +23,7 @@ import sg.lifecare.vitals2.di.component.ActivityComponent;
 import sg.lifecare.vitals2.di.component.DaggerActivityComponent;
 import sg.lifecare.vitals2.di.module.ActivityModule;
 
-public abstract  class BaseActivity extends AppCompatActivity
+public abstract class BaseActivity extends AppCompatActivity
         implements MvpView, BaseFragment.Callback {
 
     private ActivityComponent mActivityComponent;

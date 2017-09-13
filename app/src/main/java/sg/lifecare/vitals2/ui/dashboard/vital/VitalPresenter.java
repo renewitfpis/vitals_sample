@@ -2,6 +2,7 @@ package sg.lifecare.vitals2.ui.dashboard.vital;
 
 import java.net.SocketTimeoutException;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -20,6 +21,8 @@ import sg.lifecare.data.local.database.BodyWeight;
 import sg.lifecare.data.remote.model.data.BloodPressureEventData;
 import sg.lifecare.data.remote.model.data.BodyTemperatureEventData;
 import sg.lifecare.data.remote.model.data.BodyWeightEventData;
+import sg.lifecare.data.remote.model.response.AssistsedEntityResponse;
+import sg.lifecare.data.remote.model.response.EntityDetailResponse;
 import sg.lifecare.vitals2.ui.base.BaseRealmPresenter;
 import timber.log.Timber;
 
@@ -33,8 +36,18 @@ public class VitalPresenter<V extends VitalMvpView> extends BaseRealmPresenter<V
     }
 
     @Override
-    public String getPatientId() {
-        return getDataManager().getUserEntity().getId();
+    public AssistsedEntityResponse.Data getMember(int position) {
+        List<AssistsedEntityResponse.Data> members = getDataManager().getMembersEntity();
+
+        if (members != null && members.size() > position) {
+            return members.get(position);
+        }
+        return null;
+    }
+
+    @Override
+    public EntityDetailResponse.Data getUser() {
+        return getDataManager().getUserEntity();
     }
 
     @Override

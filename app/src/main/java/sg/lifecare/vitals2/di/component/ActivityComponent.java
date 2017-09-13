@@ -10,6 +10,7 @@ import sg.lifecare.vitals2.ui.bodyweight.BodyWeightDeviceFragment;
 import sg.lifecare.vitals2.ui.dashboard.DashboardActivity;
 import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseManualFragment;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanFragment;
+import sg.lifecare.vitals2.ui.dashboard.member.MemberListFragment;
 import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainFragment;
 import sg.lifecare.vitals2.ui.dashboard.nurse.NurseScanFragment;
 import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainFragment;
@@ -60,5 +61,7 @@ public interface ActivityComponent {
     void inject(JumperOximeterFragment jumperFragment);
 
     void inject(VitalFragment vitalFragment);
+
+    void inject(MemberListFragment memberListFragment);
 
 }
