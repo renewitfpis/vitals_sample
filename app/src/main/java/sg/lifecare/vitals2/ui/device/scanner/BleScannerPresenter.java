@@ -96,6 +96,11 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
     }
 
     @Override
+    public void startScan(long timeoutSec) {
+        startScan(null, timeoutSec);
+    }
+
+    @Override
     public void startScan(List<ScanFilter> filters, long timeoutSec) {
         stopScan();
 
@@ -104,7 +109,7 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
         try {
             final BluetoothLeScannerCompat scanner = BluetoothLeScannerCompat.getScanner();
 
-            if (filters == null) {
+            if (filters == null || filters.size() == 0) {
                 scanner.startScan(mScanCallback);
             } else {
                 scanner.startScan(filters, mScanSettings, mScanCallback);
@@ -119,11 +124,6 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
         } catch (IllegalStateException ex) {
             Timber.e(ex, ex.getMessage());
         }
-    }
-
-    @Override
-    public void startScan(long timeoutSec) {
-        startScan(null, timeoutSec);
     }
 
     private void addScanTimeout(long timeoutSec) {

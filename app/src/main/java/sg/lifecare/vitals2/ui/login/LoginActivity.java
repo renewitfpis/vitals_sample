@@ -113,7 +113,12 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     @OnClick(R.id.login_button)
     void onLoginClick(View v) {
         hideKeyboard();
-        mPresenter.login(mEmailEdit.getText().toString(), mPasswordEdit.getText().toString());
+
+        if (isNetworkConnected()) {
+            mPresenter.login(mEmailEdit.getText().toString(), mPasswordEdit.getText().toString());
+        } else {
+            onNetworkError(getString(R.string.error_check_network_connection));
+        }
     }
 
     private void showForgotPasswordFragment() {

@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Vitals</string>
 
+    <!-- Fixes bug -->
+    <item name="visible" type="id"/>
+    <item name="masked" type="id"/>
+
     <!-- drawer -->
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
@@ -72,6 +76,10 @@
     <string name="action_scan_nurse_id">Scan Nurse ID</string>
     <string name="action_scan_patient_id">Scan Patient ID</string>
     <string name="action_measure">Measure</string>
+
+    <string name="message_sync">Syncing data</string>
+    <string name="message_sync_completed">Sync completed</string>
+    <string name="message_sync_error">Sync error</string>
 
     <!-- Hints -->
     <string name="hint_email">Email Address</string>

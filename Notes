@@ -1,6 +1,10 @@
 Release Notes
 
-0.2.6 (13/09/2017)
+0.2.8 (14/09/2017)
+* fixes result UI
+* disconnect Urion BP after reading done
+
+0.2.7 (13/09/2017)
 * updates login UI
 * fixes navigation icon bug
 

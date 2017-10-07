@@ -1,4 +1,4 @@
-package sg.lifecare.vitals2.ui.urion;
+package sg.lifecare.vitals2.ui.bloodpressure;
 
 import android.Manifest;
 import android.app.Activity;
@@ -37,9 +37,6 @@ import sg.lifecare.ble.utility.BleUtils;
 import sg.lifecare.utils.DateUtils;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.ui.base.BaseFragment;
-import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureActivity;
-import sg.lifecare.vitals2.ui.device.ble.urion.UrionMvpPresenter;
-import sg.lifecare.vitals2.ui.device.ble.urion.UrionMvpView;
 import sg.lifecare.vitals2.ui.device.scanner.BleScannerMvpView;
 import sg.lifecare.vitals2.ui.device.scanner.BleScannerPresenter;
 import timber.log.Timber;
@@ -103,7 +100,6 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
 
     private BloodPressureMeasurement mMeasurement = null;
     private BluetoothDevice mDevice;
-
 
 
     public static UrionFragment newInstance() {
@@ -286,7 +282,14 @@ public class UrionFragment extends BaseFragment implements BleScannerMvpView, Ur
             Timber.d("bleScanResult: deviceType=%d", mDevice.getType());
 
             mBleScannerPresenter.stopScan();
-            mUrionPresenter.connect(mDevice);
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mUrionPresenter.connect(mDevice);
+                }
+            });
+
         }
     }
 

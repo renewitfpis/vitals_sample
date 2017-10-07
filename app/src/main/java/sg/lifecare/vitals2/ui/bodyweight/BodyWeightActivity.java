@@ -8,7 +8,6 @@ import android.os.Bundle;
 import sg.lifecare.ble.parser.BodyWeightMeasurement;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.ui.base.BaseActivity;
-import sg.lifecare.vitals2.ui.qn.QNFragment;
 import timber.log.Timber;
 
 public class BodyWeightActivity extends BaseActivity {
@@ -42,6 +41,10 @@ public class BodyWeightActivity extends BaseActivity {
 
     public static BodyWeightMeasurement getData(Intent intent) {
         return (BodyWeightMeasurement) intent.getSerializableExtra(PARAM_DATA);
+    }
+
+    public static String getDeviceId(Intent intent) {
+        return intent.getStringExtra(PARAM_DEVICE_ID);
     }
 
     @Override

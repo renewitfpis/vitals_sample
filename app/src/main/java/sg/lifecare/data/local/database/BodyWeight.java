@@ -37,7 +37,6 @@ public class BodyWeight extends RealmObject {
                         realm.where(BodyWeight.class).equalTo("entityId", bw.getId()).findFirst();
                 if (bodyWeightDb == null) {
 
-
                     bodyWeightDb = realm.createObject(BodyWeight.class);
                     bodyWeightDb.setEntityId(bw.getId());
                     bodyWeightDb.setWeight(bw.getWeight());
@@ -60,21 +59,24 @@ public class BodyWeight extends RealmObject {
         }
     }
 
-    public static void addBodyWeight(Realm realm, BodyWeightEventData data) {
+    public static BodyWeight addBodyWeight(Realm realm, BodyWeightEventData data) {
         realm.beginTransaction();
 
-        BodyWeight bloodPressureDb = realm.createObject(BodyWeight.class);
-        bloodPressureDb.setEntityId("");
-        bloodPressureDb.setWeight(data.getWeight());
-        bloodPressureDb.setIsUploaded(false);
+        BodyWeight bodyWeightDb = realm.createObject(BodyWeight.class);
+        bodyWeightDb.setEntityId("");
+        bodyWeightDb.setWeight(data.getWeight());
+        bodyWeightDb.setIsUploaded(false);
 
-        bloodPressureDb.setTakerId(data.getNurseId());
-        bloodPressureDb.setPatientId(data.getPatientId());
-        bloodPressureDb.setTakenTime(data.getReadTime());
+        bodyWeightDb.setTakerId(data.getNurseId());
+        bodyWeightDb.setPatientId(data.getPatientId());
+        bodyWeightDb.setTakenTime(data.getReadTime());
+        bodyWeightDb.setDeviceId(data.getDeviceId());
 
         Patient.addOrUpdatePatient(realm, data.getPatientId(), data.getReadTime());
 
         realm.commitTransaction();
+
+        return bodyWeightDb;
     }
 
     public static BodyWeight getLatestByPatientId(Realm realm, String patientId) {
@@ -91,6 +93,22 @@ public class BodyWeight extends RealmObject {
 
     public float getWeight() {
         return weight;
+    }
+
+    public Date getTakenTime() {
+        return takenTime;
+    }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public String getTakerId() {
+        return takerId;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
     }
 
     public void setEntityId(String entityId) {

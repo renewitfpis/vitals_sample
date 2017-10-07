@@ -7,10 +7,13 @@ public class LifecareConfig {
     public static final String PHONE_TYPE_DEFAULT = "P";
     public static final String PHONE_TYPE2_DEFAULT = "M";
 
+    //public static final ENDPOINT = "https://www.lifecare.sg";
+    public static final String ENDPOINT = "https://www.atlifecare.com";
+
     public static final String ENTEPRISE_ASTRALINK_ID = "EB3RAHY8-66VC96Y0-WB7AISOU";
 
-    public static final String TERMS_AND_CONDITIONS_URL = LifecareService.ENDPOINT + "/terms";
-    public static final String PRIVACY_URL = LifecareService.ENDPOINT + "/privacy";
+    public static final String TERMS_AND_CONDITIONS_URL = ENDPOINT + "/terms";
+    public static final String PRIVACY_URL = ENDPOINT + "/privacy";
 
 
 }

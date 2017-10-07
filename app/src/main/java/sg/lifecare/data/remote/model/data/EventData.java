@@ -37,6 +37,10 @@ public abstract class EventData {
         EventTypeName = eventTypeName;
     }
 
+    public String getDeviceId() {
+        return DeviceId;
+    }
+
     public String getNurseId() {
         return mNurseId;
     }

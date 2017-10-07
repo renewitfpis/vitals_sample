@@ -19,6 +19,7 @@ import retrofit2.HttpException;
 import sg.lifecare.data.DataManager;
 import sg.lifecare.data.remote.model.response.AssistsedEntityResponse;
 import sg.lifecare.data.remote.model.response.EntityDetailResponse;
+import sg.lifecare.utils.NetworkUtils;
 import sg.lifecare.vitals2.ui.base.BasePresenter;
 import timber.log.Timber;
 
@@ -28,6 +29,20 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
     @Inject
     public DashboardPresenter(DataManager dataManager, CompositeDisposable compositeDisposable) {
         super(dataManager, compositeDisposable);
+    }
+
+    @Override
+    public boolean loadOfflineData() {
+        boolean isValid = false;
+        String id = getDataManager().getPreferencesHelper().getEntityId();
+
+        if (!TextUtils.isEmpty(id)) {
+           isValid = getDataManager().loadOfflineData();
+        }
+
+        Timber.d("loadOfflineData: %b", isValid);
+
+        return isValid;
     }
 
     /**
@@ -41,6 +56,11 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
 
         if (TextUtils.isEmpty(id)) {
             getMvpView().startLoginActivity();
+        }
+
+        if (!NetworkUtils.isNetworkConnected(getDataManager().getContext())) {
+            getMvpView().onUserEntityResult(getDataManager().getUserEntity());
+            return;
         }
 
         /*getCompositeDisposable().add(Observable.zip(
@@ -212,6 +232,11 @@ public class DashboardPresenter<V extends DashboardMvpView> extends BasePresente
         String id = getDataManager().getPreferencesHelper().getEntityId();
 
         if (TextUtils.isEmpty(id)) {
+            return;
+        }
+
+        if (!NetworkUtils.isNetworkConnected(getDataManager().getContext())) {
+            getMvpView().onMembersEntityResult(getDataManager().getMembersEntity());
             return;
         }
 

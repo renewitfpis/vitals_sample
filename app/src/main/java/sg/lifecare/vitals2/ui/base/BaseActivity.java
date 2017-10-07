@@ -74,8 +74,19 @@ public abstract class BaseActivity extends AppCompatActivity
     protected  abstract void setup();
 
     private void showSnackBar(String message) {
-        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
+        /*Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
                 message, Snackbar.LENGTH_SHORT);
+
+        View view = snackbar.getView();
+        TextView textView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setText(message);
+        snackbar.show();*/
+        showSnackBar(message, Snackbar.LENGTH_SHORT);
+    }
+
+    protected void showSnackBar(String message, int duration) {
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
+                message, duration);
 
         View view = snackbar.getView();
         TextView textView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);

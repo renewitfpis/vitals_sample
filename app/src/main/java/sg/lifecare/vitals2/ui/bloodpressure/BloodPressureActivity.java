@@ -8,7 +8,6 @@ import android.os.Bundle;
 import sg.lifecare.ble.parser.BloodPressureMeasurement;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.ui.base.BaseActivity;
-import sg.lifecare.vitals2.ui.urion.UrionFragment;
 import timber.log.Timber;
 
 public class BloodPressureActivity extends BaseActivity {
@@ -42,6 +41,10 @@ public class BloodPressureActivity extends BaseActivity {
 
     public static BloodPressureMeasurement getData(Intent intent) {
         return (BloodPressureMeasurement) intent.getSerializableExtra(PARAM_DATA);
+    }
+
+    public static String getDeviceId(Intent intent) {
+        return intent.getStringExtra(PARAM_DEVICE_ID);
     }
 
     @Override

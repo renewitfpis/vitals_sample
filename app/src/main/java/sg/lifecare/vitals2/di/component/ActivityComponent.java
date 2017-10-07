@@ -18,12 +18,12 @@ import sg.lifecare.vitals2.ui.dashboard.vital.VitalFragment;
 import sg.lifecare.vitals2.ui.device.ble.BleDeviceAddFragment;
 import sg.lifecare.vitals2.ui.device.list.DeviceListFragment;
 import sg.lifecare.vitals2.ui.jumper.JumperOximeterFragment;
-import sg.lifecare.vitals2.ui.jumper.JumperThermometerFragment;
+import sg.lifecare.vitals2.ui.bodytemperature.JumperThermometerFragment;
 import sg.lifecare.vitals2.ui.login.ForgotPasswordFragment;
 import sg.lifecare.vitals2.ui.login.LoginActivity;
 import sg.lifecare.vitals2.ui.panic.PanicFragment;
-import sg.lifecare.vitals2.ui.qn.QNFragment;
-import sg.lifecare.vitals2.ui.urion.UrionFragment;
+import sg.lifecare.vitals2.ui.bodyweight.QNFragment;
+import sg.lifecare.vitals2.ui.bloodpressure.UrionFragment;
 
 @PerActivity
 @Component(dependencies = ApplicationComponent.class, modules = ActivityModule.class)

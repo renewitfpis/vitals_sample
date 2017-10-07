@@ -1,6 +1,5 @@
 package sg.lifecare.data.local.database;
 
-
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +37,6 @@ public class BloodPressure extends RealmObject {
                         realm.where(BloodPressure.class).equalTo("entityId", bp.getId()).findFirst();
                 if (bloodPressureDb == null) {
 
-
                     bloodPressureDb = realm.createObject(BloodPressure.class);
                     bloodPressureDb.setEntityId(bp.getId());
                     bloodPressureDb.setSystolic(bp.getSystolic());
@@ -51,21 +49,17 @@ public class BloodPressure extends RealmObject {
                     bloodPressureDb.setPatientId(bp.getPatientId());
                     bloodPressureDb.setTakenTime(bp.getTakenTime());
 
-
                     Timber.d("addBloodPressures: add %s, %s, %s", bp.getId(), bp.getPatientId(), bp.getTakerId());
-
+                    Patient.addOrUpdatePatient(realm, bp.getPatientId(), bp.getTakenTime());
                 } else {
-                    Timber.d("addBloodPressures: add %s, %s, %s", bp.getId(), bp.getPatientId(), bp.getTakerId());
+                    //Timber.d("addBloodPressures: add %s, %s, %s", bp.getId(), bp.getPatientId(), bp.getTakerId());
                 }
-
-                Patient.addOrUpdatePatient(realm, bp.getPatientId(), bp.getTakenTime());
             }
-
             realm.commitTransaction();
         }
     }
 
-    public static void addBloodPressure(Realm realm, BloodPressureEventData data) {
+    public static BloodPressure addBloodPressure(Realm realm, BloodPressureEventData data) {
         realm.beginTransaction();
 
         BloodPressure bloodPressureDb = realm.createObject(BloodPressure.class);
@@ -78,12 +72,13 @@ public class BloodPressure extends RealmObject {
         bloodPressureDb.setTakerId(data.getNurseId());
         bloodPressureDb.setPatientId(data.getPatientId());
         bloodPressureDb.setTakenTime(data.getReadTime());
+        bloodPressureDb.setDeviceId(data.getDeviceId());
 
         Patient.addOrUpdatePatient(realm, data.getPatientId(), data.getReadTime());
 
         realm.commitTransaction();
 
-
+        return bloodPressureDb;
     }
 
     public static BloodPressure getLatestByPatientId(Realm realm, String patientId) {
@@ -116,6 +111,10 @@ public class BloodPressure extends RealmObject {
 
     public String getPatientId() {
         return patientId;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
     }
 
     public String getTakerId() {

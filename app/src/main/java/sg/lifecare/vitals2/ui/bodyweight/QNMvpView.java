@@ -1,4 +1,4 @@
-package sg.lifecare.vitals2.ui.qn;
+package sg.lifecare.vitals2.ui.bodyweight;
 
 import sg.lifecare.vitals2.ui.base.MvpView;
 

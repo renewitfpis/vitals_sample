@@ -24,6 +24,7 @@ import sg.lifecare.data.local.PreferencesHelper;
 import sg.lifecare.data.local.database.AppDatabase;
 import sg.lifecare.data.local.database.BloodGlucose;
 import sg.lifecare.data.local.database.BloodPressure;
+import sg.lifecare.data.local.database.BodyTemperature;
 import sg.lifecare.data.local.database.Patient;
 import sg.lifecare.data.remote.LifecareUtils;
 import sg.lifecare.data.remote.model.data.BloodGlucoseEventData;
@@ -36,6 +37,7 @@ import sg.lifecare.data.remote.model.response.AssignedTaskForDeviceResponse;
 import sg.lifecare.data.remote.model.response.AssignedTaskResponse;
 import sg.lifecare.data.remote.model.response.BloodGlucoseResponse;
 import sg.lifecare.data.remote.model.response.BloodPressureResponse;
+import sg.lifecare.data.remote.model.response.BodyTemperatureResponse;
 import sg.lifecare.data.remote.model.response.BodyWeightResponse;
 import sg.lifecare.data.remote.model.response.LogoutResponse;
 import sg.lifecare.framework.di.ApplicationContext;
@@ -82,6 +84,10 @@ public class DataManager {
         mAppDatabase = appDatabase;
     }
 
+    public Context getContext() {
+        return mContext;
+    }
+
     public PreferencesHelper getPreferencesHelper() {
         return mPreferencesHelper;
     }
@@ -96,6 +102,8 @@ public class DataManager {
 
     public void setUserEntity(EntityDetailResponse.Data userEntity) {
         mUserEntity = userEntity;
+
+        mPreferencesHelper.setUserEntity(userEntity);
     }
 
     public void setMembersEntity(List<AssistsedEntityResponse.Data> membersEntity) {
@@ -125,6 +133,22 @@ public class DataManager {
         }
 
         return null;
+    }
+
+    public boolean loadOfflineData() {
+        EntityDetailResponse.Data user = mPreferencesHelper.getUserEntity();
+        if (user == null) {
+            return false;
+        }
+
+        setUserEntity(user);
+
+        if (LifecareUtils.isCaregiver(user.getAuthorizationLevel())) {
+            List<AssistsedEntityResponse.Data> members = mPreferencesHelper.getMembersEntity();
+            setMembersEntity(members);
+        }
+
+        return true;
     }
 
     public Observable<LoginResponse> login(final String email, final String password) {
@@ -183,23 +207,23 @@ public class DataManager {
         return mLifecareService.postCommissionDevice(data);
     }
 
-    public Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BloodGlucoseEventData data) {
+    public Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BloodGlucoseEventData data) {
         return mLifecareService.postAssignedTaskForDevice(data);
     }
 
-    public Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BloodPressureEventData data) {
+    public Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BloodPressureEventData data) {
         return mLifecareService.postAssignedTaskForDevice(data);
     }
 
-    public Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BodyWeightEventData data) {
+    public Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BodyWeightEventData data) {
         return mLifecareService.postAssignedTaskForDevice(data);
     }
 
-    public Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(SpO2EventData data) {
+    public Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(SpO2EventData data) {
         return mLifecareService.postAssignedTaskForDevice(data);
     }
 
-    public Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BodyTemperatureEventData data) {
+    public Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BodyTemperatureEventData data) {
         return mLifecareService.postAssignedTaskForDevice(data);
     }
 
@@ -215,8 +239,13 @@ public class DataManager {
                 LifecareUtils.convertToDayFormat(end));
     }
 
-    public Flowable<BodyWeightResponse> getBodyWeight(String entityId, DateTime start, DateTime end) {
+    public Flowable<BodyWeightResponse> getBodyWeights(String entityId, DateTime start, DateTime end) {
         return mLifecareService.getBodyWeights(entityId, LifecareUtils.convertToDayFormat(start),
+                LifecareUtils.convertToDayFormat(end));
+    }
+
+    public Flowable<BodyTemperatureResponse> getBodyTemperatures(String entityId, DateTime start, DateTime end) {
+        return mLifecareService.getBodyTemperatures(entityId, LifecareUtils.convertToDayFormat(start),
                 LifecareUtils.convertToDayFormat(end));
     }
 

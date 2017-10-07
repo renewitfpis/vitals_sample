@@ -5,11 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import sg.lifecare.ble.parser.BodyTemperatureMeasurement;
-import sg.lifecare.data.local.database.BodyTemperature;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.ui.base.BaseActivity;
-import sg.lifecare.vitals2.ui.jumper.JumperThermometerFragment;
-import sg.lifecare.vitals2.ui.qn.QNFragment;
 import timber.log.Timber;
 
 public class BodyTemperatureActivity extends BaseActivity {
@@ -42,6 +39,10 @@ public class BodyTemperatureActivity extends BaseActivity {
 
     public static BodyTemperatureMeasurement getData(Intent intent) {
         return (BodyTemperatureMeasurement) intent.getSerializableExtra(PARAM_DATA);
+    }
+
+    public static String getDeviceId(Intent intent) {
+        return intent.getStringExtra(PARAM_DEVICE_ID);
     }
 
     @Override

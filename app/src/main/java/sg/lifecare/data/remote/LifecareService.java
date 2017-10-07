@@ -43,6 +43,7 @@ import sg.lifecare.data.remote.model.response.AssignedTaskResponse;
 import sg.lifecare.data.remote.model.response.AssistsedEntityResponse;
 import sg.lifecare.data.remote.model.response.BloodGlucoseResponse;
 import sg.lifecare.data.remote.model.response.BloodPressureResponse;
+import sg.lifecare.data.remote.model.response.BodyTemperatureResponse;
 import sg.lifecare.data.remote.model.response.BodyWeightResponse;
 import sg.lifecare.data.remote.model.response.CommissionDeviceResponse;
 import sg.lifecare.data.remote.model.response.ConnectedDeviceResponse;
@@ -62,8 +63,6 @@ import sg.lifecare.vitals2.BuildConfig;
 import timber.log.Timber;
 
 public interface LifecareService {
-
-    String ENDPOINT = "https://www.lifecare.sg";
 
     @FormUrlEncoded
     @POST("mlifecare/authentication/appLogin")
@@ -158,20 +157,26 @@ public interface LifecareService {
             @Query("StartDay") String startDate,
             @Query("EndDay") String endDay);
 
-    @POST("/mlifecare/event/addEvent")
-    Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BloodGlucoseEventData post);
+    @GET("/mlifecare/event/getBodyTemperatureReading")
+    Flowable<BodyTemperatureResponse> getBodyTemperatures(
+            @Query("EntityId") String entityId,
+            @Query("StartDay") String startDate,
+            @Query("EndDay") String endDay);
 
     @POST("/mlifecare/event/addEvent")
-    Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BloodPressureEventData post);
+    Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BloodGlucoseEventData post);
 
     @POST("/mlifecare/event/addEvent")
-    Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BodyWeightEventData post);
+    Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BloodPressureEventData post);
 
     @POST("/mlifecare/event/addEvent")
-    Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body SpO2EventData post);
+    Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BodyWeightEventData post);
 
     @POST("/mlifecare/event/addEvent")
-    Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BodyTemperatureEventData post);
+    Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body SpO2EventData post);
+
+    @POST("/mlifecare/event/addEvent")
+    Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BodyTemperatureEventData post);
 
     /**
      * Factory class that sets up new Lifecare Service
@@ -207,7 +212,7 @@ public interface LifecareService {
                     .create();
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(LifecareService.ENDPOINT)
+                    .baseUrl(LifecareConfig.ENDPOINT)
                     .client(okHttpClient)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create(gson))

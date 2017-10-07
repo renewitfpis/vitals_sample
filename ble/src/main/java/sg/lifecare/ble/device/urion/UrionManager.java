@@ -5,6 +5,9 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -20,18 +23,37 @@ public class UrionManager extends BleManager<UrionManagerCallbacks> {
     private static final UUID NOTIFY_CHARACTERISTIC = UUID.fromString("0000fff1-0000-1000-8000-00805f9b34fb");
     private static final UUID WRITE_CHARACTERISTIC = UUID.fromString("0000fff2-0000-1000-8000-00805f9b34fb");
 
+    private static final int MSG_WRITE_CHECK = 1;
+
     private BluetoothGattCharacteristic mNotifyCharacteristic;
     private BluetoothGattCharacteristic mWriteCharacteristic;
+
+    private Handler mHandler;
+    private int mWriteCounter = 0;
 
     private byte[] START_CMD =  new byte[] {(byte)0xfd, (byte)0xfd, (byte)0xfa, (byte)0x05, (byte)0x0d, (byte)0x0a};
 
     public UrionManager(Context context) {
         super(context);
+
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message message) {
+                Timber.d("handleMessage: mwriteCounter=%d", mWriteCounter);
+                switch (message.what) {
+                    case MSG_WRITE_CHECK:
+                        //enqueue(Request.newWriteRequest(mWriteCharacteristic, START_CMD));
+                        break;
+                }
+            }
+        };
     }
 
     @Override
     public void connect(final BluetoothDevice device) {
         super.connect(device);
+
+        mWriteCounter = 0;
 
         if (mBluetoothGatt != null) {
             mBluetoothGatt.connect();
@@ -73,12 +95,15 @@ public class UrionManager extends BleManager<UrionManagerCallbacks> {
         @Override
         protected void onDeviceDisconnected() {
             Timber.d("onDeviceDisconnected");
+            mHandler.removeMessages(MSG_WRITE_CHECK);
         }
 
         @Override
         protected void onCharacteristicWrite(final BluetoothGatt gatt,
                 final BluetoothGattCharacteristic characteristic) {
             Timber.d("onCharacteristicWrite");
+            mWriteCounter++;
+            mHandler.sendEmptyMessageDelayed(MSG_WRITE_CHECK, 20000);
         }
 
         @Override
@@ -86,6 +111,7 @@ public class UrionManager extends BleManager<UrionManagerCallbacks> {
                 final BluetoothGattCharacteristic characteristic) {
             Timber.d("onCharacteristicNotified");
             Timber.d(ParserUtils.parse(characteristic));
+            mHandler.removeMessages(MSG_WRITE_CHECK);
 
             byte[] data = characteristic.getValue();
 

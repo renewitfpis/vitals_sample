@@ -1,4 +1,4 @@
-package sg.lifecare.vitals2.ui.device.ble.urion;
+package sg.lifecare.vitals2.ui.bloodpressure;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;

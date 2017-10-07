@@ -48,7 +48,6 @@ public class MemberListFragment extends BaseFragment implements MemberListMvpVie
     public void onAttach(Context context) {
         super.onAttach(context);
 
-
         if (context instanceof MemberListFragmentListener) {
             mCallback = (MemberListFragmentListener) context;
         } else {

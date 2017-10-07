@@ -1,4 +1,4 @@
-package sg.lifecare.vitals2.ui.jumper;
+package sg.lifecare.vitals2.ui.bodytemperature;
 
 import android.Manifest;
 import android.app.Activity;
@@ -39,9 +39,6 @@ import sg.lifecare.ble.utility.BleUtils;
 import sg.lifecare.utils.DateUtils;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.ui.base.BaseFragment;
-import sg.lifecare.vitals2.ui.bodytemperature.BodyTemperatureActivity;
-import sg.lifecare.vitals2.ui.device.ble.jumper.JumperThermometerMvpPresenter;
-import sg.lifecare.vitals2.ui.device.ble.jumper.JumperThermometerMvpView;
 import sg.lifecare.vitals2.ui.device.scanner.BleScannerMvpView;
 import sg.lifecare.vitals2.ui.device.scanner.BleScannerPresenter;
 import timber.log.Timber;

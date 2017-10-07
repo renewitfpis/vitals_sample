@@ -1,4 +1,4 @@
-package sg.lifecare.vitals2.ui.device.ble.jumper;
+package sg.lifecare.vitals2.ui.bodytemperature;
 
 import android.bluetooth.BluetoothDevice;
 

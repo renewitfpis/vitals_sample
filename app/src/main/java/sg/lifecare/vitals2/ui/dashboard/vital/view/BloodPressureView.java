@@ -14,6 +14,7 @@ import io.realm.Realm;
 import sg.lifecare.data.local.database.BloodPressure;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.R2;
+import timber.log.Timber;
 
 public class BloodPressureView extends VitalView {
 
@@ -44,6 +45,8 @@ public class BloodPressureView extends VitalView {
     @Override
     public void setup(Realm realm, String id) {
         BloodPressure bp = BloodPressure.getLatestByPatientId(realm, id);
+
+        Timber.d("setup: id=%s", id);
 
         if (bp == null) {
             mBpValueLayout.setVisibility(View.INVISIBLE);

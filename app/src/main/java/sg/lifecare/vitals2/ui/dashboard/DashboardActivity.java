@@ -1,10 +1,14 @@
 package sg.lifecare.vitals2.ui.dashboard;
 
-import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -34,24 +38,17 @@ import sg.lifecare.vitals2.R2;
 import sg.lifecare.vitals2.services.SyncService;
 import sg.lifecare.vitals2.ui.BarcodeBottomSheetFragment;
 import sg.lifecare.vitals2.ui.base.BaseActivity;
-import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseActivity;
-import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseManualFragment;
-import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureActivity;
-import sg.lifecare.vitals2.ui.bodyweight.BodyWeightActivity;
-import sg.lifecare.vitals2.ui.bodyweight.BodyWeightDeviceFragment;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanFragment;
 import sg.lifecare.vitals2.ui.dashboard.member.MemberListFragment;
-import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainFragment;
 import sg.lifecare.vitals2.ui.dashboard.nurse.NurseScanFragment;
-import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainFragment;
 import sg.lifecare.vitals2.ui.dashboard.vital.VitalFragment;
 import sg.lifecare.vitals2.ui.device.DeviceActivity;
 import sg.lifecare.vitals2.ui.jumper.JumperOximeterFragment;
-import sg.lifecare.vitals2.ui.jumper.JumperThermometerFragment;
+import sg.lifecare.vitals2.ui.bodytemperature.JumperThermometerFragment;
 import sg.lifecare.vitals2.ui.login.LoginActivity;
 import sg.lifecare.vitals2.ui.panic.PanicFragment;
-import sg.lifecare.vitals2.ui.qn.QNFragment;
-import sg.lifecare.vitals2.ui.urion.UrionFragment;
+import sg.lifecare.vitals2.ui.bodyweight.QNFragment;
+import sg.lifecare.vitals2.ui.bloodpressure.UrionFragment;
 import timber.log.Timber;
 
 public class DashboardActivity extends BaseActivity implements
@@ -91,7 +88,34 @@ public class DashboardActivity extends BaseActivity implements
 
         setup();
 
-        mPresenter.getUserEntity();
+        Timber.d("onCreate: is_network_connected = %b", isNetworkConnected());
+
+        if (isNetworkConnected()) {
+            mPresenter.getUserEntity();
+        } else {
+            // check has login previously
+            if (mPresenter.loadOfflineData()) {
+                // TODO: show no network snackbar
+                mPresenter.getUserEntity();
+            } else {
+                startLoginActivity();
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mSyncServiceReceiver, new IntentFilter(SyncService.ACTION_STATE));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mSyncServiceReceiver);
     }
 
     @Override
@@ -146,7 +170,6 @@ public class DashboardActivity extends BaseActivity implements
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerToggle.syncState();
-
 
         setupNavigationView();
 
@@ -419,6 +442,7 @@ public class DashboardActivity extends BaseActivity implements
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_content, VitalFragment.newInstance(), VitalFragment.class.getSimpleName())
+                .addToBackStack(VitalFragment.class.getSimpleName())
                 .commit();
     }
 
@@ -438,4 +462,56 @@ public class DashboardActivity extends BaseActivity implements
                 .addToBackStack(VitalFragment.class.getSimpleName())
                 .commit();
     }
+
+    public void startSyncService(final String userId) {
+
+        startService(SyncService.getStartIntent(this, userId));
+    }
+
+    private Fragment getTopFragment() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        Timber.d("getTopFragment: count=%d", count);
+        if (count > 0) {
+            String tag = getSupportFragmentManager().getBackStackEntryAt(count - 1).getName();
+            Timber.d("getTopFragment: tag=%s", tag);
+            return getSupportFragmentManager().findFragmentByTag(tag);
+        }
+        return null;
+    }
+
+    private BroadcastReceiver mSyncServiceReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+
+            if (SyncService.ACTION_STATE.equals(intent.getAction())) {
+                int state = intent.getIntExtra("state", 0);
+                Fragment fragment = getTopFragment();
+
+                Timber.d("getTopFragment: count=%d", getSupportFragmentManager().getBackStackEntryCount());
+
+                Timber.d("onReceive: state=%d, is_vital_fragment=%b", state, fragment instanceof VitalFragment);
+
+                // need to inform the vital fragment
+                if (SyncService.SYNCING == state) {
+                    showSnackBar(getString(R.string.message_sync), Snackbar.LENGTH_INDEFINITE);
+
+                    if (fragment instanceof VitalFragment) {
+                        ((VitalFragment) fragment).onDataSyncing();
+                    }
+                } else if (SyncService.COMPLETED == state) {
+                    showSnackBar(getString(R.string.message_sync_completed), Snackbar.LENGTH_SHORT);
+
+                    if (fragment instanceof VitalFragment) {
+                        ((VitalFragment) fragment).onDataSyncCompleted();
+                    }
+                } else if (SyncService.ERROR == state) {
+                    showSnackBar(getString(R.string.message_sync_error), Snackbar.LENGTH_SHORT);
+                    if (fragment instanceof VitalFragment) {
+                        ((VitalFragment) fragment).onDataSyncCompleted();
+                    }
+                }
+            }
+        }
+    };
 }

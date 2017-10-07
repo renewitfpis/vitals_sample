@@ -1,6 +1,5 @@
 package sg.lifecare.data.local.database;
 
-
 import android.content.Context;
 
 import java.io.FileNotFoundException;

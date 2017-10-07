@@ -1,12 +1,15 @@
 package sg.lifecare.data.local.database;
 
 import java.util.Date;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import sg.lifecare.data.remote.model.data.BodyTemperatureEventData;
+import sg.lifecare.data.remote.model.response.BodyTemperatureResponse;
+import timber.log.Timber;
 
 public class BodyTemperature extends RealmObject {
 
@@ -23,7 +26,39 @@ public class BodyTemperature extends RealmObject {
     private boolean isUploaded;
     private Date uploadedTime;
 
-    public static void addBodyTemperature(Realm realm, BodyTemperatureEventData data) {
+    public static void addBodyTemperatures(Realm realm, List<BodyTemperatureResponse.Data> bts) {
+        if ((bts != null) && (bts.size() > 0)) {
+            realm.beginTransaction();
+
+            for (BodyTemperatureResponse.Data bt : bts) {
+                BodyTemperature bodyTemperatureDb =
+                        realm.where(BodyTemperature.class).equalTo("entityId", bt.getId()).findFirst();
+                if (bodyTemperatureDb == null) {
+                    bodyTemperatureDb = realm.createObject(BodyTemperature.class);
+                    bodyTemperatureDb.setEntityId(bt.getId());
+                    bodyTemperatureDb.setTemperature(bt.getTemperature());
+                    bodyTemperatureDb.setIsUploaded(true);
+                    bodyTemperatureDb.setUploadTime(bt.getCreateDate());
+
+                    bodyTemperatureDb.setTakerId(bt.getTakerId());
+                    bodyTemperatureDb.setPatientId(bt.getPatientId());
+                    bodyTemperatureDb.setTakenTime(bt.getTakenTime());
+
+
+                    Timber.d("addBodyTemperatures: add %s, %s, %s", bt.getId(), bt.getPatientId(), bt.getTakerId());
+
+                } else {
+                    Timber.d("addBodyTemperatures: add %s, %s, %s", bt.getId(), bt.getPatientId(), bt.getTakerId());
+                }
+
+                Patient.addOrUpdatePatient(realm, bt.getPatientId(), bt.getTakenTime());
+            }
+
+            realm.commitTransaction();
+        }
+    }
+
+    public static BodyTemperature addBodyTemperature(Realm realm, BodyTemperatureEventData data) {
         realm.beginTransaction();
 
         BodyTemperature bodyTemperatureDb = realm.createObject(BodyTemperature.class);
@@ -34,10 +69,13 @@ public class BodyTemperature extends RealmObject {
         bodyTemperatureDb.setTakerId(data.getNurseId());
         bodyTemperatureDb.setPatientId(data.getPatientId());
         bodyTemperatureDb.setTakenTime(data.getReadTime());
+        bodyTemperatureDb.setDeviceId(data.getDeviceId());
 
         Patient.addOrUpdatePatient(realm, data.getPatientId(), data.getReadTime());
 
         realm.commitTransaction();
+
+        return bodyTemperatureDb;
     }
 
     public static BodyTemperature getLatestByPatientId(Realm realm, String patientId) {
@@ -52,8 +90,24 @@ public class BodyTemperature extends RealmObject {
         return bodyTemperatures.get(0);
     }
 
+    public String getDeviceId() {
+        return deviceId;
+    }
+
     public float getTemperature() {
         return temperature;
+    }
+
+    public Date getTakenTime() {
+        return takenTime;
+    }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public String getTakerId() {
+        return takerId;
     }
 
     public void setTemperature(float temperature) {

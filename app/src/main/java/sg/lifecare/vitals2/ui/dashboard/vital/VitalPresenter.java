@@ -23,6 +23,7 @@ import sg.lifecare.data.remote.model.data.BodyTemperatureEventData;
 import sg.lifecare.data.remote.model.data.BodyWeightEventData;
 import sg.lifecare.data.remote.model.response.AssistsedEntityResponse;
 import sg.lifecare.data.remote.model.response.EntityDetailResponse;
+import sg.lifecare.utils.NetworkUtils;
 import sg.lifecare.vitals2.ui.base.BaseRealmPresenter;
 import timber.log.Timber;
 
@@ -56,7 +57,8 @@ public class VitalPresenter<V extends VitalMvpView> extends BaseRealmPresenter<V
     }
 
     @Override
-    public void postBloodPressureData(BloodPressureMeasurement bp, String nurseId, String patientId) {
+    public void postBloodPressureData(BloodPressureMeasurement bp, String nurseId, String patientId,
+            String deviceId) {
         BloodPressureEventData eventData = new BloodPressureEventData();
         eventData.setEntityId(getDataManager().getUserEntity().getId());
         eventData.setCreateDate(Calendar.getInstance().getTime());
@@ -66,10 +68,16 @@ public class VitalPresenter<V extends VitalMvpView> extends BaseRealmPresenter<V
         eventData.setNurseId(nurseId);
         eventData.setPatientId(patientId);
         eventData.setReadTime(bp.getTimestamp());
+        eventData.setDeviceId(deviceId);
 
         getMvpView().showLoading();
 
-        BloodPressure.addBloodPressure(getDataManager().getRealm(), eventData);
+        BloodPressure bloodPressureDb = BloodPressure.addBloodPressure(getDataManager().getRealm(), eventData);
+
+        if (!NetworkUtils.isNetworkConnected(getDataManager().getContext())) {
+            getMvpView().hideLoading();
+            return;
+        }
 
         getCompositeDisposable().add(
                 getDataManager().postAssignedTaskForDevice(eventData)
@@ -78,6 +86,15 @@ public class VitalPresenter<V extends VitalMvpView> extends BaseRealmPresenter<V
                         .subscribe(response -> {
                             if (!isViewAttached()) {
                                 return;
+                            }
+
+                            if (!response.isError()) {
+                                mRealm.beginTransaction();
+                                bloodPressureDb.setEntityId(response.getData().getId());
+                                bloodPressureDb.setIsUploaded(true);
+                                bloodPressureDb.setUploadTime(response.getData().getCreateDate());
+                                mRealm.copyFromRealm(bloodPressureDb);
+                                mRealm.commitTransaction();
                             }
 
                             getMvpView().hideLoading();
@@ -106,7 +123,8 @@ public class VitalPresenter<V extends VitalMvpView> extends BaseRealmPresenter<V
     }
 
     @Override
-    public void postBodyWeightData(BodyWeightMeasurement bw, String nurseId, String patientId) {
+    public void postBodyWeightData(BodyWeightMeasurement bw, String nurseId, String patientId,
+            String deviceId) {
         BodyWeightEventData eventData = new BodyWeightEventData();
         eventData.setEntityId(getDataManager().getUserEntity().getId());
         eventData.setCreateDate(Calendar.getInstance().getTime());
@@ -114,10 +132,16 @@ public class VitalPresenter<V extends VitalMvpView> extends BaseRealmPresenter<V
         eventData.setNurseId(nurseId);
         eventData.setPatientId(patientId);
         eventData.setReadTime(bw.getTimestamp());
+        eventData.setDeviceId(deviceId);
 
         getMvpView().showLoading();
 
-        BodyWeight.addBodyWeight(getDataManager().getRealm(), eventData);
+        BodyWeight bodyWeightDb = BodyWeight.addBodyWeight(getDataManager().getRealm(), eventData);
+
+        if (!NetworkUtils.isNetworkConnected(getDataManager().getContext())) {
+            getMvpView().hideLoading();
+            return;
+        }
 
         getCompositeDisposable().add(
                 getDataManager().postAssignedTaskForDevice(eventData)
@@ -126,6 +150,15 @@ public class VitalPresenter<V extends VitalMvpView> extends BaseRealmPresenter<V
                         .subscribe(response -> {
                             if (!isViewAttached()) {
                                 return;
+                            }
+
+                            if (!response.isError()) {
+                                mRealm.beginTransaction();
+                                bodyWeightDb.setEntityId(response.getData().getId());
+                                bodyWeightDb.setIsUploaded(true);
+                                bodyWeightDb.setUploadTime(response.getData().getCreateDate());
+                                mRealm.copyFromRealm(bodyWeightDb);
+                                mRealm.commitTransaction();
                             }
 
                             getMvpView().hideLoading();
@@ -155,7 +188,7 @@ public class VitalPresenter<V extends VitalMvpView> extends BaseRealmPresenter<V
 
     @Override
     public void postBodyTemperatureData(BodyTemperatureMeasurement bt, String nurseId,
-            String patientId) {
+            String patientId, String deviceId) {
 
         BodyTemperatureEventData eventData = new BodyTemperatureEventData();
         eventData.setEntityId(getDataManager().getUserEntity().getId());
@@ -164,10 +197,16 @@ public class VitalPresenter<V extends VitalMvpView> extends BaseRealmPresenter<V
         eventData.setNurseId(nurseId);
         eventData.setPatientId(patientId);
         eventData.setReadTime(bt.getTimestamp());
+        eventData.setDeviceId(deviceId);
 
         getMvpView().showLoading();
 
-        BodyTemperature.addBodyTemperature(getDataManager().getRealm(), eventData);
+        BodyTemperature bodyTemperatureDb = BodyTemperature.addBodyTemperature(getDataManager().getRealm(), eventData);
+
+        if (!NetworkUtils.isNetworkConnected(getDataManager().getContext())) {
+            getMvpView().hideLoading();
+            return;
+        }
 
         getCompositeDisposable().add(
                 getDataManager().postAssignedTaskForDevice(eventData)
@@ -176,6 +215,15 @@ public class VitalPresenter<V extends VitalMvpView> extends BaseRealmPresenter<V
                         .subscribe(response -> {
                             if (!isViewAttached()) {
                                 return;
+                            }
+
+                            if (!response.isError()) {
+                                mRealm.beginTransaction();
+                                bodyTemperatureDb.setEntityId(response.getData().getId());
+                                bodyTemperatureDb.setIsUploaded(true);
+                                bodyTemperatureDb.setUploadTime(response.getData().getCreateDate());
+                                mRealm.copyFromRealm(bodyTemperatureDb);
+                                mRealm.commitTransaction();
                             }
 
                             getMvpView().hideLoading();

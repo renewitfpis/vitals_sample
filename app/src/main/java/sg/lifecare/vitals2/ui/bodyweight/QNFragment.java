@@ -1,4 +1,4 @@
-package sg.lifecare.vitals2.ui.qn;
+package sg.lifecare.vitals2.ui.bodyweight;
 
 import android.Manifest;
 import android.app.Activity;
@@ -40,7 +40,6 @@ import sg.lifecare.ble.utility.BleUtils;
 import sg.lifecare.utils.DateUtils;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.ui.base.BaseFragment;
-import sg.lifecare.vitals2.ui.bodyweight.BodyWeightActivity;
 import timber.log.Timber;
 
 public class QNFragment extends BaseFragment implements QNMvpView, QNBleScanCallback,

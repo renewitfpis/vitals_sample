@@ -19,9 +19,9 @@ public interface VitalMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
 
     Realm getDatabase();
 
-    void postBloodPressureData(BloodPressureMeasurement bp, String nurseId, String patientId);
+    void postBloodPressureData(BloodPressureMeasurement bp, String nurseId, String patientId, String deviceId);
 
-    void postBodyWeightData(BodyWeightMeasurement bw, String nurseId, String patientId);
+    void postBodyWeightData(BodyWeightMeasurement bw, String nurseId, String patientId, String deviceId);
 
-    void postBodyTemperatureData(BodyTemperatureMeasurement bt, String nurseId, String patientId);
+    void postBodyTemperatureData(BodyTemperatureMeasurement bt, String nurseId, String patientId, String deviceId);
 }

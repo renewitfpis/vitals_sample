@@ -3,13 +3,12 @@ package sg.lifecare.vitals2.ui.dashboard.vital;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -27,6 +26,7 @@ import sg.lifecare.vitals2.ui.base.BaseFragment;
 import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureActivity;
 import sg.lifecare.vitals2.ui.bodytemperature.BodyTemperatureActivity;
 import sg.lifecare.vitals2.ui.bodyweight.BodyWeightActivity;
+import sg.lifecare.vitals2.ui.dashboard.DashboardActivity;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BloodPressureView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BodyTemperatureView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BodyWeightView;
@@ -55,6 +55,9 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
 
     @BindView(R.id.gridview)
     GridView mGridView;
+
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout mRefreshLayout;
 
     private ArrayList<VitalView> mData;
     private VitalAdapter mAdapter;
@@ -139,6 +142,13 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
         mAdapter = new VitalAdapter(mData, mPresenter.getDatabase(), getPatientId(), this);
 
         mGridView.setAdapter(mAdapter);
+
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                ((DashboardActivity) getActivity()).startSyncService(getPatientId());
+            }
+        });
     }
 
     @Override
@@ -148,23 +158,31 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQ_BP_DATA) {
                 BloodPressureMeasurement bp = BloodPressureActivity.getData(data);
+                String deviceId = BloodPressureActivity.getDeviceId(data);
 
-                mPresenter.postBloodPressureData(bp, mUser.getId(), getPatientId());
+                mPresenter.postBloodPressureData(bp, mUser.getId(), getPatientId(), deviceId);
                 mAdapter.updateView(POSITION_BP);
 
             } else if (requestCode == REQ_BW_DATA) {
                 BodyWeightMeasurement bw = BodyWeightActivity.getData(data);
+                String deviceId = BodyWeightActivity.getDeviceId(data);
 
-                mPresenter.postBodyWeightData(bw, mUser.getId(), getPatientId());
+                mPresenter.postBodyWeightData(bw, mUser.getId(), getPatientId(), deviceId);
                 mAdapter.updateView(POSITION_BW);
             } else if (requestCode == REQ_BT_DATA) {
                 BodyTemperatureMeasurement bt = BodyTemperatureActivity.getData(data);
+                String deviceId = BodyTemperatureActivity.getDeviceId(data);
 
-                mPresenter.postBodyTemperatureData(bt, mUser.getId(), getPatientId());
+                mPresenter.postBodyTemperatureData(bt, mUser.getId(), getPatientId(), deviceId);
                 mAdapter.updateView(POSITION_BT);
             }
         }
+    }
 
+    private void updateAllViews() {
+        mAdapter.updateView(POSITION_BP);
+        mAdapter.updateView(POSITION_BW);
+        mAdapter.updateView(POSITION_BT);
     }
 
     @Override
@@ -199,5 +217,18 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
 
     private String getPatientId() {
         return mMember == null ? mUser.getId() : mMember.getId();
+    }
+
+    public void onDataSyncing() {
+        mRefreshLayout.setEnabled(false);
+        mRefreshLayout.setRefreshing(true);
+    }
+
+    public void onDataSyncCompleted() {
+        Timber.d("onDataSyncCompleted");
+        mRefreshLayout.setEnabled(true);
+        mRefreshLayout.setRefreshing(false);
+
+        updateAllViews();
     }
 }

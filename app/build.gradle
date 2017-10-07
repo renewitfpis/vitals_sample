@@ -30,7 +30,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 8
-        versionName "0.2.8"
+        versionName "0.2.8a"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
@@ -77,6 +77,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.2'
 
     // Android support libraries
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"

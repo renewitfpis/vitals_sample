@@ -1,12 +1,10 @@
-package sg.lifecare.vitals2.ui.qn;
+package sg.lifecare.vitals2.ui.bodyweight;
 
 import android.content.Context;
 
 import com.kitnew.ble.QNBleCallback;
 import com.kitnew.ble.QNBleDevice;
 import com.kitnew.ble.QNBleScanCallback;
-
-import java.util.Date;
 
 import sg.lifecare.framework.di.PerActivity;
 import sg.lifecare.vitals2.ui.base.MvpPresenter;
