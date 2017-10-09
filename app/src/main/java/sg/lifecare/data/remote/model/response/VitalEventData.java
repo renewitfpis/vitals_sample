@@ -7,7 +7,7 @@ public class VitalEventData extends EventData {
 
     private String patient_id;
     private String nurse_id;
-    private Date record_time1; // invalid date format
+    private Date record_time; // invalid date format
 
     public String getPatientId() {
         return patient_id;
@@ -18,6 +18,6 @@ public class VitalEventData extends EventData {
     }
 
     public Date getTakenTime() {
-        return record_time1;
+        return record_time;
     }
 }
