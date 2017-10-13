@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.joda.time.DateTime;
-import org.reactivestreams.Publisher;
 
 import java.util.Calendar;
 import java.util.List;
@@ -14,24 +13,14 @@ import javax.inject.Singleton;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.realm.Realm;
-import io.realm.RealmResults;
 import sg.lifecare.data.local.PreferencesHelper;
 import sg.lifecare.data.local.database.AppDatabase;
-import sg.lifecare.data.local.database.BloodGlucose;
-import sg.lifecare.data.local.database.BloodPressure;
-import sg.lifecare.data.local.database.BodyTemperature;
-import sg.lifecare.data.local.database.Patient;
 import sg.lifecare.data.remote.LifecareUtils;
 import sg.lifecare.data.remote.model.data.BloodGlucoseEventData;
 import sg.lifecare.data.remote.model.data.BloodPressureEventData;
 import sg.lifecare.data.remote.model.data.BodyTemperatureEventData;
 import sg.lifecare.data.remote.model.data.BodyWeightEventData;
-import sg.lifecare.data.remote.model.data.EventData;
 import sg.lifecare.data.remote.model.data.SpO2EventData;
 import sg.lifecare.data.remote.model.response.AssignedTaskForDeviceResponse;
 import sg.lifecare.data.remote.model.response.AssignedTaskResponse;

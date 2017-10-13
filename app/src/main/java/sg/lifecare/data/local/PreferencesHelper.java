@@ -121,14 +121,14 @@ public class PreferencesHelper {
     public EntityDetailResponse.Data getUserEntity() {
         String result = mPref.getString(PREF_KEY_USER_ENTITY, null);
 
-        //Timber.d("getUserEntity: result=%s", result);
+        Timber.d("getUserEntity: result=%s", result);
 
         if (TextUtils.isEmpty(result)) {
             return null;
         }
 
         Gson gson = new Gson();
-        Type type = new TypeToken<List<EntityDetailResponse.Data>>(){}.getType();
+        Type type = new TypeToken<EntityDetailResponse.Data>(){}.getType();
         return gson.fromJson(result, type);
     }
 

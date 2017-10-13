@@ -55,7 +55,6 @@ import sg.lifecare.data.remote.model.response.LogoutResponse;
 import sg.lifecare.data.remote.model.response.RegisterAccountResponse;
 import sg.lifecare.data.remote.model.response.RelatedAlertMessageResponse;
 import sg.lifecare.data.remote.model.response.ResetPasswordResponse;
-import sg.lifecare.data.remote.model.response.Response;
 import sg.lifecare.data.remote.model.response.ServiceResponse;
 import sg.lifecare.data.remote.model.response.UpdateProfileResponse;
 import sg.lifecare.utils.CookieUtils;

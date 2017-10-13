@@ -8,21 +8,21 @@ public class AlertRuleData {
     public static final int ACTIVITY_TYPE_GEOFENCE_ENTRY = 1;
     public static final int ACTIVITY_TYPE_GEOFENCE_EXIT = 2;
 
-    public static final int ARM_STATE_ARM = 1;
-
     private String EntityId;
+    private String RuleEditEntityId;
+    private String RuleId;
     private double Latitude;
     private double Longitude;
     private int IntValue;
     private String StartTime;
     private String EndTime;
-    private int ArmState;
+    private String ArmState;
     private int ActivityType;
     private String Name;
     private String Type;
 
-    public AlertRuleData(String entityId) {
-        EntityId = entityId;
+    public AlertRuleData() {
+
     }
 
     public String getEntityId() {
@@ -50,11 +50,7 @@ public class AlertRuleData {
     }
 
     public String getArmStateAsString() {
-        switch (ArmState) {
-            case ARM_STATE_ARM:
-                return "arm";
-        }
-        return "";
+        return ArmState;
     }
 
     public String getActivityTypeAstring() {
@@ -75,6 +71,18 @@ public class AlertRuleData {
 
     public String getType() {
         return Type;
+    }
+
+    public void setRuleId(String ruleId) {
+        RuleId = ruleId;
+    }
+
+    public void setEntityId(String id) {
+        EntityId = id;
+    }
+
+    public void setRuleEditEntityId(String id) {
+        RuleEditEntityId = id;
     }
 
     public void setLatitude(double latitude) {
@@ -99,7 +107,7 @@ public class AlertRuleData {
         EndTime = String.format(Locale.getDefault(), "%d", minute);
     }
 
-    public void setArmState(int state) {
+    public void setArmState(String state) {
         ArmState = state;
     }
 
