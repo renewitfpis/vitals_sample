@@ -14,6 +14,7 @@ public class Spo2Measurement implements Serializable {
 
     private int mSpo2;
     private int mPulse;
+    private double mPi;
     private Date mTimestamp;
 
     private Spo2Measurement(int spo2, int pulse) {
@@ -29,11 +30,19 @@ public class Spo2Measurement implements Serializable {
         return mPulse;
     }
 
+    public double getPi() {
+        return mPi;
+    }
+
     public Date getTimestamp() {
         return mTimestamp;
     }
 
     public void setTimestamp(Date timestamp) {
         mTimestamp = timestamp;
+    }
+
+    public void setPi(double pi) {
+        mPi = pi;
     }
 }
