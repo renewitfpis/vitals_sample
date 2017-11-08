@@ -8,6 +8,9 @@ import dagger.Provides;
 import io.reactivex.disposables.CompositeDisposable;
 import sg.lifecare.framework.di.ActivityContext;
 import sg.lifecare.framework.di.PerActivity;
+import sg.lifecare.vitals2.ui.bloodglucose.InoSmartMvpPresenter;
+import sg.lifecare.vitals2.ui.bloodglucose.InoSmartMvpView;
+import sg.lifecare.vitals2.ui.bloodglucose.InoSmartPresenter;
 import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureDeviceMvpPresenter;
 import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureDeviceMvpView;
 import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureDevicePresenter;
@@ -216,4 +219,9 @@ public class ActivityModule {
         return presenter;
     }
 
+    @Provides
+    @PerActivity
+    InoSmartMvpPresenter<InoSmartMvpView> provideInoSmartPresenter(InoSmartPresenter<InoSmartMvpView> presenter) {
+        return presenter;
+    }
 }

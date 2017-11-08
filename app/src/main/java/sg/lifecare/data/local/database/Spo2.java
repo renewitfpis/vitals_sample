@@ -6,6 +6,7 @@ import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import sg.lifecare.data.remote.model.data.SpO2EventData;
 
 public class Spo2 extends RealmObject {
 
@@ -16,6 +17,7 @@ public class Spo2 extends RealmObject {
 
     private int spo2;
     private int pulse;
+    private double pi;
 
     private Date takenTime; // reading taken time
     private String takerId; // reading taken by
@@ -23,22 +25,26 @@ public class Spo2 extends RealmObject {
     private boolean isUploaded;
     private Date uploadedTime;
 
-    /*public static void addBodyTemperature(Realm realm, BodyTemperatureEventData data) {
+    public static Spo2 addSpo2(Realm realm, SpO2EventData data) {
         realm.beginTransaction();
 
-        BodyTemperature bodyTemperatureDb = realm.createObject(BodyTemperature.class);
-        bodyTemperatureDb.setEntityId("");
-        bodyTemperatureDb.setTemperature(data.getTemperature());
-        bodyTemperatureDb.setIsUploaded(false);
+        Spo2 spo2Db = realm.createObject(Spo2.class);
+        spo2Db.setEntityId("");
+        spo2Db.setSpo2(data.getSpO2());
+        spo2Db.setPulse(data.getPulse());
+        spo2Db.setPi(data.getPi());
+        spo2Db.setIsUploaded(false);
 
-        bodyTemperatureDb.setTakerId(data.getNurseId());
-        bodyTemperatureDb.setPatientId(data.getPatientId());
-        bodyTemperatureDb.setTakenTime(data.getReadTime());
+        spo2Db.setTakerId(data.getNurseId());
+        spo2Db.setPatientId(data.getPatientId());
+        spo2Db.setTakenTime(data.getReadTime());
 
         Patient.addOrUpdatePatient(realm, data.getPatientId(), data.getReadTime());
 
         realm.commitTransaction();
-    }*/
+
+        return spo2Db;
+    }
 
     public static Spo2 getLatestByPatientId(Realm realm, String patientId) {
         RealmResults<Spo2> spo2s = realm.where(Spo2.class)
@@ -60,12 +66,20 @@ public class Spo2 extends RealmObject {
         return spo2;
     }
 
+    public double getPi() {
+        return pi;
+    }
+
     public void setPulse(int pulse) {
         this.pulse = pulse;
     }
 
     public void setSpo2(int spo2) {
         this.spo2 = spo2;
+    }
+
+    public void setPi(double pi) {
+        this.pi = pi;
     }
 
     public void setEntityId(String entityId) {

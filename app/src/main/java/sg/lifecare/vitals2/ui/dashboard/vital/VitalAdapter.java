@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import sg.lifecare.data.local.database.BloodGlucose;
+import sg.lifecare.vitals2.ui.dashboard.vital.view.BloodGlucoseView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BloodPressureView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BodyTemperatureView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BodyWeightView;
@@ -54,13 +56,14 @@ class VitalAdapter extends BaseAdapter {
         if (itemView == null) {
             if (vitalView instanceof BloodPressureView) {
                 itemView = vitalView.getView(parent);
-
                 //itemView.setTag(vitalView);
             } else if (vitalView instanceof BodyWeightView) {
                 itemView = vitalView.getView(parent);
             } else if (vitalView instanceof BodyTemperatureView) {
                 itemView = vitalView.getView(parent);
             } else if (vitalView instanceof Spo2View) {
+                itemView = vitalView.getView(parent);
+            } else if (vitalView instanceof BloodGlucoseView) {
                 itemView = vitalView.getView(parent);
             }
         }

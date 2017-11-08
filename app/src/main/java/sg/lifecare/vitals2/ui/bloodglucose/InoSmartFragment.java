@@ -1,4 +1,4 @@
-package sg.lifecare.vitals2.ui.jumper;
+package sg.lifecare.vitals2.ui.bloodglucose;
 
 import android.Manifest;
 import android.app.Activity;
@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.ParcelUuid;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
@@ -21,10 +20,7 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,21 +31,17 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import no.nordicsemi.android.support.v18.scanner.ScanFilter;
 import no.nordicsemi.android.support.v18.scanner.ScanResult;
-import sg.lifecare.ble.device.jumper.JumperManager;
-import sg.lifecare.ble.parser.Spo2Measurement;
+import sg.lifecare.ble.device.vivacheck.InoSmartManager;
+import sg.lifecare.ble.parser.BloodGlucoseMeasurement;
 import sg.lifecare.ble.utility.BleUtils;
 import sg.lifecare.utils.DateUtils;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.ui.base.BaseFragment;
-import sg.lifecare.vitals2.ui.device.ble.jumper.JumperOximeterMvpPresenter;
-import sg.lifecare.vitals2.ui.device.ble.jumper.JumperOximeterMvpView;
 import sg.lifecare.vitals2.ui.device.scanner.BleScannerMvpView;
 import sg.lifecare.vitals2.ui.device.scanner.BleScannerPresenter;
-import sg.lifecare.vitals2.ui.spo2.Spo2Activity;
 import timber.log.Timber;
 
-public class JumperOximeterFragment extends BaseFragment
-        implements BleScannerMvpView, JumperOximeterMvpView {
+public class InoSmartFragment extends BaseFragment implements BleScannerMvpView, InoSmartMvpView {
 
     private static final int PERMISSION_REQ_LOCATION = 1;
 
@@ -59,7 +51,7 @@ public class JumperOximeterFragment extends BaseFragment
     BleScannerPresenter<BleScannerMvpView> mBleScannerPresenter;
 
     @Inject
-    JumperOximeterMvpPresenter<JumperOximeterMvpView> mJumperPresenter;
+    InoSmartMvpPresenter<InoSmartMvpView> mInoSmartPresenter;
 
     @BindView(R.id.progress_layout)
     View mProgressLayout;
@@ -76,23 +68,11 @@ public class JumperOximeterFragment extends BaseFragment
     @BindView(R.id.timestamp_text)
     TextView mTimestampText;
 
-    @BindView(R.id.spo2_value_text)
-    TextView mSpo2ValueText;
+    @BindView(R.id.value_text)
+    TextView mValueText;
 
-    @BindView(R.id.pi_value_text)
-    TextView mPiValueText;
-
-    @BindView(R.id.pulse_value_text)
-    TextView mPulseValueText;
-
-    @BindView(R.id.spo2_label)
-    TextView mSpo2Label;
-
-    @BindView(R.id.pi_label)
-    TextView mPiLabel;
-
-    @BindView(R.id.pulse_label)
-    TextView mPulseLabel;
+    @BindView(R.id.blood_glucose_label)
+    TextView mLabel;
 
     @BindView(R.id.save_button)
     Button mSaveButton;
@@ -103,22 +83,19 @@ public class JumperOximeterFragment extends BaseFragment
     @BindView(R.id.stop_button)
     Button mStopButton;
 
-    @BindView(R.id.confirm_button)
-    Button mConfirmButton;
-
     @BindView(R.id.notes_layout)
     TextInputLayout mNotesLayout;
 
     private BluetoothDevice mDevice;
-    private Spo2Measurement mMeasurement;
+    private List<InoSmartManager.CustomerHistory> mCustomerHistories = null;
 
-    public static JumperOximeterFragment newInstance() {
-        return new JumperOximeterFragment();
+    public static InoSmartFragment newInstance() {
+        return new InoSmartFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pulse_jumper, container, false);
+        View view = inflater.inflate(R.layout.fragment_blood_glucose_ino_smart, container, false);
 
         Timber.d("onCreateView");
 
@@ -127,8 +104,8 @@ public class JumperOximeterFragment extends BaseFragment
 
         mBleScannerPresenter.onAttach(this);
 
-        mJumperPresenter.onAttach(this);
-        mJumperPresenter.init(getContext());
+        mInoSmartPresenter.onAttach(this);
+        mInoSmartPresenter.init(getContext());
 
         setupViews(view);
 
@@ -141,8 +118,8 @@ public class JumperOximeterFragment extends BaseFragment
         mBleScannerPresenter.stopScan();
         mBleScannerPresenter.onDetach();
 
-        mJumperPresenter.uninit();
-        mJumperPresenter.onDetach();
+        mInoSmartPresenter.uninit();
+        mInoSmartPresenter.onDetach();
 
         super.onDestroyView();
     }
@@ -161,12 +138,11 @@ public class JumperOximeterFragment extends BaseFragment
                 setupScanView();
 
                 List<ScanFilter> scanFilters = new ArrayList<>();
-                //scanFilters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid(
-                //        JumperManager.PROPRIETARY_SERVICE)).build());
-                //scanFilters.add(new ScanFilter.Builder().setDeviceName("My Oximeter").build());
+                //scanFilters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid(UrionManager.PROPRIETARY_SERVICE)).build());
+                //scanFilters.add(new ScanFilter.Builder().setDeviceName("Bluetooth BP").build());
 
                 mDevice = null;
-                mMeasurement = null;
+                mCustomerHistories = null;
                 mBleScannerPresenter.startScan(scanFilters, 0);
             } else {
                 final Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -180,20 +156,7 @@ public class JumperOximeterFragment extends BaseFragment
         setupConnectView(R.string.device_msg_start_connect);
 
         mBleScannerPresenter.stopScan();
-        mJumperPresenter.disconnect();
-    }
-
-    @OnClick(R.id.cancel_button)
-    public void onCancelClick() {
-        getActivity().finish();
-    }
-
-    @OnClick(R.id.confirm_button)
-    public void onConfirmClick() {
-        setupSaveView();
-
-        mBleScannerPresenter.stopScan();
-        mJumperPresenter.disconnect();
+        mInoSmartPresenter.disconnect();
     }
 
     @OnClick(R.id.save_button)
@@ -201,9 +164,17 @@ public class JumperOximeterFragment extends BaseFragment
 
         Intent intent = new Intent();
 
-        if (mMeasurement != null) {
-            intent.putExtra(Spo2Activity.PARAM_DATA, mMeasurement);
-            intent.putExtra(Spo2Activity.PARAM_DEVICE_ID, mDevice.getAddress());
+        if ((mCustomerHistories != null) && (mCustomerHistories.size() > 0)) {
+            BloodGlucoseMeasurement measurement = BloodGlucoseMeasurement.get(
+                    mCustomerHistories.get(0).getResult(), mCustomerHistories.get(0).getTimestamp());
+            if (mCustomerHistories.get(0).isAfterMeal()) {
+                measurement.setAfterMeal();
+            } else if (mCustomerHistories.get(0).isBeforeMeal()) {
+                measurement.setBeforeMeal();
+            }
+
+            intent.putExtra(BloodGlucoseActivity.PARAM_DATA, measurement);
+            intent.putExtra(BloodGlucoseActivity.PARAM_DEVICE_ID, mDevice.getAddress());
             getActivity().setResult(Activity.RESULT_OK, intent);
         } else {
             getActivity().setResult(Activity.RESULT_CANCELED);
@@ -213,12 +184,22 @@ public class JumperOximeterFragment extends BaseFragment
 
     }
 
+    @OnClick(R.id.cancel_button)
+    public void onCancelClick() {
+        getActivity().finish();
+    }
+
+    private void setContentVisibility(int visibility) {
+        mTimestampCardView.setVisibility(visibility);
+        mValueText.setVisibility(visibility);
+        mLabel.setVisibility(visibility);
+        mNotesLayout.setVisibility(visibility);
+    }
 
     private void setupScanView() {
         mSaveButton.setVisibility(View.GONE);
         mConnectButton.setVisibility(View.GONE);
         mStopButton.setVisibility(View.VISIBLE);
-        mConfirmButton.setVisibility(View.GONE);
 
         mProgressBar.setVisibility(View.VISIBLE);
         mProgressText.setText(R.string.device_msg_scanning);
@@ -228,7 +209,6 @@ public class JumperOximeterFragment extends BaseFragment
         mSaveButton.setVisibility(View.GONE);
         mConnectButton.setVisibility(View.VISIBLE);
         mStopButton.setVisibility(View.GONE);
-        mConfirmButton.setVisibility(View.GONE);
 
         mProgressBar.setVisibility(View.INVISIBLE);
         mProgressText.setVisibility(View.VISIBLE);
@@ -238,64 +218,24 @@ public class JumperOximeterFragment extends BaseFragment
     }
 
     private void setupSaveView() {
-        mSaveButton.setVisibility(View.VISIBLE);
-        mConnectButton.setVisibility(View.GONE);
-        mStopButton.setVisibility(View.GONE);
-        mConfirmButton.setVisibility(View.GONE);
-
         mProgressBar.setVisibility(View.INVISIBLE);
         mProgressText.setVisibility(View.INVISIBLE);
 
-        mSpo2ValueText.setText(String.format(Locale.getDefault(), "%d", mMeasurement.getSpo2()));
-        mPulseValueText.setText(String.format(Locale.getDefault(), "%d", mMeasurement.getPulse()));
-        mPiValueText.setText(new DecimalFormat("#.#").format(mMeasurement.getPi()));
+        mStopButton.setVisibility(View.GONE);
 
-        DateTime dateTime = new DateTime(mMeasurement.getTimestamp());
-        mTimestampText.setText(DateUtils.FULL_DATETIME_FORMAT.print(dateTime));
+        if ((mCustomerHistories != null) && (mCustomerHistories.size() > 0)) {
+            mSaveButton.setVisibility(View.VISIBLE);
+            mConnectButton.setVisibility(View.GONE);
 
-        setContentVisibility(View.VISIBLE);
+            DateTime dateTime = new DateTime(mCustomerHistories.get(0).getTimestamp());
+            mTimestampText.setText(DateUtils.FULL_DATETIME_FORMAT.print(dateTime));
+            mValueText.setText(String.format(Locale.getDefault(), "%.1f", mCustomerHistories.get(0).getResult()));
+
+            setContentVisibility(View.VISIBLE);
+        } else {
+            setupConnectView(R.string.device_msg_no_data);
+        }
     }
-
-    private void setTransferView(Spo2Measurement measurement) {
-
-        if (mSpo2ValueText.getVisibility() == View.INVISIBLE) {
-            mSpo2ValueText.setVisibility(View.VISIBLE);
-            mPiValueText.setVisibility(View.VISIBLE);
-            mPulseValueText.setVisibility(View.VISIBLE);
-            mSpo2Label.setVisibility(View.VISIBLE);
-            mPiLabel.setVisibility(View.VISIBLE);
-            mPulseLabel.setVisibility(View.VISIBLE);
-            mConfirmButton.setVisibility(View.VISIBLE);
-
-            mProgressBar.setVisibility(View.INVISIBLE);
-            mProgressText.setVisibility(View.INVISIBLE);
-        }
-
-        if ((measurement.getSpo2() > 0) && (measurement.getSpo2() != (byte)0x7f)) {
-            mSpo2ValueText.setText(String.format(Locale.getDefault(), "%d", measurement.getSpo2()));
-        }
-
-        if ((measurement.getPulse() != 0xff)) {
-            mPulseValueText.setText(String.format(Locale.getDefault(), "%d", measurement.getPulse()));
-        }
-
-        if (measurement.getPi() > 0.0d) {
-            mPiValueText.setText(new DecimalFormat("#.#").format(measurement.getPi()));
-        }
-
-    }
-
-    private void setContentVisibility(int visibility) {
-        mTimestampCardView.setVisibility(visibility);
-        mSpo2ValueText.setVisibility(visibility);
-        mPiValueText.setVisibility(visibility);
-        mPulseValueText.setVisibility(visibility);
-        mSpo2Label.setVisibility(visibility);
-        mPiLabel.setVisibility(visibility);
-        mPulseLabel.setVisibility(visibility);
-        mNotesLayout.setVisibility(visibility);
-    }
-
 
     @Override
     public void showScanLoading() {
@@ -309,41 +249,62 @@ public class JumperOximeterFragment extends BaseFragment
 
     @Override
     public void bleScanResult(int callbackType, ScanResult result) {
-        Timber.d("bleScanResult");
-        if ((mDevice == null) && (result.getDevice() != null)
-                && "My Oximeter".equalsIgnoreCase(result.getDevice().getName())) {
+        Timber.d("bleScanResult: %s", result.getDevice().getName());
+        if ((mDevice == null) && (result.getDevice() != null) &&
+                "BLE-Vivachek".equalsIgnoreCase(result.getDevice().getName())) {
             mDevice = result.getDevice();
 
             Timber.d("bleScanResult: deviceType=%d", mDevice.getType());
 
             mBleScannerPresenter.stopScan();
-            mJumperPresenter.connect(mDevice);
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mInoSmartPresenter.connect(mDevice);
+                }
+            });
+
         }
     }
 
     @Override
     public void bleBatchScanResults(List<ScanResult> results) {
-        //if (results.size() > 0) {
-        //    mBleScannerPresenter.stopScan();
-        //    mJumperPresenter.connect(results.get(0).getDevice());
-        //}
+
     }
 
     @Override
     public void onNoDeviceFound() {
-
+        setupConnectView(R.string.device_msg_no_device);
     }
 
+    @Override
+    public void onDeviceDisconnected(BluetoothDevice device) {
+        if (mCustomerHistories != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setupSaveView();
+                }
+            });
+        }
+    }
 
     @Override
-    public void onSpo2PulsePiRead(int spo2, int pulse, double pi) {
+    public void onDeviceErrorDisconnected(BluetoothDevice device) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mMeasurement = Spo2Measurement.get(spo2, pulse, Calendar.getInstance().getTime());
-                mMeasurement.setPi(pi);
-                setTransferView(mMeasurement);
+                setupConnectView(R.string.device_msg_error_disconnected);
             }
         });
+    }
+
+    @Override
+    public void onDeviceResultUpdate(List<InoSmartManager.CustomerHistory> customerHistories) {
+
+        // we just want to get result
+        mCustomerHistories = customerHistories;
+        mInoSmartPresenter.disconnect();
     }
 }

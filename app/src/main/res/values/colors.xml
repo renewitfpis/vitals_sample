@@ -12,5 +12,6 @@
     <color name="blood_pressure">#FFD23A</color>
     <color name="body_weight">#90C850</color>
     <color name="body_temperature">#407AE2</color>
+    <color name="blood_glucose">#911832</color>
     <color name="spo2">#60B6FA</color>
 </resources>

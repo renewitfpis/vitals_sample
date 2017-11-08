@@ -4,6 +4,7 @@ import dagger.Component;
 import sg.lifecare.framework.di.PerActivity;
 import sg.lifecare.vitals2.TestActivity;
 import sg.lifecare.vitals2.di.module.ActivityModule;
+import sg.lifecare.vitals2.ui.bloodglucose.InoSmartFragment;
 import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureDeviceFragment;
 import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureManualFragment;
 import sg.lifecare.vitals2.ui.bodyweight.BodyWeightDeviceFragment;
@@ -63,5 +64,7 @@ public interface ActivityComponent {
     void inject(VitalFragment vitalFragment);
 
     void inject(MemberListFragment memberListFragment);
+
+    void inject(InoSmartFragment inoSmartFragment);
 
 }

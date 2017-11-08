@@ -4,6 +4,7 @@ package sg.lifecare.data.local.database;
 import java.util.Date;
 
 import io.realm.DynamicRealm;
+import io.realm.FieldAttribute;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
@@ -45,6 +46,10 @@ public class Migration implements RealmMigration {
 
             oldVesion++;
 
+        } else if (oldVesion == 2) {
+            // add field for SPO2
+            RealmObjectSchema spo2Schema = schema.get("Spo2");
+            spo2Schema.addField("pi", Double.class, FieldAttribute.REQUIRED);
         }
     }
 }

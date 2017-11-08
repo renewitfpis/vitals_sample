@@ -42,6 +42,10 @@ public class Spo2Activity extends BaseActivity {
         return (Spo2Measurement) intent.getSerializableExtra(PARAM_DATA);
     }
 
+    public static String getDeviceId(Intent intent) {
+        return intent.getStringExtra(PARAM_DEVICE_ID);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

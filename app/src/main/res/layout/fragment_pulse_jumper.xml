@@ -10,24 +10,28 @@
     android:focusableInTouchMode="true"
     android:background="@color/white">
 
-    <Button
+    <ImageButton
         android:id="@+id/cancel_button"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/action_cancel"
-        app:layout_constraintRight_toLeftOf="@+id/buttons_layout"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        style="@style/AppButton" />
+        android:background="?android:selectableItemBackground"
+        android:tint="@color/blue_grey_900"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_close_black_36dp" />
 
     <FrameLayout
         android:id="@+id/buttons_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/cancel_button"
-        app:layout_constraintTop_toTopOf="@+id/cancel_button">
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cancel_button"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="8dp">
         <Button
             android:id="@+id/save_button"
             android:layout_width="match_parent"
@@ -88,7 +92,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="16dp"
         android:id="@+id/timestamp_cardview"
-        app:layout_constraintTop_toBottomOf="@+id/cancel_button">
+        app:layout_constraintTop_toBottomOf="@+id/buttons_layout">
 
         <TextView
             android:id="@+id/timestamp_text"
@@ -110,7 +114,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/spo2_spo2_name_unit_label"
-        android:textAppearance="@style/AppText.Medium"
+        android:textAppearance="@style/BleValueLabelText"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/timestamp_cardview" />
 
@@ -128,7 +132,7 @@
         android:paddingEnd="8dp"
         android:paddingStart="8dp"
         android:paddingTop="4dp"
-        android:textAppearance="@style/AppText.Large"
+        android:textAppearance="@style/BleValueText"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -143,7 +147,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/spo2_pulse_rate_name_unit_label"
-        android:textAppearance="@style/AppText.Medium"
+        android:textAppearance="@style/BleValueLabelText"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spo2_value_text" />
 
@@ -158,7 +162,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="14dp"
-        android:textAppearance="@style/AppText.Large"
+        android:textAppearance="@style/BleValueText"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:background="@color/black"
@@ -176,7 +180,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/spo2_pi_name_unit_label"
-        android:textAppearance="@style/AppText.Medium"
+        android:textAppearance="@style/BleValueLabelText"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pulse_value_text" />
 
@@ -191,7 +195,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="14dp"
-        android:textAppearance="@style/AppText.Large"
+        android:textAppearance="@style/BleValueText"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:background="@color/black"
@@ -202,12 +206,23 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pi_label" />
 
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/action_confirm"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pi_value_text"
+        style="@style/AppButton" />
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/notes_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
         android:theme="@style/NotesEditText"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -1,9 +1,11 @@
 package sg.lifecare.vitals2.ui.dashboard.vital;
 
 import io.realm.Realm;
+import sg.lifecare.ble.parser.BloodGlucoseMeasurement;
 import sg.lifecare.ble.parser.BloodPressureMeasurement;
 import sg.lifecare.ble.parser.BodyTemperatureMeasurement;
 import sg.lifecare.ble.parser.BodyWeightMeasurement;
+import sg.lifecare.ble.parser.Spo2Measurement;
 import sg.lifecare.data.remote.model.response.AssistsedEntityResponse;
 import sg.lifecare.data.remote.model.response.EntityDetailResponse;
 import sg.lifecare.framework.di.PerActivity;
@@ -24,4 +26,8 @@ public interface VitalMvpPresenter<V extends MvpView> extends MvpPresenter<V> {
     void postBodyWeightData(BodyWeightMeasurement bw, String nurseId, String patientId, String deviceId);
 
     void postBodyTemperatureData(BodyTemperatureMeasurement bt, String nurseId, String patientId, String deviceId);
+
+    void postSpo2Data(Spo2Measurement spo2, String nurseId, String patientId, String deviceId);
+
+    void postBloodGlucoseData(BloodGlucoseMeasurement bg, String nurseId, String patientId, String deviceId);
 }

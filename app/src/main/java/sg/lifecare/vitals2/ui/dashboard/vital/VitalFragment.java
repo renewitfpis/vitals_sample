@@ -16,17 +16,22 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import sg.lifecare.ble.parser.BloodGlucoseMeasurement;
 import sg.lifecare.ble.parser.BloodPressureMeasurement;
 import sg.lifecare.ble.parser.BodyTemperatureMeasurement;
 import sg.lifecare.ble.parser.BodyWeightMeasurement;
+import sg.lifecare.ble.parser.Spo2Measurement;
+import sg.lifecare.data.local.database.BloodGlucose;
 import sg.lifecare.data.remote.model.response.AssistsedEntityResponse;
 import sg.lifecare.data.remote.model.response.EntityDetailResponse;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.ui.base.BaseFragment;
+import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseActivity;
 import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureActivity;
 import sg.lifecare.vitals2.ui.bodytemperature.BodyTemperatureActivity;
 import sg.lifecare.vitals2.ui.bodyweight.BodyWeightActivity;
 import sg.lifecare.vitals2.ui.dashboard.DashboardActivity;
+import sg.lifecare.vitals2.ui.dashboard.vital.view.BloodGlucoseView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BloodPressureView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BodyTemperatureView;
 import sg.lifecare.vitals2.ui.dashboard.vital.view.BodyWeightView;
@@ -42,11 +47,13 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
     private static final int REQ_BW_DATA = 2;
     private static final int REQ_BT_DATA = 3;
     private static final int REQ_SPO2_DATA = 4;
+    private static final int REQ_BG_DATA = 5;
 
     private static final int POSITION_BP = 0;
     private static final int POSITION_BW = 1;
     private static final int POSITION_BT = 2;
     private static final int POSITION_SPO2 = 3;
+    private static final int POSITION_BG = 4;
 
     private static final String KEY_MEMBER_POSITION = "member_position";
 
@@ -138,6 +145,7 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
         mData.add(new BodyWeightView());
         mData.add(new BodyTemperatureView());
         mData.add(new Spo2View());
+        mData.add(new BloodGlucoseView());
 
         mAdapter = new VitalAdapter(mData, mPresenter.getDatabase(), getPatientId(), this);
 
@@ -175,6 +183,18 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
 
                 mPresenter.postBodyTemperatureData(bt, mUser.getId(), getPatientId(), deviceId);
                 mAdapter.updateView(POSITION_BT);
+            } else if (requestCode == REQ_SPO2_DATA) {
+                Spo2Measurement spo2 = Spo2Activity.getData(data);
+                String deviceId = Spo2Activity.getDeviceId(data);
+
+                mPresenter.postSpo2Data(spo2, mUser.getId(), getPatientId(), deviceId);
+                mAdapter.updateView(POSITION_SPO2);
+             } else if (requestCode == REQ_BG_DATA) {
+                BloodGlucoseMeasurement bg = BloodGlucoseActivity.getData(data);
+                String deviceId = BloodGlucoseActivity.getDeviceId(data);
+
+                mPresenter.postBloodGlucoseData(bg, mUser.getId(), getPatientId(), deviceId);
+                mAdapter.updateView(POSITION_BG);
             }
         }
     }
@@ -183,6 +203,8 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
         mAdapter.updateView(POSITION_BP);
         mAdapter.updateView(POSITION_BW);
         mAdapter.updateView(POSITION_BT);
+        mAdapter.updateView(POSITION_SPO2);
+        mAdapter.updateView(POSITION_BG);
     }
 
     @Override
@@ -212,6 +234,12 @@ public class VitalFragment extends BaseFragment implements VitalMvpView, VitalVi
                             Spo2Activity.TYPE_DEVICE,
                             Spo2Activity.DEVICE_JUMPER),
                             REQ_SPO2_DATA);
+        } else if (vitalView instanceof BloodGlucoseView) {
+            startActivityForResult(
+                    BloodGlucoseActivity.getStartIntent(getContext(),
+                            BloodGlucoseActivity.TYPE_DEVICE,
+                            BloodGlucoseActivity.DEVICE_INO_SMART),
+                            REQ_BG_DATA);
         }
     }
 

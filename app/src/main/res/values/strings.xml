@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Vitals</string>
 
     <!-- Fixes bug -->
     <item name="visible" type="id"/>
@@ -76,6 +75,7 @@
     <string name="action_scan_nurse_id">Scan Nurse ID</string>
     <string name="action_scan_patient_id">Scan Patient ID</string>
     <string name="action_measure">Measure</string>
+    <string name="action_confirm">Confirm</string>
 
     <string name="message_sync">Syncing data</string>
     <string name="message_sync_completed">Sync completed</string>
@@ -133,12 +133,14 @@
     <string name="device_msg_start_connect">Start connecting to device.</string>
     <string name="device_msg_error_disconnected">Connection error. Retry.</string>
     <string name="device_msg_waiting_measure">Waiting to start measuring.</string>
+    <string name="device_msg_no_data">No data from device. Retry</string>
 
     <!-- misc -->
     <string name="blood_pressure">Blood Pressure</string>
     <string name="body_weight">Body Weight</string>
     <string name="body_temperature">Body Temperature</string>
     <string name="spo2">SpO2</string>
+    <string name="blood_glucose">Blood Glucose</string>
 
 
     <!-- QN -->

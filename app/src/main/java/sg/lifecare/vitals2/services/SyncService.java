@@ -38,6 +38,7 @@ import sg.lifecare.data.local.database.BloodGlucose;
 import sg.lifecare.data.local.database.BloodPressure;
 import sg.lifecare.data.local.database.BodyTemperature;
 import sg.lifecare.data.local.database.BodyWeight;
+import sg.lifecare.data.remote.model.data.BloodGlucoseEventData;
 import sg.lifecare.data.remote.model.data.BloodPressureEventData;
 import sg.lifecare.data.remote.model.data.BodyTemperatureEventData;
 import sg.lifecare.data.remote.model.data.BodyWeightEventData;
@@ -225,20 +226,6 @@ public class SyncService extends Service {
         mCompositeDisposable.dispose();
     }
 
-    private Flowable<Boolean> downloadBloodGlucose(String userId, DateTime start, DateTime end) {
-        return mDataManager.getBloodGlucoses(userId, start, end)
-                .map(bloodGlucoseResponse -> {
-                    Realm realm = mDataManager.getRealm();
-                    BloodGlucose.addBloodGlucoses(realm, bloodGlucoseResponse.getData());
-                    realm.close();
-                    return true;
-                })
-                .onErrorReturn(throwable -> {
-                    Timber.e(throwable.getMessage(), throwable);
-                    return false;
-                });
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Timber.d("onStartCommand: startId=%d", startId);
@@ -279,9 +266,11 @@ public class SyncService extends Service {
         allFlowables.add(uploadBloodPressure());
         allFlowables.add(uploadBodyTemperature());
         allFlowables.add(uploadBodyWeight());
+        allFlowables.add(uploadBloodGlucose());
         allFlowables.add(downloadBloodPressure(mUserId, start, end));
         allFlowables.add(downloadBodyTemperature(mUserId, start, end));
         allFlowables.add(downloadBodyWeight(mUserId, start, end));
+        allFlowables.add(downloadBloodGlucose(mUserId, start, end));
 
         /*Flowable<List<Boolean>> allFlowables = Single.concatArray(
                 uploadBloodPressure(),
@@ -482,6 +471,54 @@ public class SyncService extends Service {
                 }).toList();
     }
 
+    private Single<List<Boolean>> uploadBloodGlucose() {
+        return Flowable.create(
+                (FlowableOnSubscribe<RealmResults<BloodGlucose>>) emitter -> {
+
+                    Realm realm = mDataManager.getRealm();
+
+                    emitter.onNext(realm.where(BloodGlucose.class).equalTo("isUploaded", false).findAll());
+
+                    realm.close();
+
+                    emitter.onComplete();
+                }, BackpressureStrategy.BUFFER)
+                .flatMapIterable(bps -> bps)
+                .flatMap(new Function<BloodGlucose, Publisher<Boolean>>() {
+                    @Override
+                    public Publisher<Boolean> apply(@NonNull BloodGlucose bg)
+                            throws Exception {
+                        BloodGlucoseEventData eventData = new BloodGlucoseEventData();
+                        eventData.setEntityId(mDataManager.getUserEntity().getId());
+                        eventData.setCreateDate(Calendar.getInstance().getTime());
+                        eventData.setConcentration(bg.getGlucose());
+                        eventData.setNurseId(bg.getTakerId());
+                        eventData.setPatientId(bg.getPatientId());
+                        eventData.setReadTime(bg.getTakenTime());
+                        eventData.setDeviceId(bg.getDeviceId());
+
+                        return mDataManager.postAssignedTaskForDevice(eventData)
+                                .map(response -> {
+
+                                    if (!response.isError()) {
+                                        Realm realm = mDataManager.getRealm();
+                                        realm.beginTransaction();
+                                        bg.setIsUploaded(true);
+                                        bg.setEntityId(response.getData().getId());
+                                        bg.setUploadTime(response.getData().getCreateDate());
+                                        realm.copyFromRealm(bg);
+                                        realm.commitTransaction();
+                                        realm.close();
+                                    }
+                                    return true;
+                                }).onErrorReturn(throwable -> {
+                                    Timber.e(throwable.getMessage(), throwable);
+                                    return false;
+                                });
+                    }
+                }).toList();
+    }
+
     private Single<List<Boolean>> downloadBloodPressure(String userId, DateTime start, DateTime end) {
         return mDataManager.getBloodPressures(userId, start, end)
                 .map(response -> {
@@ -518,6 +555,20 @@ public class SyncService extends Service {
                     realm.close();
                     return true;
 
+                })
+                .onErrorReturn(throwable -> {
+                    Timber.e(throwable.getMessage(), throwable);
+                    return false;
+                }).toList();
+    }
+
+    private Single<List<Boolean>> downloadBloodGlucose(String userId, DateTime start, DateTime end) {
+        return mDataManager.getBloodGlucoses(userId, start, end)
+                .map(response -> {
+                    Realm realm = mDataManager.getRealm();
+                    BloodGlucose.addBloodGlucoses(realm, response.getData());
+                    realm.close();
+                    return true;
                 })
                 .onErrorReturn(throwable -> {
                     Timber.e(throwable.getMessage(), throwable);

@@ -16,6 +16,10 @@ public class BloodGlucoseEventData extends EventData {
         super(LifecareUtils.EVENT_ID_BLOOD_GLUCOSE, "Gluco Update Data");
     }
 
+    public float getConcentration() {
+        return mConcentration;
+    }
+
     public void setConcentration(float concentration) {
         mConcentration = concentration;
         updateExtraData();
