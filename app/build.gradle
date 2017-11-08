@@ -19,7 +19,7 @@ apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion '26.0.2'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -28,9 +28,9 @@ android {
     defaultConfig {
         applicationId "sg.lifecare.vitals2"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 10
-        versionName "0.2.10"
+        versionName "0.2.11"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
