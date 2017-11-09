@@ -8,11 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.ToolBar">
-        <item name="android:textColorPrimary">@color/white</item>
+    <style name="AppTheme.ToolBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/blue_grey_900</item>
+        <item name="android:background">@color/white</item>
+        
         <!-- change menu icon -->
-        <item name="colorControlNormal">@color/white</item>
-        <item name="actionMenuTextColor">@color/white</item>
+        <item name="colorControlNormal">@color/blue_grey_900</item>
+        <item name="actionMenuTextColor">@color/blue_grey_900</item>
     </style>
 
 
@@ -35,24 +37,16 @@
     <style name="AppText" parent="@android:style/TextAppearance">
     </style>
 
-    <style name="AppText.Display1">
-        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Display1</item>
-        <item name="android:textSize">34sp</item>
+    <style name="AppText.Display1" parent="Base.TextAppearance.AppCompat.Display1">
     </style>
 
-    <style name="AppText.Headline">
-        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Headline</item>
-        <item name="android:textSize">24sp</item>
+    <style name="AppText.Headline" parent="Base.TextAppearance.AppCompat.Headline">
     </style>
 
-    <style name="AppText.Title">
-        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Title</item>
-        <item name="android:textSize">20sp</item>
+    <style name="AppText.Title" parent="Base.TextAppearance.AppCompat.Title">ß
     </style>
 
-    <style name="AppText.Subhead">
-        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Subhead</item>
-        <item name="android:textSize">16sp</item>
+    <style name="AppText.Subhead" parent="Base.TextAppearance.AppCompat.Subhead">
     </style>
 
     <style name="AppText.Body" parent="TextAppearance.AppCompat.Body1">
@@ -83,8 +77,33 @@
     </style>
 
     <style name="AppButton" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@color/white</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@color/blue_grey_600</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="AppButton.Red" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:background">@color/blood_glucose</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="AppButton.Yellow" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:background">@color/blood_pressure</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="AppButton.Green" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:background">@color/body_weight</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="AppButton.Blue" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:background">@color/body_temperature</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="AppButton.LightBlue" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:background">@color/spo2</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="AppButton.Dialog">
@@ -109,5 +128,16 @@
 
     <style name="AppDialog" parent="Theme.AppCompat.Light.Dialog">
 
+    </style>
+
+    <style name="BleValueLabelText" parent="AppText.Subhead">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">@color/blue_grey_800</item>
+    </style>
+
+    <style name="BleValueText" parent="AppText.Display1">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/blue_grey_900</item>
+        <item name="android:background">@color/white</item>
     </style>
 </resources>

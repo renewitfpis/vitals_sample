@@ -3,12 +3,11 @@ package sg.lifecare.ble.parser;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
-public class WeightMeasurement {
-
-    private static final String TAG = "WeightMeasurement";
+public class BodyWeightMeasurement implements Serializable {
 
     private static final byte MEASUREMENT_UNIT= 0x01;
     private static final byte TIMESTAMP_PRESENT = 0x02;
@@ -24,7 +23,7 @@ public class WeightMeasurement {
     public static final String UNIT_METER = "m";
     public static final String UNIT_INCH = "in";
 
-    public static WeightMeasurement parse(final BluetoothGattCharacteristic characteristic) {
+    public static BodyWeightMeasurement parse(final BluetoothGattCharacteristic characteristic) {
         if (characteristic == null) {
             return null;
         }
@@ -39,7 +38,7 @@ public class WeightMeasurement {
         final int weight = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, offset);
         offset += 2;
 
-        WeightMeasurement weightMeasurement = new WeightMeasurement(weight / (unit == UNIT_SI ? 200f : 100f), unit);
+        BodyWeightMeasurement weightMeasurement = new BodyWeightMeasurement(weight / (unit == UNIT_SI ? 200f : 100f), unit);
 
         if (timestampPresent) {
             final Calendar calendar = Calendar.getInstance();
@@ -74,6 +73,13 @@ public class WeightMeasurement {
 
     }
 
+    public static BodyWeightMeasurement get(float weight, Date timestamp) {
+        BodyWeightMeasurement measurement = new BodyWeightMeasurement(weight, UNIT_SI);
+        measurement.setTimestamp(timestamp);
+
+        return measurement;
+    }
+
     private final float mWeight;
     private final int mUnit;
     private Date mTimestamp;
@@ -81,7 +87,7 @@ public class WeightMeasurement {
     private float mBmi = -1f;
     private float mHeight = -1f;
 
-    private WeightMeasurement(float weight, int unit) {
+    private BodyWeightMeasurement(float weight, int unit) {
 
         mWeight = weight;
         mUnit = unit;

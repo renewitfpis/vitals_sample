@@ -1,8 +1,14 @@
 package sg.lifecare.vitals2.ui.bloodpressure;
 
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,6 +93,7 @@ public class BloodPressureDeviceFragment extends BaseFragment implements
 
     private List<ScanFilter> mScanFilters = new ArrayList<>();
     private List<BloodPressureMeasurement> mBloodPressures = new ArrayList<>();
+    private String mDeviceId;
 
     public static BloodPressureDeviceFragment newInstance() {
         BloodPressureDeviceFragment fragment = new BloodPressureDeviceFragment();
@@ -146,7 +153,8 @@ public class BloodPressureDeviceFragment extends BaseFragment implements
 
         setContentVisibility(View.INVISIBLE);
 
-        if (devices.size() > 0) {
+        if ((devices.size() > 0) && (ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
             setupScanView();
         } else {
             setupConnectView();
@@ -211,9 +219,20 @@ public class BloodPressureDeviceFragment extends BaseFragment implements
 
     @OnClick(R.id.connect_button)
     public void onConnectClick() {
-        mBleScannerPresenter.startScan(mScanFilters);
-        setupScanView();
-        mBloodPressures.clear();
+        // check permissions
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mBleScannerPresenter.startScan(mScanFilters);
+            setupScanView();
+            mBloodPressures.clear();
+        } else {
+
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+        }
+
+
+
     }
 
     @OnClick(R.id.stop_button)
@@ -221,6 +240,24 @@ public class BloodPressureDeviceFragment extends BaseFragment implements
         mBleScannerPresenter.stopScan();
         mANDUA651Presenter.stopConnect();
         setupConnectView();
+    }
+
+    @OnClick(R.id.save_button)
+    public void onSaveClick() {
+
+        Intent intent = new Intent();
+
+        if (mBloodPressures.size() > 0) {
+            BloodPressureMeasurement bloodPressure = mBloodPressures.get(mBloodPressures.size()-1);
+            intent.putExtra(BloodPressureActivity.PARAM_DATA, bloodPressure);
+            intent.putExtra(BloodPressureActivity.PARAM_DEVICE_ID, mDeviceId);
+            getActivity().setResult(Activity.RESULT_OK, intent);
+        } else {
+            getActivity().setResult(Activity.RESULT_CANCELED);
+        }
+
+        getActivity().finish();
+
     }
 
     @Override
@@ -264,10 +301,16 @@ public class BloodPressureDeviceFragment extends BaseFragment implements
     }
 
     @Override
+    public void bleScanResult(int callbackType, ScanResult result) {
+
+    }
+
+    @Override
     public void bleBatchScanResults(List<ScanResult> results) {
         if (results.size() > 0) {
             mBleScannerPresenter.stopScan();
             mANDUA651Presenter.readDevice(results.get(0).getDevice());
+            mDeviceId = results.get(0).getDevice().getAddress();
         }
     }
 

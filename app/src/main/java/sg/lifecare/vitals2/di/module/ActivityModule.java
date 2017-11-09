@@ -8,6 +8,9 @@ import dagger.Provides;
 import io.reactivex.disposables.CompositeDisposable;
 import sg.lifecare.framework.di.ActivityContext;
 import sg.lifecare.framework.di.PerActivity;
+import sg.lifecare.vitals2.ui.bloodglucose.InoSmartMvpPresenter;
+import sg.lifecare.vitals2.ui.bloodglucose.InoSmartMvpView;
+import sg.lifecare.vitals2.ui.bloodglucose.InoSmartPresenter;
 import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureDeviceMvpPresenter;
 import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureDeviceMvpView;
 import sg.lifecare.vitals2.ui.bloodpressure.BloodPressureDevicePresenter;
@@ -26,11 +29,33 @@ import sg.lifecare.vitals2.ui.bloodglucose.BloodGlucoseManualPresenter;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanMvpPresenter;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanMvpView;
 import sg.lifecare.vitals2.ui.dashboard.careplan.CarePlanPresenter;
+import sg.lifecare.vitals2.ui.dashboard.member.MemberListMvpPresenter;
+import sg.lifecare.vitals2.ui.dashboard.member.MemberListMvpView;
+import sg.lifecare.vitals2.ui.dashboard.member.MemberListPresenter;
+import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainMvpPresenter;
+import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainMvpView;
+import sg.lifecare.vitals2.ui.dashboard.nurse.NurseMainPresenter;
+import sg.lifecare.vitals2.ui.dashboard.nurse.NurseScanMvpPresenter;
+import sg.lifecare.vitals2.ui.dashboard.nurse.NurseScanMvpView;
+import sg.lifecare.vitals2.ui.dashboard.nurse.NurseScanPresenter;
+import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainMvpPresenter;
+import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainMvpView;
+import sg.lifecare.vitals2.ui.dashboard.patient.PatientMainPresenter;
+import sg.lifecare.vitals2.ui.dashboard.vital.VitalMvpPresenter;
+import sg.lifecare.vitals2.ui.dashboard.vital.VitalMvpView;
+import sg.lifecare.vitals2.ui.dashboard.vital.VitalPresenter;
+import sg.lifecare.vitals2.ui.device.ble.jumper.JumperOximeterMvpPresenter;
+import sg.lifecare.vitals2.ui.device.ble.jumper.JumperOximeterMvpView;
+import sg.lifecare.vitals2.ui.device.ble.jumper.JumperOximeterPresenter;
+import sg.lifecare.vitals2.ui.bodytemperature.JumperThermometerMvpPresenter;
+import sg.lifecare.vitals2.ui.bodytemperature.JumperThermometerMvpView;
+import sg.lifecare.vitals2.ui.bodytemperature.JumperThermometerPresenter;
+import sg.lifecare.vitals2.ui.bloodpressure.UrionMvpPresenter;
+import sg.lifecare.vitals2.ui.bloodpressure.UrionMvpView;
+import sg.lifecare.vitals2.ui.bloodpressure.UrionPresenter;
 import sg.lifecare.vitals2.ui.device.list.DeviceListMvpPresenter;
 import sg.lifecare.vitals2.ui.device.list.DeviceListMvpView;
 import sg.lifecare.vitals2.ui.device.list.DeviceListPresenter;
-import sg.lifecare.vitals2.ui.device.ble.and.ANDMvpPresenter;
-import sg.lifecare.vitals2.ui.device.ble.and.ANDUC352MvpView;
 import sg.lifecare.vitals2.ui.device.scanner.BleScannerMvpPresenter;
 import sg.lifecare.vitals2.ui.device.scanner.BleScannerMvpView;
 import sg.lifecare.vitals2.ui.device.scanner.BleScannerPresenter;
@@ -40,6 +65,9 @@ import sg.lifecare.vitals2.ui.login.ForgotPasswordPresenter;
 import sg.lifecare.vitals2.ui.login.LoginMvpPresenter;
 import sg.lifecare.vitals2.ui.login.LoginMvpView;
 import sg.lifecare.vitals2.ui.login.LoginPresenter;
+import sg.lifecare.vitals2.ui.bodyweight.QNMvpPresenter;
+import sg.lifecare.vitals2.ui.bodyweight.QNMvpView;
+import sg.lifecare.vitals2.ui.bodyweight.QNPresenter;
 
 @Module
 public class ActivityModule {
@@ -130,4 +158,70 @@ public class ActivityModule {
         return presenter;
     }
 
+    @Provides
+    @PerActivity
+    NurseScanMvpPresenter<NurseScanMvpView> provideNurseScanPresenter(
+            NurseScanPresenter<NurseScanMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    NurseMainMvpPresenter<NurseMainMvpView> provideNurseMainPresenter(
+            NurseMainPresenter<NurseMainMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    PatientMainMvpPresenter<PatientMainMvpView> providePatientMainPresenter(
+            PatientMainPresenter<PatientMainMvpView> presenter) {
+        return presenter;
+    }
+
+
+    @Provides
+    @PerActivity
+    QNMvpPresenter<QNMvpView> proviceQNPresenter(QNPresenter<QNMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    UrionMvpPresenter<UrionMvpView> provideUrionPresenter(UrionPresenter<UrionMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    JumperThermometerMvpPresenter<JumperThermometerMvpView> provideJumperThermometerPresenter(
+            JumperThermometerPresenter<JumperThermometerMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    JumperOximeterMvpPresenter<JumperOximeterMvpView> provideJumperOximeterPresenter(
+            JumperOximeterPresenter<JumperOximeterMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    VitalMvpPresenter<VitalMvpView> provideVitalPresenter(VitalPresenter<VitalMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    MemberListMvpPresenter<MemberListMvpView> provideMemberListPresenter(
+            MemberListPresenter<MemberListMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    InoSmartMvpPresenter<InoSmartMvpView> provideInoSmartPresenter(InoSmartPresenter<InoSmartMvpView> presenter) {
+        return presenter;
+    }
 }

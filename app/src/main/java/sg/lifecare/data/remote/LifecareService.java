@@ -26,11 +26,10 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
-import sg.lifecare.data.local.database.BloodGlucose;
-import sg.lifecare.data.local.database.BodyWeight;
 import sg.lifecare.data.remote.model.data.AcknowledgeData;
 import sg.lifecare.data.remote.model.data.BloodGlucoseEventData;
 import sg.lifecare.data.remote.model.data.BloodPressureEventData;
+import sg.lifecare.data.remote.model.data.BodyTemperatureEventData;
 import sg.lifecare.data.remote.model.data.BodyWeightEventData;
 import sg.lifecare.data.remote.model.data.CaregiverData;
 import sg.lifecare.data.remote.model.data.CommissionData;
@@ -44,6 +43,7 @@ import sg.lifecare.data.remote.model.response.AssignedTaskResponse;
 import sg.lifecare.data.remote.model.response.AssistsedEntityResponse;
 import sg.lifecare.data.remote.model.response.BloodGlucoseResponse;
 import sg.lifecare.data.remote.model.response.BloodPressureResponse;
+import sg.lifecare.data.remote.model.response.BodyTemperatureResponse;
 import sg.lifecare.data.remote.model.response.BodyWeightResponse;
 import sg.lifecare.data.remote.model.response.CommissionDeviceResponse;
 import sg.lifecare.data.remote.model.response.ConnectedDeviceResponse;
@@ -55,7 +55,6 @@ import sg.lifecare.data.remote.model.response.LogoutResponse;
 import sg.lifecare.data.remote.model.response.RegisterAccountResponse;
 import sg.lifecare.data.remote.model.response.RelatedAlertMessageResponse;
 import sg.lifecare.data.remote.model.response.ResetPasswordResponse;
-import sg.lifecare.data.remote.model.response.Response;
 import sg.lifecare.data.remote.model.response.ServiceResponse;
 import sg.lifecare.data.remote.model.response.UpdateProfileResponse;
 import sg.lifecare.utils.CookieUtils;
@@ -63,8 +62,6 @@ import sg.lifecare.vitals2.BuildConfig;
 import timber.log.Timber;
 
 public interface LifecareService {
-
-    String ENDPOINT = "https://www.lifecare.sg";
 
     @FormUrlEncoded
     @POST("mlifecare/authentication/appLogin")
@@ -159,17 +156,26 @@ public interface LifecareService {
             @Query("StartDay") String startDate,
             @Query("EndDay") String endDay);
 
-    @POST("/mlifecare/event/addEvent")
-    Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BloodGlucoseEventData post);
+    @GET("/mlifecare/event/getBodyTemperatureReading")
+    Flowable<BodyTemperatureResponse> getBodyTemperatures(
+            @Query("EntityId") String entityId,
+            @Query("StartDay") String startDate,
+            @Query("EndDay") String endDay);
 
     @POST("/mlifecare/event/addEvent")
-    Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BloodPressureEventData post);
+    Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BloodGlucoseEventData post);
 
     @POST("/mlifecare/event/addEvent")
-    Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BodyWeightEventData post);
+    Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BloodPressureEventData post);
 
     @POST("/mlifecare/event/addEvent")
-    Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body SpO2EventData post);
+    Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BodyWeightEventData post);
+
+    @POST("/mlifecare/event/addEvent")
+    Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body SpO2EventData post);
+
+    @POST("/mlifecare/event/addEvent")
+    Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(@Body BodyTemperatureEventData post);
 
     /**
      * Factory class that sets up new Lifecare Service
@@ -205,7 +211,7 @@ public interface LifecareService {
                     .create();
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(LifecareService.ENDPOINT)
+                    .baseUrl(LifecareConfig.ENDPOINT)
                     .client(okHttpClient)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create(gson))

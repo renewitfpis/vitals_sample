@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.joda.time.DateTime;
-import org.reactivestreams.Publisher;
 
 import java.util.Calendar;
 import java.util.List;
@@ -14,19 +13,20 @@ import javax.inject.Singleton;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.realm.Realm;
 import sg.lifecare.data.local.PreferencesHelper;
 import sg.lifecare.data.local.database.AppDatabase;
-import sg.lifecare.data.local.database.BloodGlucose;
-import sg.lifecare.data.local.database.BloodPressure;
 import sg.lifecare.data.remote.LifecareUtils;
 import sg.lifecare.data.remote.model.data.BloodGlucoseEventData;
 import sg.lifecare.data.remote.model.data.BloodPressureEventData;
+import sg.lifecare.data.remote.model.data.BodyTemperatureEventData;
 import sg.lifecare.data.remote.model.data.BodyWeightEventData;
 import sg.lifecare.data.remote.model.data.SpO2EventData;
 import sg.lifecare.data.remote.model.response.AssignedTaskForDeviceResponse;
 import sg.lifecare.data.remote.model.response.AssignedTaskResponse;
 import sg.lifecare.data.remote.model.response.BloodGlucoseResponse;
 import sg.lifecare.data.remote.model.response.BloodPressureResponse;
+import sg.lifecare.data.remote.model.response.BodyTemperatureResponse;
 import sg.lifecare.data.remote.model.response.BodyWeightResponse;
 import sg.lifecare.data.remote.model.response.LogoutResponse;
 import sg.lifecare.framework.di.ApplicationContext;
@@ -73,6 +73,10 @@ public class DataManager {
         mAppDatabase = appDatabase;
     }
 
+    public Context getContext() {
+        return mContext;
+    }
+
     public PreferencesHelper getPreferencesHelper() {
         return mPreferencesHelper;
     }
@@ -87,6 +91,8 @@ public class DataManager {
 
     public void setUserEntity(EntityDetailResponse.Data userEntity) {
         mUserEntity = userEntity;
+
+        mPreferencesHelper.setUserEntity(userEntity);
     }
 
     public void setMembersEntity(List<AssistsedEntityResponse.Data> membersEntity) {
@@ -118,6 +124,22 @@ public class DataManager {
         return null;
     }
 
+    public boolean loadOfflineData() {
+        EntityDetailResponse.Data user = mPreferencesHelper.getUserEntity();
+        if (user == null) {
+            return false;
+        }
+
+        setUserEntity(user);
+
+        if (LifecareUtils.isCaregiver(user.getAuthorizationLevel())) {
+            List<AssistsedEntityResponse.Data> members = mPreferencesHelper.getMembersEntity();
+            setMembersEntity(members);
+        }
+
+        return true;
+    }
+
     public Observable<LoginResponse> login(final String email, final String password) {
         // need to clear the previous cookie
         CookieUtils.getCookieJar(mContext).clear();
@@ -140,11 +162,11 @@ public class DataManager {
         return mLifecareService.resetPassword(email);
     }
 
-    public Observable<EntityDetailResponse> getEntity(final String id) {
+    public Observable<EntityDetailResponse> getEntityObservable(final String id) {
         return mLifecareService.getEntityDetail(id);
     }
 
-    public Observable<AssistsedEntityResponse> getMembersEntity(String entityId) {
+    public Observable<AssistsedEntityResponse> getMembersEntityObservable(String entityId) {
         return mLifecareService.getAsisteds(entityId);
     }
 
@@ -174,19 +196,23 @@ public class DataManager {
         return mLifecareService.postCommissionDevice(data);
     }
 
-    public Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BloodGlucoseEventData data) {
+    public Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BloodGlucoseEventData data) {
         return mLifecareService.postAssignedTaskForDevice(data);
     }
 
-    public Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BloodPressureEventData data) {
+    public Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BloodPressureEventData data) {
         return mLifecareService.postAssignedTaskForDevice(data);
     }
 
-    public Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BodyWeightEventData data) {
+    public Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BodyWeightEventData data) {
         return mLifecareService.postAssignedTaskForDevice(data);
     }
 
-    public Observable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(SpO2EventData data) {
+    public Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(SpO2EventData data) {
+        return mLifecareService.postAssignedTaskForDevice(data);
+    }
+
+    public Flowable<AssignedTaskForDeviceResponse> postAssignedTaskForDevice(BodyTemperatureEventData data) {
         return mLifecareService.postAssignedTaskForDevice(data);
     }
 
@@ -202,31 +228,20 @@ public class DataManager {
                 LifecareUtils.convertToDayFormat(end));
     }
 
-    public Flowable<BodyWeightResponse> getBodyWeight(String entityId, DateTime start, DateTime end) {
+    public Flowable<BodyWeightResponse> getBodyWeights(String entityId, DateTime start, DateTime end) {
         return mLifecareService.getBodyWeights(entityId, LifecareUtils.convertToDayFormat(start),
+                LifecareUtils.convertToDayFormat(end));
+    }
+
+    public Flowable<BodyTemperatureResponse> getBodyTemperatures(String entityId, DateTime start, DateTime end) {
+        return mLifecareService.getBodyTemperatures(entityId, LifecareUtils.convertToDayFormat(start),
                 LifecareUtils.convertToDayFormat(end));
     }
 
     /**************************************************************************
      * Database
      *************************************************************************/
-    public Flowable<Boolean> addNewUser(EntityDetailResponse.Data user) {
-        return mAppDatabase.addNewUser(user);
-    }
-
-    public void addBloodPressures(String userId, List<BloodPressureResponse.Data> bps) {
-        mAppDatabase.addBloodPressures(userId, bps);
-    }
-
-    public void addBloodGlucoses(String userId, List<BloodGlucoseResponse.Data> bgs) {
-        mAppDatabase.addBloodGlucoses(userId, bgs);
-    }
-
-    public void addBodyWeights(String userId, List<BodyWeightResponse.Data> bws) {
-        mAppDatabase.addBodyWeights(userId, bws);
-    }
-
-    public Flowable<Long> addBloodPressuresFlowable(String userId, List<BloodPressureResponse.Data> bps) {
-        return mAppDatabase.addBloodPressuresFlowable(userId, bps);
+    public Realm getRealm() {
+        return mAppDatabase.getRealm();
     }
 }

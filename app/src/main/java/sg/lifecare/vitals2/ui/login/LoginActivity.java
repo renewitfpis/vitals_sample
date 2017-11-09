@@ -78,9 +78,14 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                 .subscribe(aBoolean -> mLoginButton.setEnabled(aBoolean));
 
         if (BuildConfig.DEBUG) {
-            mEmailEdit.setText("vitalsvip1@lifecare.sg");
-            mPasswordEdit.setText("vitals1234");
+            //mEmailEdit.setText("vitalsvip1@lifecare.sg");
+            //mPasswordEdit.setText("vitals1234");
+            //mEmailEdit.setText("clinic1@fullertonhealth.com");
+            //mPasswordEdit.setText("test1234");
         }
+
+        mEmailEdit.setText("renewitp1@atlifecare.com");
+        mPasswordEdit.setText("renewit888");
     }
 
     @Override
@@ -107,7 +112,13 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     @OnClick(R.id.login_button)
     void onLoginClick(View v) {
-        mPresenter.login(mEmailEdit.getText().toString(), mPasswordEdit.getText().toString());
+        hideKeyboard();
+
+        if (isNetworkConnected()) {
+            mPresenter.login(mEmailEdit.getText().toString(), mPasswordEdit.getText().toString());
+        } else {
+            onNetworkError(getString(R.string.error_check_network_connection));
+        }
     }
 
     private void showForgotPasswordFragment() {

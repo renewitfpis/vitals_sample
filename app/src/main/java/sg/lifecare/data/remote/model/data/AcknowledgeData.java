@@ -6,9 +6,18 @@ public class AcknowledgeData {
     private String RuleEditEntityId;
     private String RuleId;
 
-    public AcknowledgeData (String entityId, String editEntityId, String ruleId) {
-        EntityId = entityId;
-        RuleEditEntityId = editEntityId;
-        RuleId = ruleId;
+    public AcknowledgeData () {
+    }
+
+    public void setEntityId(String id) {
+        EntityId = id;
+    }
+
+    public void setRuleEditEntityId(String id) {
+        RuleEditEntityId = id;
+    }
+
+    public void setRuleId(String id) {
+        RuleId = id;
     }
 }

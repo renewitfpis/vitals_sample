@@ -3,6 +3,7 @@ package sg.lifecare.data.remote.model.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
 import java.util.List;
 
 public class BloodPressureResponse extends Response {
@@ -15,7 +16,7 @@ public class BloodPressureResponse extends Response {
         return data;
     }
 
-    public class Data extends EventData {
+    public class Data extends VitalEventData {
 
         private int diastolic;
         private int heart_rate;
@@ -32,5 +33,7 @@ public class BloodPressureResponse extends Response {
         public int getSystolic() {
             return systolic;
         }
+
+
     }
 }

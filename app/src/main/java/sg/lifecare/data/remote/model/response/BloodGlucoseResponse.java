@@ -15,7 +15,7 @@ public class BloodGlucoseResponse extends Response {
         return data;
     }
 
-    public class Data extends EventData {
+    public class Data extends VitalEventData {
 
         private float concentration;
 

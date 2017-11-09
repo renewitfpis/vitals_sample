@@ -17,12 +17,12 @@ class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>
     private ArrayList<DeviceData.Device> mDevices = new ArrayList<>();
     private OnItemLongClickListener mItemLongClickListener;
 
-    public interface OnItemLongClickListener {
+    interface OnItemLongClickListener {
         void onItemLongClick(DeviceData.Device device);
     }
 
 
-    public DeviceAdapter(OnItemLongClickListener listener) {
+    DeviceAdapter(OnItemLongClickListener listener) {
         mItemLongClickListener = listener;
     }
 
@@ -57,9 +57,11 @@ class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>
         return mDevices.size();
     }
 
-    public void replaceDevices(List<DeviceData.Device> devices) {
+    void replaceDevices(List<DeviceData.Device> devices) {
         mDevices.clear();
         mDevices.addAll(devices);
+
+        notifyDataSetChanged();
     }
 
     class DeviceViewHolder extends RecyclerView.ViewHolder {

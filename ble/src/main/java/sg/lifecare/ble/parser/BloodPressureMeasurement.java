@@ -2,6 +2,7 @@ package sg.lifecare.ble.parser;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -9,7 +10,7 @@ import java.util.Date;
  * https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.blood_pressure_measurement.xml
  */
 
-public class BloodPressureMeasurement {
+public class BloodPressureMeasurement implements Serializable {
 
     private static final String TAG = "BloodPressureMeasurement";
 
@@ -88,6 +89,14 @@ public class BloodPressureMeasurement {
         }
 
         return bloodPressureMeasurement;
+    }
+
+    public static BloodPressureMeasurement get(float systolic, float diastolic, float pulseRate, Date timestamp) {
+        BloodPressureMeasurement measurement = new BloodPressureMeasurement(UNIT_SI, systolic, diastolic, 0);
+        measurement.setPulseRate(pulseRate);
+        measurement.setTimestamp(timestamp);
+
+        return measurement;
     }
 
     private final int mUnit;

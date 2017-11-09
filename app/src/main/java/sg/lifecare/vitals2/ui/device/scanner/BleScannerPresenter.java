@@ -1,5 +1,6 @@
 package sg.lifecare.vitals2.ui.device.scanner;
 
+import android.os.Looper;
 import android.os.ParcelUuid;
 
 import java.util.ArrayList;
@@ -27,15 +28,15 @@ import timber.log.Timber;
 public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresenter<V>
         implements BleScannerMvpPresenter<V> {
 
-    private static final int SCAN_DURATION = 30; // in seconds
+    private static final int SCAN_DURATION = 60; // in seconds
 
     private static ScanSettings mScanSettings = new ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
             .setReportDelay(1000)
-            .setUseHardwareBatchingIfSupported(true)
+            //.setUseHardwareBatchingIfSupported(false)
+            .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
             .build();
 
-    private BluetoothLeScannerCompat mScanner;
     private boolean mIsScanning = false;
 
     private DisposableSubscriber<Long> mScanTimeoutSubscriber;
@@ -44,8 +45,6 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
     public BleScannerPresenter(DataManager dataManager,
             CompositeDisposable compositeDisposable) {
         super(dataManager, compositeDisposable);
-
-        mScanner = BluetoothLeScannerCompat.getScanner();
     }
 
     @Override
@@ -58,6 +57,7 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
 
     @Override
     public void scanForANDUA651() {
+        Timber.d("scanForANDUA651");
         final List<ScanFilter> filters = new ArrayList<>();
         filters.add(new ScanFilter.Builder().setServiceUuid(
                 ParcelUuid.fromString(ANDUA651Manager.BLOOD_PRESSURE_SERVICE.toString())).build());
@@ -67,7 +67,9 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
     @Override
     public void stopScan() {
         if (mIsScanning) {
-            mScanner.stopScan(mScanCallback);
+            Timber.d("stopScan");
+            final BluetoothLeScannerCompat scanner = BluetoothLeScannerCompat.getScanner();
+            scanner.stopScan(mScanCallback);
             mIsScanning = false;
         }
 
@@ -78,7 +80,7 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
 
     @Override
     public void startScan(List<ScanFilter> filters) {
-        stopScan();
+        /*stopScan();
 
         try {
             mScanner.startScan(filters, mScanSettings, mScanCallback);
@@ -89,10 +91,43 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
             getMvpView().showScanLoading();
         } catch (IllegalStateException ex) {
             Timber.e(ex, ex.getMessage());
+        }*/
+        startScan(filters, SCAN_DURATION);
+    }
+
+    @Override
+    public void startScan(long timeoutSec) {
+        startScan(null, timeoutSec);
+    }
+
+    @Override
+    public void startScan(List<ScanFilter> filters, long timeoutSec) {
+        stopScan();
+
+        Timber.d("startScan");
+
+        try {
+            final BluetoothLeScannerCompat scanner = BluetoothLeScannerCompat.getScanner();
+
+            if (filters == null || filters.size() == 0) {
+                scanner.startScan(mScanCallback);
+            } else {
+                scanner.startScan(filters, mScanSettings, mScanCallback);
+            }
+            mIsScanning = true;
+
+            if (timeoutSec > 0) {
+                addScanTimeout(timeoutSec);
+            }
+
+            getMvpView().showScanLoading();
+        } catch (IllegalStateException ex) {
+            Timber.e(ex, ex.getMessage());
         }
     }
 
-    private void addScanTimeout() {
+    private void addScanTimeout(long timeoutSec) {
+        Timber.d("addScanTimeout: %d seconds", timeoutSec);
 
         removeScanTimeout();
 
@@ -117,7 +152,7 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
             }
         };
 
-        Flowable.timer(SCAN_DURATION, TimeUnit.SECONDS)
+        Flowable.timer(timeoutSec, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mScanTimeoutSubscriber);
@@ -137,10 +172,15 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
             super.onScanResult(callbackType, result);
 
             Timber.d("onScanResult: callbackType=%d, data=%s", callbackType, result.toString());
+
+            if (getMvpView() != null) {
+                getMvpView().bleScanResult(callbackType, result);
+            }
         }
 
         @Override
         public void onBatchScanResults(final List<ScanResult> results) {
+            Timber.d("onBatchScanResults: size=%d", results.size());
             for (ScanResult result : results) {
                 Timber.d("onBatchScanResults: %s", result.toString());
             }

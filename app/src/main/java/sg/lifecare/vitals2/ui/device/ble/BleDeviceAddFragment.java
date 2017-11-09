@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import no.nordicsemi.android.support.v18.scanner.ScanResult;
 import sg.lifecare.ble.parser.BloodPressureMeasurement;
-import sg.lifecare.ble.parser.WeightMeasurement;
+import sg.lifecare.ble.parser.BodyWeightMeasurement;
 import sg.lifecare.data.local.DeviceData;
 import sg.lifecare.vitals2.R;
 import sg.lifecare.vitals2.R2;
@@ -173,6 +173,11 @@ public class BleDeviceAddFragment extends BaseDialogFragment
     }
 
     @Override
+    public void bleScanResult(int callbackType, ScanResult result) {
+
+    }
+
+    @Override
     public void bleBatchScanResults(List<ScanResult> results) {
         if (results.size() > 0) {
             mBleScannerPresenter.stopScan();
@@ -222,7 +227,7 @@ public class BleDeviceAddFragment extends BaseDialogFragment
     }
 
     @Override
-    public void onWeightMeasurementRead(WeightMeasurement weight) {
+    public void onWeightMeasurementRead(BodyWeightMeasurement weight) {
 
     }
 

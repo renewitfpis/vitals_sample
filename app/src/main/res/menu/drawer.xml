@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="none">
+        <!--
         <item
             android:id="@+id/nav_item_devices"
             android:title="@string/nav_devices"/>
@@ -9,6 +10,26 @@
             android:id="@+id/nav_barcode"
             android:title="Barcode" />
 
+        <item
+            android:id="@+id/nav_panic"
+            android:title="Panic" />
+
+        <item
+            android:id="@+id/nav_qn"
+            android:title="QN"/>
+
+        <item
+            android:id="@+id/nav_urion"
+            android:title="Urion"/>
+
+        <item
+            android:id="@+id/nav_jumper_thermometer"
+            android:title="Jumper Thermometer"/>
+
+        <item
+            android:id="@+id/nav_jumper_oximeter"
+            android:title="Jumper Oximeter"/>
+-->
         <item
             android:id="@+id/nav_item_logout"
             android:title="@string/nav_logout" />

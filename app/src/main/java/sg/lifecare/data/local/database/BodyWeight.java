@@ -2,8 +2,15 @@ package sg.lifecare.data.local.database;
 
 
 import java.util.Date;
+import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
+import io.realm.Sort;
+import sg.lifecare.data.remote.model.data.BodyWeightEventData;
+import sg.lifecare.data.remote.model.response.BodyWeightResponse;
+import timber.log.Timber;
 
 public class BodyWeight extends RealmObject {
 
@@ -14,10 +21,95 @@ public class BodyWeight extends RealmObject {
 
     private float weight;
 
-    private Date takenTime;
-    private String takerId;
+    private Date takenTime; // reading taken time
+    private String takerId; // reading taken by
+    private String patientId;  // reading belongs to
     private boolean isUploaded;
     private Date uploadedTime;
+
+    public static void addBodyWeights(Realm realm, List<BodyWeightResponse.Data> bws) {
+        if ((bws != null) && (bws.size() > 0)) {
+
+            realm.beginTransaction();
+
+            for (BodyWeightResponse.Data bw : bws) {
+                BodyWeight bodyWeightDb =
+                        realm.where(BodyWeight.class).equalTo("entityId", bw.getId()).findFirst();
+                if (bodyWeightDb == null) {
+
+                    bodyWeightDb = realm.createObject(BodyWeight.class);
+                    bodyWeightDb.setEntityId(bw.getId());
+                    bodyWeightDb.setWeight(bw.getWeight());
+                    bodyWeightDb.setIsUploaded(true);
+                    bodyWeightDb.setUploadTime(bw.getCreateDate());
+
+                    bodyWeightDb.setTakerId(bw.getTakerId());
+                    bodyWeightDb.setPatientId(bw.getPatientId());
+                    bodyWeightDb.setTakenTime(bw.getCreateDate());
+
+                    Timber.d("addBodyWeights: add %s", bw.getId());
+                } else {
+                    Timber.d("addBodyWeights: skip %s", bw.getId());
+                }
+
+                Patient.addOrUpdatePatient(realm, bw.getPatientId(), bw.getTakenTime());
+            }
+
+            realm.commitTransaction();
+        }
+    }
+
+    public static BodyWeight addBodyWeight(Realm realm, BodyWeightEventData data) {
+        realm.beginTransaction();
+
+        BodyWeight bodyWeightDb = realm.createObject(BodyWeight.class);
+        bodyWeightDb.setEntityId("");
+        bodyWeightDb.setWeight(data.getWeight());
+        bodyWeightDb.setIsUploaded(false);
+
+        bodyWeightDb.setTakerId(data.getNurseId());
+        bodyWeightDb.setPatientId(data.getPatientId());
+        bodyWeightDb.setTakenTime(data.getReadTime());
+        bodyWeightDb.setDeviceId(data.getDeviceId());
+
+        Patient.addOrUpdatePatient(realm, data.getPatientId(), data.getReadTime());
+
+        realm.commitTransaction();
+
+        return bodyWeightDb;
+    }
+
+    public static BodyWeight getLatestByPatientId(Realm realm, String patientId) {
+        RealmResults<BodyWeight> bodyWeights = realm.where(BodyWeight.class)
+                .equalTo("patientId", patientId)
+                .findAllSorted("takenTime", Sort.DESCENDING);
+
+        if (bodyWeights.size() == 0) {
+            return null;
+        }
+
+        return bodyWeights.get(0);
+    }
+
+    public float getWeight() {
+        return weight;
+    }
+
+    public Date getTakenTime() {
+        return takenTime;
+    }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public String getTakerId() {
+        return takerId;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
 
     public void setEntityId(String entityId) {
         this.entityId = entityId;
@@ -25,6 +117,10 @@ public class BodyWeight extends RealmObject {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
     }
 
     public void setTakenTime(Date takenTime) {

@@ -2,6 +2,8 @@ package sg.lifecare.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.util.TypedValue;
@@ -28,5 +30,10 @@ public class CommonUtils {
     public static int spTopPx(Context context, float spValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
+    }
+
+    public static boolean isMainThread() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? Looper.getMainLooper().isCurrentThread()
+                : Thread.currentThread() == Looper.getMainLooper().getThread();
     }
 }

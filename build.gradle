@@ -3,16 +3,17 @@
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath 'com.jakewharton:butterknife-gradle-plugin:8.5.1'
 
         classpath 'me.tatarka:gradle-retrolambda:3.6.0'
-        classpath 'io.realm:realm-gradle-plugin:3.3.2'
+        classpath 'io.realm:realm-gradle-plugin:4.0.0-RC1'
     }
 }
 
@@ -39,11 +40,11 @@ ext {
     contrainLayoutVersion = '1.0.2'
 
     // Google
-    playServicesVersion = '10.2.6'
+    playServicesVersion = '11.4.2'
     mapsUtilsVersion = '0.5'
 
     // APP dependencies
-    supportLibraryVersion = '25.3.1'
+    supportLibraryVersion = '25.4.0'
     gsonVersion = '2.8.1'
 
     butterKnifeVersion = '8.6.0'

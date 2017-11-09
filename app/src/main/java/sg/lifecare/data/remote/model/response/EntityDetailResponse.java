@@ -27,7 +27,6 @@ public class EntityDetailResponse extends Response {
         private Date date_established;
         private String type;
         private String status;
-        private int authorization_level;
         private String default_language;
         private Enterprise enterprise;
         private String referal_code;
