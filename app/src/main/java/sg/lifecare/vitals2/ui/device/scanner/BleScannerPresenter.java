@@ -32,7 +32,7 @@ public class BleScannerPresenter<V extends BleScannerMvpView> extends BasePresen
 
     private static ScanSettings mScanSettings = new ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
-            //.setReportDelay(1000)
+            .setReportDelay(1000)
             //.setUseHardwareBatchingIfSupported(false)
             .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
             .build();

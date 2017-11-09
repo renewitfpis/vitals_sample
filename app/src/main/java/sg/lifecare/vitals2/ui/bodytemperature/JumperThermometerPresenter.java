@@ -3,9 +3,16 @@ package sg.lifecare.vitals2.ui.bodytemperature;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import sg.lifecare.ble.device.jumper.JumperManager;
 import sg.lifecare.ble.device.jumper.JumperThermometerCallbacks;
 import sg.lifecare.ble.device.jumper.JumperThermometerManager;
@@ -46,8 +53,19 @@ public class JumperThermometerPresenter<V extends JumperThermometerMvpView> exte
             return;
         }
 
-        mHasResult = false;
-        mManager.connect(device);
+        Timber.d("connect: wait");
+        getCompositeDisposable().add(
+                Observable.timer(1, TimeUnit.SECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<Long>() {
+                            @Override
+                            public void accept(@NonNull Long aLong) throws Exception {
+                                Timber.d("connect: start");
+                                mHasResult = false;
+                                mManager.connect(device);
+                            }
+                        }));
     }
 
     @Override

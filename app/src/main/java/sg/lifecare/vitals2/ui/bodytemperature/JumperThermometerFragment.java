@@ -148,7 +148,7 @@ public class JumperThermometerFragment extends BaseFragment
                 //scanFilters.add(new ScanFilter.Builder().setDeviceName("My Thermometer").build());
 
                 mDevice = null;
-                mBleScannerPresenter.startScan(scanFilters, 0);
+                mBleScannerPresenter.startScan(0);
             } else {
                 final Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
@@ -267,8 +267,12 @@ public class JumperThermometerFragment extends BaseFragment
 
     @Override
     public void bleBatchScanResults(List<ScanResult> results) {
-        /*if (results.size() > 0) {
-            if (mDevice == null) {
+        Timber.d("bleBatchScanResults");
+        if (results.size() > 0) {
+            for (ScanResult result : results) {
+                Timber.d("result: %s", result.getDevice().toString());
+            }
+            /*if (mDevice == null) {
                 mDevice = results.get(0).getDevice();
                 mHandler.postDelayed(new Runnable() {
                     @Override
@@ -277,8 +281,8 @@ public class JumperThermometerFragment extends BaseFragment
                         mJumperPresenter.connect(mDevice);
                     }
                 }, 500);
-            }
-        }*/
+            }*/
+        }
     }
 
     @Override
